@@ -39,13 +39,14 @@
 - 当前没有待执行的 `Execution Brief`。
 - `kubernetes/kubernetes#140523` 不应恢复实现，除非未来重新筛选并明确处理与现有 assignee 的协调问题。
 - 本地 `gh` 凭据在最近核验时失效；需要使用 `gh` 专属查询前应重新认证。
-- 当前 Git `origin` 已配置为公开事实仓库 `Yanansn/zhaiyezi`；SSH 访问已核验可用。
+- 当前 Git `origin` 已配置为公开事实仓库 `Yanansn/zhaiyezi`，但当前 SSH 身份 `bzsuni` 没有写权限；首次 Push 被 GitHub 拒绝。
 
 ## 下一步
 
 1. 普通 Chat 筛选 Issue、完成教学和方案讨论，并生成单阶段 `Execution Brief`。
 2. 用户将简报一次性交给本地 Codex。
 3. Codex 核验事实后只执行该阶段，并在授权后将结果发布到 `Yanansn/zhaiyezi`。
+4. 在重新 Push 前，为 `bzsuni` 授予目标仓库写权限，或切换到有权访问 `Yanansn/zhaiyezi` 的 SSH/GitHub 身份。
 
 ## 新上下文恢复指令
 
