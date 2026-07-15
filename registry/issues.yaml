@@ -1,0 +1,9 @@
+issues:
+  - id: "kubernetes/kubernetes#140523"
+    url: "https://github.com/kubernetes/kubernetes/issues/140523"
+    title: "EvictionRequest: add CRUD tests for conformance"
+    domain: cloud-native
+    language: go
+    status: awaiting-triage
+    recommendation: promising
+    record: "issues/kubernetes-kubernetes-140523"
