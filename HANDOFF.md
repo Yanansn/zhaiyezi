@@ -27,6 +27,7 @@
 - 建立项目事实库、状态模型和 Issue 记录模板。
 - 读取并记录 Issue 正文、标签、认领状态和现有讨论。
 - 完成初步筛选：Issue 范围看起来集中，但尚未获得 `triage/accepted`。
+- 完成一次无对话背景的只读冷启动测试；新 Agent 能恢复目标、任务、状态、阻塞、审批边界和下一步。
 - 未公开留言、未认领 Issue、未修改 Kubernetes 代码。
 
 ## 当前阻塞与风险
@@ -58,4 +59,5 @@
 ## 最近检查
 
 - 项目记录日期：2026-07-14
-- 初始项目提交：`1c77ba5 chore: initialize zhaiyezi workflow`
+- 当前分支应以 `git branch --show-current` 为准。
+- 当前提交应以 `git log -1 --oneline` 为准，避免交接文件在每次提交后产生自引用漂移。
