@@ -1,12 +1,11 @@
 issue: "kubernetes/kubernetes#140523"
-status: awaiting-triage
-recommendation: promising
+status: superseded
+recommendation: do-not-pursue
 branch: null
 pull_request: null
-last_verified: "2026-07-15"
+last_verified: "2026-07-15T16:10:50+08:00"
 blockers:
+  - "Issue was assigned to anshulchikhale30-p before implementation began"
   - "Issue still has needs-triage and no triage/accepted label"
 next_actions:
-  - inspect repository contribution and conformance-test guidance
-  - map existing API operation tests for subresources
-  - prepare a maintainer confirmation question before implementation
+  - select and screen a different unassigned issue

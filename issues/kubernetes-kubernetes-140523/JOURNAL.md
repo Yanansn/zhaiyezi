@@ -14,3 +14,6 @@
 - Added the validated `harvest-open-source-issue` workflow as a repository-level Skill under `.agents/skills/` for local Codex discovery.
 - Added `LOCAL-TAKEOVER.md` with Ubuntu extraction, Git remote, startup, recovery and approval instructions.
 - Prepared the project for a single local Codex main-Agent operating model.
+- Re-verified GitHub at 2026-07-15T16:10:50+08:00. The Issue remained open with `needs-triage`, but `anshulchikhale30-p` had commented `/assign` and become the assignee; no linked branch or pull request existed.
+- User decided to stop pursuing the Issue because another contributor had claimed it.
+- Marked the local task `superseded` without creating a branch, changing Kubernetes code, running code tests, posting publicly or creating a pull request.

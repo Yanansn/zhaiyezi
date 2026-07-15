@@ -4,6 +4,6 @@ issues:
     title: "EvictionRequest: add CRUD tests for conformance"
     domain: cloud-native
     language: go
-    status: awaiting-triage
-    recommendation: promising
+    status: superseded
+    recommendation: do-not-pursue
     record: "issues/kubernetes-kubernetes-140523"
