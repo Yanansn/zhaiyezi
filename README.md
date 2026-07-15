@@ -14,6 +14,8 @@
 
 参见 `registry/issues.yaml` 和各 Issue 目录中的 `STATUS.yaml`。
 
+新上下文或新 Agent 应先读取 `AGENTS.md` 和 `HANDOFF.md`，再核验 GitHub 实时状态。
+
 ## 状态流转
 
 `candidate → screening → awaiting-triage/selected → analyzing → planned → implementing → testing → pr-ready → submitted → reviewing → merged/closed`
