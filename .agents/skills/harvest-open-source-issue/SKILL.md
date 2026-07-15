@@ -1,52 +1,56 @@
 ---
 name: harvest-open-source-issue
-description: Systematically investigate, explain, implement, test, and carry an open-source issue through contribution while teaching the project and preserving auditable records. Use when Codex needs to screen candidate issues, learn an unfamiliar repository through a real issue, build a code map and solution, make and explain changes, guide or run tests, prepare branches/commits/pull requests, respond to CI or review, or resume an existing issue contribution.
+description: Execute a stage-scoped open-source contribution from a confirmed Execution Brief by verifying live facts, reading real code, building precise code maps, implementing, testing, diagnosing failures, updating records, and performing approved Git or GitHub publication steps. Use when Codex receives a bounded engineering brief for an already screened issue or resumes an established contribution stage.
 ---
 
 # Harvest Open Source Issues
 
-Treat an issue as both a contribution task and a structured learning path. Advance it through explicit stages and preserve evidence in the project record.
+Treat Codex as the engineering execution agent for an issue that ordinary Chat has already screened and explained. Execute one bounded stage at a time and preserve evidence for the next Chat handoff.
+
+## Intake gate
+
+- Require an `Execution Brief` containing the issue, confirmed facts, goal, required investigation, constraints, expected deliverables, and approval boundary.
+- Read [execution-brief.md](references/execution-brief.md) when starting a new stage or when the brief is incomplete.
+- Verify the brief against repository records, live GitHub state, local Git state, and real source code before acting.
+- If the brief is absent, materially stale, or lacks a stage goal, deliverables, or approval boundary, report the gap and stop. Do not expand into candidate screening or open-ended research.
 
 ## Operating principles
 
 - Distinguish GitHub facts, source-code facts, test evidence, and inference.
-- Read the issue body, current labels, assignees, discussion, linked pull requests, and repository contribution instructions before recommending implementation.
-- Explain the affected subsystem and terminology in plain language before editing.
+- Read the issue body, current labels, assignees, discussion, linked pull requests, and repository contribution instructions before implementation.
 - Build a code map and identify analogous implementations or tests before proposing a solution.
 - Keep changes scoped to the accepted issue. Do not bundle opportunistic refactors.
 - Run the narrowest meaningful checks first. Never claim success without recorded evidence.
-- Teach the reasoning behind code, commands, tests, and community workflow.
+- Report engineering evidence concisely: what changed, why it works, how it was validated, and remaining risks.
 - Require user confirmation before public comments, issue assignment, pushes, pull requests, reviews, or other person-facing actions.
-- Update the issue record after every material stage transition.
+- Default to no subagents. Use them only when the brief permits them and parallel work has clear value.
+- Update only records whose facts changed in the current stage.
 
 ## Workflow
 
-1. **Discover the project**
+1. **Verify intake and discover the project**
+   - Parse the Execution Brief and state the exact stage boundary.
    - Read `AGENTS.md`, `CONTRIBUTING.md`, issue/PR templates, build files, test guidance, and relevant ownership files.
    - Record language, build system, test framework, CI, contribution rules, CLA/DCO requirements, and community conventions.
    - Read [project-discovery.md](references/project-discovery.md).
-2. **Screen the issue**
-   - Check freshness, triage state, ownership, linked work, clarity, environment cost, scope, testability, learning value, and likely blockers.
-   - Choose `selected`, `awaiting-confirmation`, `research-only`, `rejected`, or `blocked`; explain why.
-   - Read [screening.md](references/screening.md).
-3. **Explain and map**
-   - Explain current behavior, expected behavior, impact, terminology, scope, and non-goals.
+2. **Map when requested**
    - Trace the relevant code path and existing tests. Record files and responsibilities in `CODE-MAP.md`.
-4. **Plan**
+   - Do not modify upstream code when the brief says the stage is code-map-only.
+3. **Plan when requested**
    - State the root cause or unresolved hypothesis, preferred solution, alternatives, risks, compatibility concerns, and validation strategy.
    - If maintainers have not accepted the direction, prepare a concise confirmation comment and pause before substantial implementation.
-5. **Implement**
+4. **Implement when requested**
    - Create a descriptive branch after checking repository conventions.
    - Make the smallest coherent change. Explain important code decisions and connect them to the code map.
-6. **Validate**
+5. **Validate when requested or required by implementation**
    - Format and lint, run targeted unit or package tests, then integration/e2e tests when proportional and feasible.
    - Record exact commands, environment, results, limitations, and CI-only coverage in `TESTING.md`.
    - Read [testing.md](references/testing.md).
-7. **Prepare the contribution**
+6. **Prepare or publish when authorized**
    - Inspect the staged diff for unrelated changes.
    - Propose branch name, commit structure and messages, PR title/body, issue linkage, release note, and reviewer notes according to repository rules.
-   - Obtain confirmation before external actions.
-8. **Review and close**
+   - Perform Commit, Push, PR, comment, or review actions only when the brief or a later user message explicitly authorizes each external boundary.
+7. **Review and close**
    - Diagnose CI failures, respond to review, iterate implementation and tests, and update records.
    - Finish with merged, rejected, superseded, or blocked status plus a learning retrospective and suggested next issue.
 
@@ -67,11 +71,20 @@ Use one directory per issue under `issues/<owner>-<repo>-<number>/`. Maintain:
 
 Use `scripts/init_issue_record.py` to initialize a record and `scripts/validate_issue_record.py` before reporting a stage complete. Never overwrite journal history.
 
+Do not rewrite all record files on every turn. Use this minimum mapping:
+
+- code map: `CODE-MAP.md`, plus `STATUS.yaml` and `JOURNAL.md` only when state or next action changes;
+- plan: `PLAN.md` and changed status/journal facts;
+- implementation: `IMPLEMENTATION.md` and changed status/journal facts;
+- validation or CI: `TESTING.md` and changed status/journal facts;
+- publication or review: `PR.md` and changed status/journal facts;
+- terminal outcome: final status, outcome, relevant testing/PR evidence, `LEARNING.md`, `JOURNAL.md`, and the project handoff.
+
 ## Status model
 
 Use one of: `candidate`, `screening`, `awaiting-triage`, `selected`, `analyzing`, `planned`, `implementing`, `testing`, `pr-ready`, `submitted`, `reviewing`, `merged`, `blocked`, `rejected`, `superseded`, `closed`.
 
-Do not skip directly from `candidate` to `implementing`. A contribution is complete only when its outcome and learning retrospective are recorded.
+Ordinary Chat normally hands off an issue after screening. Do not skip from an unverified brief directly to implementation. A contribution is complete only when its outcome and learning retrospective are recorded.
 
 ## Adaptation
 
