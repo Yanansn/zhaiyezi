@@ -8,7 +8,7 @@
 
 每次开始工作或更换上下文时，必须按顺序执行：
 
-1. 使用 `harvest-open-source-issue` Skill。
+1. 使用仓库级 `.agents/skills/harvest-open-source-issue/` Skill。
 2. 读取根目录 `HANDOFF.md`。
 3. 读取 `registry/issues.yaml`，确认当前活动 Issue。
 4. 读取活动 Issue 的 `STATUS.yaml` 和 `JOURNAL.md`。
@@ -18,6 +18,8 @@
 8. 在继续执行前，向用户报告“记录状态、实时状态、差异、阻塞和下一步”。
 
 项目文件是历史决定与工作状态的权威记录；GitHub 是外部 Issue、PR 和 CI 实时状态的权威来源。不得仅依靠对话记忆继续任务。
+
+如果 Skill 没有自动显示，先确认 Codex 从仓库根目录启动，并检查 `.agents/skills/harvest-open-source-issue/SKILL.md` 是否存在。
 
 ## 标准工作流
 

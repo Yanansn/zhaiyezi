@@ -16,6 +16,8 @@
 
 新上下文或新 Agent 应先读取 `AGENTS.md` 和 `HANDOFF.md`，再核验 GitHub 实时状态。
 
+Ubuntu Codex 首次接管请阅读 `LOCAL-TAKEOVER.md`。通用工作流已随仓库保存在 `.agents/skills/harvest-open-source-issue/`。
+
 ## 状态流转
 
 `candidate → screening → awaiting-triage/selected → analyzing → planned → implementing → testing → pr-ready → submitted → reviewing → merged/closed`
