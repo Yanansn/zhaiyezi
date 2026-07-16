@@ -10,23 +10,24 @@
 - 简报模板：`.agents/skills/harvest-open-source-issue/references/execution-brief.md`
 - 项目规则：`AGENTS.md`
 - Issue 登记：`registry/issues.yaml`
-- 最近任务记录：`issues/kubernetes-kubernetes-140523/`
+- 当前任务记录：`issues/kubernetes-kubernetes-140502/`
 - 外部事实来源：GitHub
 - 事实仓库：`Yanansn/zhaiyezi`，普通 Chat 已可通过 GitHub Connector 读取已 Push 内容
 
 ## 当前活动任务
 
-- 当前没有活动 Issue。
-- 最近任务：`kubernetes/kubernetes#140523`（`EvictionRequest: add CRUD tests for conformance`）
-- 终止状态：`superseded`
-- 终止原因：Issue 已由 `anshulchikhale30-p` 认领，为避免重复贡献而放弃。
-- 工作分支和 Pull Request 均未创建。
+- 当前 Issue：`kubernetes/kubernetes#140502`（`The generated test scenarios for RWX volume types dont make sense`）
+- 当前阶段：`code-map` 已完成，状态为 `awaiting-triage`，建议为 `promising`。
+- 实时状态：Issue open、无人认领、仍有 `needs-triage`、没有 `triage/accepted` 或关联 Kubernetes 实现 PR。
+- 技术结论：ext4/xfs 会进入真实 StorageClass 参数，同时测试创建 Filesystem RWX PVC 并让两个 Pod 共享读写；最可能是 TestPattern/RWX 组合与实际资源请求问题，不只是名称问题。
+- 上游工作分支和 Pull Request 均未创建，Kubernetes 源码未修改。
+- 上一个 Issue `kubernetes/kubernetes#140523` 已因其他贡献者认领而 `superseded`。
 
 ## 当前仓库模型
 
 - 事实仓库：`Yanansn/zhaiyezi`，本地路径为 `~/projects/zhaiyezi`。
-- 当前没有活动的上游工作仓库、本地上游 Clone、用户 Fork 工作分支或 PR。
-- 选定新 Issue 后，必须在 `STATUS.yaml` 和 Execution Brief 中记录官方仓库、用户 Fork、本地 Clone 路径、base branch、working branch 和 PR 状态；不得提前虚构。
+- 当前上游 Clone：`/home/sun/go/src/k8s.io/kubernetes`；代码地图核验基线为官方 `master@1b4e48f52199bcfb28ef6efd60522a082c3e78d0`。
+- 当前没有用户 Fork 工作分支或 PR；这些字段保持未创建状态，不得提前虚构。
 
 ## 已完成
 
@@ -43,11 +44,12 @@
 - 普通 Chat 已能通过 GitHub Connector 读取事实仓库。
 - 完善普通 Chat、本地 Codex、用户和 GitHub 事实仓库之间的可见性、阶段交接、停止条件与完成回传协议。
 - 补充 facts repository、官方 upstream、用户 Fork、本地 Clone 和 PR 生命周期的多仓库协作规则。
+- 完成 `kubernetes/kubernetes#140502` 的测试注册、fsType、RWX capability、资源创建与多 Pod 读写调用链代码地图。
 
 ## 当前阻塞与风险
 
-- 当前没有选定的新 Issue。
-- 当前没有待执行的工程 `Execution Brief`。
+- `kubernetes/kubernetes#140502` 尚未获得 `triage/accepted`，SIG Storage 也未确认 fsType 过滤范围。
+- 下一阶段不应直接实现；应先由普通 Chat 复核代码地图，并决定是否准备一条方案确认评论。
 - `kubernetes/kubernetes#140523` 不应恢复实现，除非未来重新筛选并明确处理与现有 assignee 的协调问题。
 - 本地 `gh` 的认证状态不是持久事实；需要使用 `gh` 时必须先运行 `gh auth status` 实时核验。
 - 普通 Chat 只能读取已经 Push 的事实，不能读取 Codex 本地尚未提交或尚未 Push 的状态。
@@ -55,15 +57,11 @@
 ## 下一步
 
 ```text
-Chat 筛选和教学
-→ Chat 生成单阶段 Execution Brief
-→ 用户交给 Codex
-→ Codex 核验事实仓库、本地工作区和上游 GitHub 实时状态
-→ Codex 执行单一阶段
-→ Codex 更新事实记录
-→ 授权后 Commit 和 Push
-→ Chat 重新读取事实仓库
-→ Chat 解释、决策并生成下一阶段简报
+Codex Push #140502 code-map 记录
+→ Chat 读取并讲解 B+C 根因判断
+→ Chat 决定等待 triage 或生成“方案确认评论”单阶段 Brief
+→ 用户明确授权后 Codex 才能公开评论
+→ 获得维护者方向后再生成 plan Brief
 ```
 
 ## 新上下文恢复指令
@@ -71,7 +69,7 @@ Chat 筛选和教学
 新的 Codex 执行会话必须先执行 `AGENTS.md` 的恢复顺序，并报告：
 
 - 本轮 `Execution Brief` 的阶段、目标、交付物和审批边界
-- 项目记录中的状态（当前无活动 Issue，最近任务已 `superseded`）
+- 项目记录中的状态（#140502 `awaiting-triage`，#140523 `superseded`）
 - GitHub 当前实时状态
 - 两者是否存在差异
 - Git 分支及未提交改动

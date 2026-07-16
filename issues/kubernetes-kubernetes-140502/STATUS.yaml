@@ -1,0 +1,35 @@
+issue: "kubernetes/kubernetes#140502"
+status: awaiting-triage
+recommendation: promising
+last_verified: "2026-07-16"
+facts_repository:
+  repository: "Yanansn/zhaiyezi"
+  local_path: "/home/sun/projects/zhaiyezi"
+  branch: "main"
+  baseline_commit: "a4317e681cb9ba8d051e41968bb3d83fcecc80ea"
+upstream:
+  repository: "kubernetes/kubernetes"
+  local_path: "/home/sun/go/src/k8s.io/kubernetes"
+  official_remote: "upstream"
+  base_branch: "master"
+  base_commit: "1b4e48f52199bcfb28ef6efd60522a082c3e78d0"
+  local_base_branch: "master"
+  local_base_commit: "1b4e48f52199bcfb28ef6efd60522a082c3e78d0"
+  base_ahead_behind: "0/0"
+  worktree: clean
+fork:
+  repository: null
+  branch: null
+  commit: null
+  status: not-required-for-this-stage
+pull_request:
+  number: null
+  url: null
+  state: not-created
+blockers:
+  - "Issue still has needs-triage and no triage/accepted label"
+  - "SIG Storage has not confirmed whether the guard should cover ext4/xfs, all local filesystems, or every explicit fsType"
+next_actions:
+  - "Have ordinary Chat review the code map and explain the B+C root-cause assessment"
+  - "Prepare, but do not post, a concise maintainer confirmation comment about a case-local compatibility guard"
+  - "Wait for triage/accepted or explicit maintainer direction before implementation"
