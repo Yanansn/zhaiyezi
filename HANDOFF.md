@@ -25,6 +25,17 @@
 - 上游工作分支和 Pull Request 均未创建，Kubernetes 源码未修改。
 - 上一个 Issue `kubernetes/kubernetes#140523` 已因其他贡献者认领而 `superseded`。
 
+## Public communication
+
+- Current draft: `issues/kubernetes-kubernetes-140502/COMMENT-DRAFT.md`
+- Status: `Awaiting user approval`
+- Chat Review: completed
+- User approval: not granted
+- Publication: not authorized and not published
+- Published URL/time: not applicable
+
+所有上游评论、回复、PR、Review、Discussion、RFC 和公开 Commit 信息都代表用户本人。评论 Draft 已完成且经过 Chat Review，仍不能自动发布；只有用户针对该公开动作明确授权后，Codex 才能执行。发布前还必须重新核验实时 Issue 状态和待发布文本。
+
 ## 当前仓库模型
 
 - 事实仓库：`Yanansn/zhaiyezi`，本地路径为 `~/projects/zhaiyezi`。

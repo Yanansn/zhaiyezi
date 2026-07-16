@@ -16,5 +16,10 @@ pull_request:
   number: null
   url: null
   state: not-created
+public_communication:
+  draft_ready: false
+  reviewed: false
+  user_approved: false
+  published: false
 blockers: []
 next_actions: []

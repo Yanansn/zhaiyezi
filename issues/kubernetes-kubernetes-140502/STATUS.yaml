@@ -26,6 +26,11 @@ pull_request:
   number: null
   url: null
   state: not-created
+public_communication:
+  draft_ready: true
+  reviewed: true
+  user_approved: false
+  published: false
 blockers:
   - "Issue still has needs-triage and no triage/accepted label"
   - "SIG Storage has not confirmed whether the guard should use explicit TestPattern compatibility metadata or a predicate for known local filesystems"

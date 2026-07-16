@@ -36,6 +36,12 @@ KNOWN_STATUSES = {
     "reviewing",
     *TERMINAL_STATUSES,
 }
+PUBLIC_COMMUNICATION_FIELDS = (
+    "draft_ready",
+    "reviewed",
+    "user_approved",
+    "published",
+)
 
 
 def yaml_scalar(text: str, key: str) -> str | None:
@@ -47,6 +53,22 @@ def meaningful_markdown(text: str) -> str:
     text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
     lines = [line for line in text.splitlines() if not line.lstrip().startswith("#")]
     return "\n".join(lines).strip()
+
+
+def yaml_bool_in_section(text: str, section: str, key: str) -> bool | None:
+    section_match = re.search(
+        rf"(?m)^{re.escape(section)}:\s*\n(?P<body>(?:^[ \t]+.*(?:\n|$))*)",
+        text,
+    )
+    if not section_match:
+        return None
+    value_match = re.search(
+        rf"(?m)^\s+{re.escape(key)}:\s*(true|false)\s*$",
+        section_match.group("body"),
+    )
+    if not value_match:
+        return None
+    return value_match.group(1) == "true"
 
 
 def validate(record: Path) -> tuple[list[str], list[str]]:
@@ -67,6 +89,45 @@ def validate(record: Path) -> tuple[list[str], list[str]]:
         errors.append("STATUS.yaml has no top-level issue")
     if status not in KNOWN_STATUSES:
         errors.append(f"STATUS.yaml has unknown status: {status!r}")
+
+    communication = {
+        key: yaml_bool_in_section(status_text, "public_communication", key)
+        for key in PUBLIC_COMMUNICATION_FIELDS
+    }
+    if all(value is None for value in communication.values()):
+        message = "legacy record has no public_communication fields; add them before resuming public work"
+        if status in TERMINAL_STATUSES:
+            warnings.append(message)
+        else:
+            errors.append("STATUS.yaml is missing the public_communication contract")
+    elif any(value is None for value in communication.values()):
+        errors.append("STATUS.yaml has incomplete public_communication fields")
+    else:
+        if communication["published"] and not communication["user_approved"]:
+            errors.append("published public communication must have user_approved: true")
+        if communication["user_approved"] and not communication["reviewed"]:
+            errors.append("user-approved public communication must have reviewed: true")
+        if communication["reviewed"] and not communication["draft_ready"]:
+            errors.append("reviewed public communication must have draft_ready: true")
+
+    comment_draft = record / "COMMENT-DRAFT.md"
+    if comment_draft.exists():
+        comment_text = comment_draft.read_text(encoding="utf-8")
+        required_markers = (
+            "## Publication status",
+            "- Current status:",
+            "- Reviewed by Chat:",
+            "- User approved:",
+            "- Publication authorized:",
+            "- Published at:",
+            "- GitHub URL:",
+        )
+        missing_markers = [marker for marker in required_markers if marker not in comment_text]
+        if missing_markers:
+            errors.append(
+                "COMMENT-DRAFT.md has incomplete publication metadata: "
+                + ", ".join(missing_markers)
+            )
 
     knowledge_path = record / "KNOWLEDGE.md"
     if not knowledge_path.exists():

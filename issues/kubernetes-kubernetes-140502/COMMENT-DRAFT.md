@@ -1,5 +1,15 @@
 # Maintainer confirmation comment draft
 
+## Publication status
+
+- Current status: Awaiting user approval
+- Target: `kubernetes/kubernetes#140502` Issue comment
+- Reviewed by Chat: yes
+- User approved: no
+- Publication authorized: no
+- Published at: not-published
+- GitHub URL: not-published
+
 ## Purpose
 
 Summarize the source investigation without claiming ownership, and ask SIG Storage to choose the compatibility representation before planning or implementation begins.

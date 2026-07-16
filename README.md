@@ -27,6 +27,22 @@ Knowledge
 
 `KNOWLEDGE.md` 帮助新读者理解必要背景，Inventory 防止局部样本造成范围误判，`CODE-MAP.md` 保存源码组织与运行事实，`ANALYSIS.md` 才负责基于证据推理。并非每个 Issue 都需要同等深度：没有关键领域门槛时可以保持 Knowledge 简短，不涉及集合或扩展对象时不必建立 Inventory，没有多阶段传播时也不必单列 Lifecycle。
 
+## 公开沟通
+
+```text
+Research
+    ↓
+Draft
+    ↓
+Chat Review
+    ↓
+User Approval
+    ↓
+Publication
+```
+
+Issue 评论、回复、PR、Review、Discussion、RFC 以及会出现在 GitHub 上的 Commit 信息，最终都代表用户本人。普通 Chat 负责技术 Review 和润色，用户决定是否公开，Codex 只在明确授权后执行发布。完成 Draft 不等于获得发布权限；默认可以按简报准备草稿，默认禁止发布。
+
 ## 协作闭环
 
 ```mermaid

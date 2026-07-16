@@ -11,13 +11,14 @@ from pathlib import Path
 
 DOCUMENTS = {
     "ISSUE.md": "# Issue\n\n## Source facts\n\n## Requirement summary\n\n## Acceptance signals\n",
+    "KNOWLEDGE.md": "# Knowledge\n\n<!-- Add only the background needed to understand this Issue. -->\n",
     "ANALYSIS.md": "# Analysis\n\n## Plain-language explanation\n\n## Current behavior\n\n## Expected behavior\n\n## Scope and non-goals\n\n## Root cause or hypotheses\n",
     "CODE-MAP.md": "# Code map\n\n## Entry points\n\n## Relevant files\n\n## Call flow\n\n## Existing tests and analogues\n",
     "PLAN.md": "# Plan\n\n## Preferred solution\n\n## Alternatives\n\n## Risks\n\n## Validation plan\n",
     "IMPLEMENTATION.md": "# Implementation\n\n## Changes\n\n## Reasoning\n\n## Deviations from plan\n",
     "TESTING.md": "# Testing\n\n## Environment\n\n## Commands and results\n\n## Limitations\n\n## CI results\n",
     "LEARNING.md": "# Learning\n\n## Concepts\n\n## Reusable methods\n\n## Open questions\n",
-    "PR.md": "# Pull request\n\n## Repositories\n\n- Official upstream:\n- User fork:\n\n## Branches and commits\n\n- Base branch:\n- Head branch:\n- Commits:\n\n## Draft\n\n- Title:\n- Body:\n- Issue linkage:\n- Test summary:\n\n## Submission\n\n- Number:\n- URL:\n- State: not-created\n\n## CI status\n\n## Review feedback\n\n## Final outcome\n",
+    "PR.md": "# Pull request\n\n## Publication status\n\n- Current status: Draft\n- Target repository: not-set\n- Reviewed by Chat: no\n- User approved: no\n- Publication authorized: no\n- Published at: not-published\n- GitHub URL: not-published\n\n## Repositories\n\n- Official upstream:\n- User fork:\n\n## Branches and commits\n\n- Base branch:\n- Head branch:\n- Commits:\n\n## Draft\n\n- Title:\n- Body:\n- Issue linkage:\n- Test summary:\n\n## Submission\n\n- Number:\n- URL:\n- State: not-created\n\n## CI status\n\n## Review feedback\n\n## Final outcome\n",
 }
 
 
@@ -62,6 +63,11 @@ pull_request:
   number: null
   url: null
   state: not-created
+public_communication:
+  draft_ready: false
+  reviewed: false
+  user_approved: false
+  published: false
 blockers: []
 next_actions:
   - verify live issue state

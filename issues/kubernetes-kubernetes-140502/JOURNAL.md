@@ -23,3 +23,4 @@
 - Re-verified GitHub at `2026-07-16T15:12:12+08:00`: the Issue remains open and unassigned with `needs-triage`, two unchanged comments, no `triage/accepted`, and no linked Kubernetes implementation PR or maintainer direction.
 - Drafted a concise maintainer confirmation comment that reports the resource path and asks SIG Storage to choose between a case-local known-filesystem predicate and explicit cross-node RWX compatibility metadata on `TestPattern`.
 - Kept the draft unposted. Publication still requires a separate, explicit user authorization after reviewing `COMMENT-DRAFT.md`.
+- Applied the repository Public Communication Contract to this record: the comment is marked `Awaiting user approval`, Chat Review is recorded as complete, and both user approval and publication remain false. No GitHub community action was performed.

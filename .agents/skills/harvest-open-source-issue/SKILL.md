@@ -30,6 +30,7 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
 - Treat unpushed local results as invisible to ordinary Chat; never present them as shared facts.
 - At the end of each stage, state explicitly what was pushed and what remains local. Use [execution-brief.md](references/execution-brief.md) for the full return contract.
 - Make upstream code changes only in the upstream working repository; make contribution-record changes only in the facts repository.
+- Treat every GitHub-facing message or artifact as speech by the user. Follow [public-communication.md](references/public-communication.md); never publish directly from research or infer publication permission from a completed Draft.
 
 ## Workflow
 
@@ -67,6 +68,9 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
    - In the upstream working repository run `git status -sb`, `git log --oneline <upstream-base>..HEAD`, `git diff --check <upstream-base>...HEAD`, and `git diff --stat <upstream-base>...HEAD`.
    - Check the PR template, `CONTRIBUTING`, CLA/DCO, `Signed-off-by`, release-note requirements, Issue linkage, unrelated changes, and whether commits need cleanup or squash.
    - Propose branch name, commit structure and messages, PR title/body, issue linkage, release note, and reviewer notes according to repository rules.
+   - For any GitHub comment, reply, PR description, Review, Discussion or RFC, first create an exact Draft, obtain Chat Review, then wait for explicit user approval. A Draft PR is already public and follows the same gate.
+   - Treat preparation, initial publication, maintainer reply and update of existing public content as separate permissions. Missing publication fields mean prohibited.
+   - Immediately before an authorized publication, re-verify the live target, user identity and exact approved content. Afterward record the URL, publication time, actual content and maintainer-feedback state.
    - Perform Commit, Push, PR, comment, or review actions only when the brief or a later user message explicitly authorizes each external boundary.
 7. **Review and close**
    - Diagnose CI failures, respond to review, iterate implementation and tests, and update records.
@@ -100,11 +104,14 @@ Use one directory per issue under `issues/<owner>-<repo>-<number>/`. Maintain:
 - `TESTING.md`: commands, environment, evidence, failures, limitations, and CI results.
 - `LEARNING.md`: concepts learned and reusable problem-solving methods.
 - `PR.md`: official repository, user Fork, base/head branches, commits, title/body, Issue linkage, URL/number, CI, review feedback, and outcome.
+- `COMMENT-DRAFT.md`: when a public comment is being considered, the exact Draft, claims/evidence, maintainer questions, publication status, approval flags, target, and post-publication URL/time.
 - `JOURNAL.md`: append-only dated decisions and material actions.
 
 Use `scripts/init_issue_record.py` to initialize a record and `scripts/validate_issue_record.py` before reporting a stage complete. Never overwrite journal history.
 
 Inventory and Lifecycle are conditional sections, not new status values or mandatory standalone files. The record contract and suggested section shapes are defined in [research-contract.md](references/research-contract.md).
+
+Public communication lifecycle labels are artifact metadata, not Issue statuses. Keep the existing Issue status model unchanged and track the four simple booleans under `public_communication` in `STATUS.yaml`.
 
 Do not rewrite all record files on every turn. Use this minimum mapping:
 
