@@ -28,15 +28,13 @@ pull_request:
   state: not-created
 public_communication:
   draft_ready: true
-  reviewed: false
-  user_approved: false
-  published: false
+  reviewed: true
+  user_approved: true
+  published: true
   expected_identity: bzsuni
-  identity_verified: false
+  identity_verified: true
 blockers:
   - "Issue still has needs-triage and no triage/accepted label"
   - "SIG Storage has not confirmed whether the guard should use explicit TestPattern compatibility metadata or a predicate for known local filesystems"
 next_actions:
-  - "Complete a technical review of COMMENT-DRAFT.md, then obtain explicit user authorization before publication"
-  - "Immediately before any authorized publication, re-verify assignees, comments, labels, and linked implementation PRs"
-  - "Wait for maintainer direction before plan or implementation"
+  - "Wait for maintainer feedback. Do not begin plan or implementation until direction is confirmed."

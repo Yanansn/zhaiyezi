@@ -18,8 +18,8 @@
 ## 当前活动任务
 
 - 当前 Issue：`kubernetes/kubernetes#140502`（`The generated test scenarios for RWX volume types dont make sense`）
-- 当前阶段：`code-map`、Knowledge/Inventory 和维护者方案确认评论草稿已完成；状态为 `awaiting-triage`，建议为 `promising`。评论正文已完成最后一次优化并保持 `Draft`，尚未发布，正等待 Technical Review。
-- 实时状态：Issue open、无人认领、仍有 `needs-triage`、没有 `triage/accepted` 或关联 Kubernetes 实现 PR。
+- 当前阶段：`Awaiting maintainer feedback`。Issue 状态保持 `awaiting-triage`，建议为 `promising`；维护者方案确认评论已经发布。
+- 实时状态：Issue open、无人认领、仍有 `needs-triage`、没有 `triage/accepted`、实现认领或活跃关联 Kubernetes 实现 PR；发布前没有新的维护者方向。
 - 技术结论：`multiVolume` 当前直接选择 ext4、xfs 和 Windows ntfs 的 DynamicPV Pattern；ext3 DynamicPV Pattern 存在但当前不在该 suite。显式 FsType 会进入真实 StorageClass 参数，同时测试创建 Filesystem RWX PVC 并让两个 Pod 共享读写；最可能是 TestPattern/RWX 组合与实际资源请求问题，不只是名称问题。
 - 范围结论：`SupportedFsType` 是开放字符串集合，不能简单在“只排除 ext4/xfs”和“排除所有非空 FsType”之间二选一。需请维护者确认使用已知本地文件系统 predicate，还是为 TestPattern 增加显式 RWX 兼容性元数据。
 - 上游工作分支和 Pull Request 均未创建，Kubernetes 源码未修改。
@@ -28,16 +28,17 @@
 ## Public communication
 
 - Current draft: `issues/kubernetes-kubernetes-140502/COMMENT-DRAFT.md`
-- Status: `Draft`
+- Status: `Published`
 - Expected GitHub identity: `bzsuni`
-- Authenticated GitHub identity: `verify-before-publish`
-- Identity verified: no
-- Technical review completed: no
-- User approval: not granted
-- Publication: not authorized and not published
-- Published URL/time: not applicable
+- Authenticated GitHub identity: `bzsuni`
+- Identity verified: yes
+- Technical review completed: yes
+- User approval: granted
+- Publication: authorized and published
+- Published URL/time: https://github.com/kubernetes/kubernetes/issues/140502#issuecomment-4989997742 at `2026-07-16T08:56:31Z`
+- Comment ID: `4989997742`
 
-所有上游评论、回复、PR、Review、Discussion、RFC 和公开 Commit 信息都代表用户本人。评论正文实质变化使旧 Review 失效；必须先完成新的 Technical Review，再由用户针对该公开动作明确授权。发布前还必须重新核验实际 GitHub 身份、实时 Issue 状态和待发布文本。
+所有上游评论、回复、PR、Review、Discussion、RFC 和公开 Commit 信息都代表用户本人。本次评论已通过 Technical Review、用户明确授权和发布前身份核验；后续回复或其他公开动作仍需新的独立授权。
 
 Publication checklist：
 
@@ -75,18 +76,15 @@ Publication checklist：
 ## 当前阻塞与风险
 
 - `kubernetes/kubernetes#140502` 尚未获得 `triage/accepted`，SIG Storage 也未确认采用本地文件系统 predicate 还是显式 Pattern 兼容性元数据。
-- 下一步：Complete a Technical Review of `COMMENT-DRAFT.md`, then obtain explicit user authorization before publication.
+- 下一步：Monitor maintainer response; do not implement without a new Brief.
 - `kubernetes/kubernetes#140523` 不应恢复实现，除非未来重新筛选并明确处理与现有 assignee 的协调问题。
 - 本地 `gh` 的认证状态不是持久事实；需要使用 `gh` 时必须先运行 `gh auth status` 实时核验。
 - 普通 Chat 只能读取已经 Push 的事实，不能读取 Codex 本地尚未提交或尚未 Push 的状态。
 
 ## Next step
 
-1. Technical review of COMMENT-DRAFT.md
-2. Explicit user approval
-3. Verify GitHub identity (expected: bzsuni)
-4. Publish comment
-5. Wait for maintainer feedback
+1. Monitor maintainer response.
+2. Do not prepare a plan or implementation until community direction is confirmed in a new Brief.
 
 ## 新上下文恢复指令
 

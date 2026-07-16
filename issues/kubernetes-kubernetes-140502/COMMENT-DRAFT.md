@@ -2,16 +2,17 @@
 
 ## Publication status
 
-- Current status: Draft
+- Current status: Published
 - Target: `kubernetes/kubernetes#140502` Issue comment
 - Expected GitHub identity: `bzsuni`
-- Authenticated GitHub identity: verify-before-publish
-- Identity verified: no
-- Technical review completed: no
-- User approved: no
-- Publication authorized: no
-- Published at: not-published
-- GitHub URL: not-published
+- Authenticated GitHub identity: `bzsuni`
+- Identity verified: yes
+- Technical review completed: yes
+- User approved: yes
+- Publication authorized: yes
+- Published at: `2026-07-16T08:56:31Z`
+- GitHub URL: https://github.com/kubernetes/kubernetes/issues/140502#issuecomment-4989997742
+- Comment ID: `4989997742`
 
 ## Purpose
 
@@ -60,5 +61,5 @@ I'd like to understand the preferred direction before preparing a PR.
 - [x] Draft does not promise an implementation or PR.
 - [x] Draft does not make an unverified accusation against the vSphere CSI Driver.
 - [x] Secondary node-affinity observations are excluded.
-- [ ] Authenticated GitHub identity matches expected identity `bzsuni`. **Verify immediately before publication.**
-- [ ] User has explicitly authorized publication. **Not authorized in this stage.**
+- [x] Authenticated GitHub identity matched expected identity `bzsuni` immediately before publication.
+- [x] User explicitly authorized this exact publication.
