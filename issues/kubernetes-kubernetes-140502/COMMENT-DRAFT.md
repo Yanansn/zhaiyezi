@@ -2,9 +2,11 @@
 
 ## Publication status
 
-- Current status: Awaiting user approval
+- Current status: Draft
 - Target: `kubernetes/kubernetes#140502` Issue comment
-- Reviewed by Chat: yes
+- Expected GitHub identity: `Yanansn`
+- Actual GitHub identity: verify-before-publish
+- Reviewed by Chat: no
 - User approved: no
 - Publication authorized: no
 - Published at: not-published
@@ -16,18 +18,15 @@ Summarize the source investigation without claiming ownership, and ask SIG Stora
 
 ## Draft
 
-I traced the test registration and resource creation path for this case.
+I traced the registration and resource creation path for this test.
 
-The `multiVolume` suite currently selects the DynamicPV patterns for ext4, xfs, and Windows ntfs. The displayed test name comes from the pattern, but the filesystem type is not name-only metadata: for dynamic provisioning, a non-empty `FsType` is passed into the StorageClass as `csi.storage.k8s.io/fstype`. The cross-node case then requests a `ReadWriteMany` PVC with the default `Filesystem` volume mode and keeps two writable Pods on the same PVC while validating cross-Pod reads and writes.
+This appears to be more than a naming issue: a non-empty `TestPattern.FsType` is passed to the dynamically created StorageClass as `csi.storage.k8s.io/fstype`, while the affected case requests a `ReadWriteMany` Filesystem PVC and validates writable access from two Pods.
 
-This therefore appears to be more than a naming issue. At the same time, it would be too broad to assume that RWX is invalid for every explicit filesystem. `DriverInfo` models `SupportedFsType` and `CapRWX` independently, so it cannot express a driver that supports ext4/xfs for a block-backed RWO flavor and RWX for a separate shared-file flavor.
+The current `multiVolume` patterns include ext4, xfs, and Windows ntfs. Removing explicit filesystem patterns from the entire suite would also remove valid coverage from other cases, while skipping every non-empty `FsType` may be too broad.
 
-Removing explicit filesystem patterns from the entire suite would also drop valid coverage from other `multiVolume` cases. Two narrower approaches seem possible:
+Would SIG Storage prefer a case-local compatibility check for conventional single-host filesystem patterns, or explicit cross-node RWX compatibility metadata on `TestPattern`?
 
-1. add a case-local compatibility predicate for known local filesystem patterns before this cross-node RWX case creates resources; or
-2. express cross-node RWX compatibility explicitly in `TestPattern`, instead of inferring it from the filesystem name.
-
-The current pattern inventory includes ext3, ext4, xfs, and ntfs, although ext3 is not currently selected by `multiVolume`. Would SIG Storage prefer a case-local predicate or explicit compatibility metadata? If the predicate is preferred, should ext3/ext4/xfs/ntfs be handled consistently?
+If a local check is preferred, should ext3, ext4, xfs, and ntfs be handled consistently?
 
 ## Claims and evidence
 

@@ -28,13 +28,13 @@ pull_request:
   state: not-created
 public_communication:
   draft_ready: true
-  reviewed: true
+  reviewed: false
   user_approved: false
   published: false
 blockers:
   - "Issue still has needs-triage and no triage/accepted label"
   - "SIG Storage has not confirmed whether the guard should use explicit TestPattern compatibility metadata or a predicate for known local filesystems"
 next_actions:
-  - "Review COMMENT-DRAFT.md and obtain explicit user approval before publication"
+  - "Chat review the shortened COMMENT-DRAFT.md, then obtain explicit user authorization before publication"
   - "Immediately before any authorized publication, re-verify assignees, comments, labels, and linked implementation PRs"
   - "Wait for maintainer direction before plan or implementation"

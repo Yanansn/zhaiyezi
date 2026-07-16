@@ -24,3 +24,4 @@
 - Drafted a concise maintainer confirmation comment that reports the resource path and asks SIG Storage to choose between a case-local known-filesystem predicate and explicit cross-node RWX compatibility metadata on `TestPattern`.
 - Kept the draft unposted. Publication still requires a separate, explicit user authorization after reviewing `COMMENT-DRAFT.md`.
 - Applied the repository Public Communication Contract to this record: the comment is marked `Awaiting user approval`, Chat Review is recorded as complete, and both user approval and publication remain false. No GitHub community action was performed.
+- Shortened the public comment Draft based on Chat Review feedback. Because the body changed materially, the prior Review no longer applies and the artifact returned to `Draft`, awaiting a new Chat Review. The expected publishing identity is `Yanansn`; the actual identity remains `verify-before-publish`. Publication is neither authorized nor performed.
