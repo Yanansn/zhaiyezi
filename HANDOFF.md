@@ -12,6 +12,7 @@
 - Issue 登记：`registry/issues.yaml`
 - 最近任务记录：`issues/kubernetes-kubernetes-140523/`
 - 外部事实来源：GitHub
+- 事实仓库：`Yanansn/zhaiyezi`，普通 Chat 已可通过 GitHub Connector 读取已 Push 内容
 
 ## 当前活动任务
 
@@ -32,21 +33,31 @@
 - 未公开留言、未认领 Issue、未修改 Kubernetes 代码。
 - 重新核验 Issue 后发现其他贡献者已认领，已按用户决定终止该任务并补齐终止记录。
 - 将工作模型调整为“普通 Chat + 本地 Codex + 公开事实仓库”；Codex 不再承担候选筛选和长篇教学。
+- `main` 已成功推送到 `Yanansn/zhaiyezi`，当前 Ubuntu 使用 SSH Host 别名 `github-yanansn`，实际认证身份已核验为 `Yanansn`。
+- 普通 Chat 已能通过 GitHub Connector 读取事实仓库。
+- 完善普通 Chat、本地 Codex、用户和 GitHub 事实仓库之间的可见性、阶段交接、停止条件与完成回传协议。
 
 ## 当前阻塞与风险
 
 - 当前没有选定的新 Issue。
-- 当前没有待执行的 `Execution Brief`。
+- 当前没有待执行的工程 `Execution Brief`。
 - `kubernetes/kubernetes#140523` 不应恢复实现，除非未来重新筛选并明确处理与现有 assignee 的协调问题。
-- 本地 `gh` 凭据在最近核验时失效；需要使用 `gh` 专属查询前应重新认证。
-- 当前 Git `origin` 已配置为公开事实仓库 `Yanansn/zhaiyezi`，但当前 SSH 身份 `bzsuni` 没有写权限；首次 Push 被 GitHub 拒绝。
+- 本地 `gh` 的认证状态不是持久事实；需要使用 `gh` 时必须先运行 `gh auth status` 实时核验。
+- 普通 Chat 只能读取已经 Push 的事实，不能读取 Codex 本地尚未提交或尚未 Push 的状态。
 
 ## 下一步
 
-1. 普通 Chat 筛选 Issue、完成教学和方案讨论，并生成单阶段 `Execution Brief`。
-2. 用户将简报一次性交给本地 Codex。
-3. Codex 核验事实后只执行该阶段，并在授权后将结果发布到 `Yanansn/zhaiyezi`。
-4. 在重新 Push 前，为 `bzsuni` 授予目标仓库写权限，或切换到有权访问 `Yanansn/zhaiyezi` 的 SSH/GitHub 身份。
+```text
+Chat 筛选和教学
+→ Chat 生成单阶段 Execution Brief
+→ 用户交给 Codex
+→ Codex 核验事实仓库、本地工作区和上游 GitHub 实时状态
+→ Codex 执行单一阶段
+→ Codex 更新事实记录
+→ 授权后 Commit 和 Push
+→ Chat 重新读取事实仓库
+→ Chat 解释、决策并生成下一阶段简报
+```
 
 ## 新上下文恢复指令
 
@@ -63,6 +74,6 @@
 
 ## 最近检查
 
-- 项目记录日期：2026-07-15
+- 项目记录日期：2026-07-16
 - 当前分支应以 `git branch --show-current` 为准。
 - 当前提交应以 `git log -1 --oneline` 为准，避免交接文件在每次提交后产生自引用漂移。

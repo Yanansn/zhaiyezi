@@ -25,6 +25,8 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
 - Require user confirmation before public comments, issue assignment, pushes, pull requests, reviews, or other person-facing actions.
 - Default to no subagents. Use them only when the brief permits them and parallel work has clear value.
 - Update only records whose facts changed in the current stage.
+- Treat unpushed local results as invisible to ordinary Chat; never present them as shared facts.
+- At the end of each stage, state explicitly what was pushed and what remains local. Use [execution-brief.md](references/execution-brief.md) for the full return contract.
 
 ## Workflow
 

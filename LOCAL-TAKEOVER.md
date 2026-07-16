@@ -4,38 +4,39 @@
 
 让 Ubuntu 上的 Codex 成为《摘叶子》的阶段化工程执行 Agent。普通 Chat 负责筛选、教学和方案讨论；Codex 根据每阶段一份 `Execution Brief` 使用本地代码、Git、SSH、构建和测试环境完成明确交付物。
 
-## 解压与检查
+## 进入仓库并检查
 
-下载最终压缩包后执行：
+对于已经 clone 或已经从压缩包恢复的仓库，先进入现有目录并检查状态：
 
 ```bash
-mkdir -p ~/projects/zhaiyezi
-tar -xzf zhaiyezi-codex-ready.tar.gz -C ~/projects
 cd ~/projects/zhaiyezi
-
 git status -sb
 git log --oneline -5
 git remote -v
 ```
 
-压缩包包含 `.git` 历史，不需要重新执行 `git init`。
+若目录来自压缩包，必须确认其中包含 `.git` 历史；不要在已有仓库中重新执行 `git init`。
 
 ## 设置 GitHub 远程
 
-项目计划使用：
-
-```text
-git@github.com:Yanansn/zhaiyezi.git
-```
-
-检查并设置：
+单一 GitHub SSH 身份环境可以使用：
 
 ```bash
 git remote set-url origin git@github.com:Yanansn/zhaiyezi.git
 git remote -v
 ```
 
-不要在不确认当前账号具有写权限时 Push。
+当前 Ubuntu 是多 GitHub 身份环境，必须使用 SSH Host 别名：
+
+```bash
+git remote set-url origin git@github-yanansn:Yanansn/zhaiyezi.git
+ssh -T git@github-yanansn
+git remote -v
+```
+
+预期 `ssh -T` 显示实际认证身份为 `Yanansn`。不得仅根据私钥文件名推断 GitHub 身份，必须以该命令的实际输出为准。不要在项目文档中写入私钥内容，也不要由 Codex 修改用户的 `~/.ssh/config`。
+
+不要在没有核验实际身份和写权限时 Push。
 
 ## 启动 Codex
 
@@ -81,6 +82,8 @@ Codex 应报告：
 Codex 必须按照 `AGENTS.md` 恢复，不依赖旧聊天记忆，也不得把单阶段简报扩展为全面研究任务。
 
 完成后，在简报已经授权 Push 的前提下，将事实记录推送到公开的 `Yanansn/zhaiyezi`。普通 Chat 随后通过 GitHub Connector 读取结果。
+
+阶段结束时必须说明哪些内容已经 Push、哪些仍仅在本地；未 Push 的文件和命令结果不会自动出现在普通 Chat 中。完整回传要求见 Execution Brief 模板。
 
 ## 发布边界
 
