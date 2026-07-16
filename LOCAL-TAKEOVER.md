@@ -81,6 +81,93 @@ upstream  https://github.com/kubernetes/kubernetes.git
 
 `origin` 不应错误指向官方仓库，除非用户确有官方写权限且项目流程明确要求。默认只把工作分支 Push 到用户 Fork，PR 的 base 指向官方仓库分支。不要 Force Push，除非用户明确授权且已判断不会破坏 Review。
 
+实际 remote 名称可以不同。开始前必须结合 `git remote -v` 中的仓库地址确认哪个是官方仓库、哪个是用户 Fork，不能凭 `origin` 或 `upstream` 名称猜测。
+
+## 安全同步上游基础分支
+
+涉及真实上游代码的阶段开始时，在上游 Clone 中先执行：
+
+```bash
+git status -sb
+git branch --show-current
+git remote -v
+git log -1 --oneline
+git fetch --prune upstream
+```
+
+`git fetch` 必须由本轮 Execution Brief 明确授权。fetch 后核验官方默认开发分支是 `main`、`master` 还是其他名称，并记录：
+
+```bash
+git rev-list --left-right --count <local-base>...upstream/<base>
+git rev-parse <local-base>
+git rev-parse upstream/<base>
+git merge-base <working-branch> upstream/<base>
+```
+
+`git rev-list --left-right --count` 的第一个数字是本地基础分支独有 Commit 数，第二个数字是官方基础分支独有 Commit 数：
+
+- `0 0`：一致；
+- `0 N`：本地 behind，可考虑 fast-forward；
+- `N 0`：本地有独有提交，停止自动同步；
+- `N M`：已经 diverged，停止自动同步。
+
+只有以下条件同时成立时，才可自动同步：工作树干净、本地基础分支没有独有提交、没有 diverge、同步可 fast-forward，并且简报允许本地基础分支同步。使用明确的官方 remote 和分支：
+
+```bash
+git switch <base>
+git merge --ff-only upstream/<base>
+```
+
+不要使用无参数 `git pull`。它可能从用户 Fork 拉取，行为还会受 `pull.rebase` 等本地配置影响，并可能产生 merge Commit 或改写历史。
+
+若工作树不干净、本地基础分支有独有提交、双方 diverge、remote 与记录不符、官方默认分支无法确认、当前分支有未识别提交、fetch 失败或无法 fast-forward，立即停止并报告。不得静默执行：
+
+```bash
+git reset --hard
+git clean -fd
+git stash
+git rebase
+git checkout -- .
+git restore .
+git branch -D <branch>
+git push --force
+git push --force-with-lease
+```
+
+这些动作只有在简报针对具体仓库、具体分支和具体动作明确授权时才可执行。
+
+### 工作分支与基础分支分开处理
+
+尚未创建工作分支时，从已核验的最新官方基础分支创建：
+
+```bash
+git switch -c <working-branch> upstream/<base>
+```
+
+工作分支存在但还没有实际提交时，也必须确认没有本地工作并取得重新创建或调整分支的明确授权。工作分支已有提交时，不得因为基础分支更新而自动 merge 或 rebase；先报告工作分支 Commit、官方 base Commit、ahead/behind、merge-base、冲突风险、PR 状态及是否会改写已 Push Commit，再由新简报决定暂不更新、merge、rebase 或重新创建。
+
+PR 已创建时，默认不主动 rebase 或 Force Push。只有上游明确要求、CI 因基线过旧失败、出现冲突、项目规则要求保持最新或用户明确要求时，才提出更新建议。
+
+### 同步事实仓库
+
+开始阶段时也要单独检查 `zhaiyezi`：
+
+```bash
+cd ~/projects/zhaiyezi
+git status -sb
+git fetch --prune origin
+git rev-list --left-right --count main...origin/main
+```
+
+只有工作树干净、本地没有独有提交、可以 fast-forward 且简报允许时，才执行：
+
+```bash
+git switch main
+git merge --ff-only origin/main
+```
+
+不得自动 reset、stash 或覆盖尚未发布的事实记录。
+
 ## 启动 Codex
 
 在仓库根目录运行：

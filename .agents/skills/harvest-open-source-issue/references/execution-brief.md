@@ -30,10 +30,15 @@ owner/repository#number；不涉及开源 Issue 的仓库维护阶段写 `not-ap
 - Local path:
 - Upstream remote name:
 - Fork remote name:
-- Base branch:
-- Expected upstream base commit:
+- Official base branch:
+- Expected official base commit:
+- Local base branch:
+- Expected local base commit:
+- Base synchronization required: yes / no
+- Fast-forward synchronization allowed: yes / no
 - Working branch:
 - Expected working branch commit:
+- Working branch update allowed: no / merge / rebase / recreate
 - Expected worktree state:
 
 ### Pull request
@@ -44,6 +49,8 @@ owner/repository#number；不涉及开源 Issue 的仓库维护阶段写 `not-ap
 - Existing PR URL:
 
 不确定的 Commit 写 `verify-before-start`，尚未创建工作分支或 PR 写 `not-created`。Codex 必须分别核验两个仓库，不得默认任一工作树干净，也不得混淆事实仓库 remote 与用户 Fork remote。仅维护事实仓库文档时，Upstream working repository 和 Pull request 可写 `not-applicable`。
+
+remote 名称只是提示，Codex 必须从实际 Git 配置和仓库地址确认官方仓库与用户 Fork。同步本地基础分支和更新已有工作分支是两个独立动作；未明确授权时均禁止。
 
 ## Confirmed facts
 
@@ -93,10 +100,21 @@ owner/repository#number；不涉及开源 Issue 的仓库维护阶段写 `not-ap
 - official upstream:
 - user fork:
 - local path:
-- base branch:
+- official remote:
+- official base branch:
+- fetched official commit:
+- local base branch:
+- local base before commit:
+- local base after commit:
+- base synchronization result:
+- local base ahead/behind:
+- local base worktree:
 - changed files:
-- branch:
-- commit:
+- working branch:
+- working branch commit:
+- merge-base with official base:
+- working branch updated:
+- working branch update method:
 - pushed to fork:
 - fork remote:
 - remaining local changes:
@@ -117,6 +135,11 @@ owner/repository#number；不涉及开源 Issue 的仓库维护阶段写 `not-ap
 
 - Commit 到 facts repository：allowed / prohibited
 - Push facts repository：allowed / prohibited
+- Fetch official upstream：allowed / prohibited
+- Fast-forward local base branch：allowed / prohibited
+- Merge official base into working branch：allowed / prohibited
+- Rebase working branch onto official base：allowed / prohibited
+- Rewrite or force-push working branch：allowed / prohibited
 - Commit 到 upstream working repository：allowed / prohibited
 - Push 到 user fork：allowed / prohibited
 - 创建或更新 upstream PR：allowed / prohibited
@@ -129,6 +152,9 @@ owner/repository#number；不涉及开源 Issue 的仓库维护阶段写 `not-ap
 - 上游 Issue 已被认领、关闭、替代或需求发生实质变化。
 - 本地存在来源不明的工作树修改。
 - facts repository 或 upstream working repository 的 branch、commit、remote、base 或工作树与基线实质不一致。
+- 官方 remote fetch 失败，官方默认开发分支无法确认，或 remote 角色与记录不一致。
+- 本地基础分支存在独有提交、与官方基础分支 diverge，或同步不能 fast-forward。
+- 工作分支存在未识别提交，或更新需要未授权的 merge、rebase、reset、历史改写或 Force Push。
 - 所需操作超出审批边界。
 - 测试成本或环境要求明显超出约束。
 - 实现需要改变已经确认的方案。

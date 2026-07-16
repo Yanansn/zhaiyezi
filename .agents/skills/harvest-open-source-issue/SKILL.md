@@ -13,6 +13,7 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
 - Read [execution-brief.md](references/execution-brief.md) when starting a new stage or when the brief is incomplete.
 - Identify the facts repository and, for real code work, the separate upstream working repository from the brief.
 - Verify the brief against repository records, live GitHub state, and each applicable local repository's branch, commit, remotes, and worktree before acting.
+- Require separate authorization for fetching the official upstream, fast-forwarding the local base, merging or rebasing a working branch, and rewriting or force-pushing a working branch.
 - If the brief is absent, materially stale, or lacks a stage goal, deliverables, or approval boundary, report the gap and stop. Do not expand into candidate screening or open-ended research.
 
 ## Operating principles
@@ -35,6 +36,10 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
 1. **Verify intake and discover the project**
    - Parse the Execution Brief and state the exact stage boundary.
    - Verify the facts repository and upstream working repository independently when both apply.
+   - Resolve remote roles from configured repository URLs instead of assuming `origin` is the Fork or `upstream` is official.
+   - When authorized, fetch the official remote with pruning, identify its default development branch, and compare the local base, official base, and working branch with `rev-list`, `rev-parse`, and `merge-base`.
+   - Fast-forward a local base only when the worktree is clean, the local base has no unique commits, the histories have not diverged, `--ff-only` can succeed, and the brief explicitly permits it. Record the base Commit before and after.
+   - Stop on dirty state, unique local base commits, divergence, unknown commits, remote mismatch, an unknown default branch, fetch failure, or any need for merge Commit, rebase, reset, or discarded work.
    - Read `AGENTS.md`, `CONTRIBUTING.md`, issue/PR templates, build files, test guidance, and relevant ownership files.
    - Record language, build system, test framework, CI, contribution rules, CLA/DCO requirements, and community conventions.
    - Read [project-discovery.md](references/project-discovery.md).
@@ -45,7 +50,8 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
    - State the root cause or unresolved hypothesis, preferred solution, alternatives, risks, compatibility concerns, and validation strategy.
    - If maintainers have not accepted the direction, prepare a concise confirmation comment and pause before substantial implementation.
 4. **Implement when requested**
-   - Create a descriptive branch after checking repository conventions.
+   - Create a descriptive branch from the verified official base after checking repository conventions.
+   - Treat updating an existing working branch as separate from synchronizing the local base. Never merge or rebase the official base into a branch with commits without explicit authorization; do not rebase or force-push an open PR by default.
    - Work in the upstream working repository and make the smallest coherent change. Explain important code decisions and connect them to the code map.
 5. **Validate when requested or required by implementation**
    - Format and lint, run targeted unit or package tests, then integration/e2e tests when proportional and feasible.
@@ -66,13 +72,15 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
 
 1. Read the rules, handoff, brief, and issue record in the facts repository.
 2. Verify the facts repository branch, commit, remote, and worktree.
-3. Enter the upstream working repository and verify official upstream, user Fork, base branch, working branch, commit, and worktree.
+3. Enter the upstream working repository and verify official upstream, user Fork, base branch, working branch, commit, and worktree. If authorized, fetch the official remote and safely fast-forward only an eligible local base.
 4. Verify the live upstream Issue, PR, comments, assignee, CI, and Review state.
 5. Perform the requested investigation, implementation, or validation in the upstream working repository.
 6. Return to the facts repository and update only changed records.
 7. Inspect `git diff` and `git status` separately in both repositories.
 8. Commit, Push, and create or update a PR only under their respective explicit approvals.
 9. Report the facts repository, upstream working repository, and PR states separately.
+
+Never use a generic `git pull` for base synchronization. Prefer an authorized `git fetch --prune <official-remote>`, followed by `git switch <base>` and `git merge --ff-only <official-remote>/<base>` only when all safety conditions hold. Never recover automatically with `reset --hard`, clean, stash, rebase, restore, branch deletion, or force-push.
 
 ## Record contract
 
