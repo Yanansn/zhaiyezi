@@ -12,9 +12,9 @@ upstream:
   local_path: "/home/sun/go/src/k8s.io/kubernetes"
   official_remote: "upstream"
   base_branch: "master"
-  base_commit: "1b4e48f52199bcfb28ef6efd60522a082c3e78d0"
+  base_commit: "7e8950f1ec186066fabdfe69d69f92fbb04592da"
   local_base_branch: "master"
-  local_base_commit: "1b4e48f52199bcfb28ef6efd60522a082c3e78d0"
+  local_base_commit: "7e8950f1ec186066fabdfe69d69f92fbb04592da"
   base_ahead_behind: "0/0"
   worktree: clean
 fork:
@@ -28,8 +28,8 @@ pull_request:
   state: not-created
 blockers:
   - "Issue still has needs-triage and no triage/accepted label"
-  - "SIG Storage has not confirmed whether the guard should cover ext4/xfs, all local filesystems, or every explicit fsType"
+  - "SIG Storage has not confirmed whether the guard should use explicit TestPattern compatibility metadata or a predicate for known local filesystems"
 next_actions:
   - "Have ordinary Chat review the code map and explain the B+C root-cause assessment"
-  - "Prepare, but do not post, a concise maintainer confirmation comment about a case-local compatibility guard"
+  - "Prepare, but do not post, a concise maintainer confirmation comment noting ext4/xfs/ntfs current coverage, ext3 future scope, and the preferred semantic guard options"
   - "Wait for triage/accepted or explicit maintainer direction before implementation"
