@@ -30,6 +30,6 @@ blockers:
   - "Issue still has needs-triage and no triage/accepted label"
   - "SIG Storage has not confirmed whether the guard should use explicit TestPattern compatibility metadata or a predicate for known local filesystems"
 next_actions:
-  - "Have ordinary Chat review the code map and explain the B+C root-cause assessment"
-  - "Prepare, but do not post, a concise maintainer confirmation comment noting ext4/xfs/ntfs current coverage, ext3 future scope, and the preferred semantic guard options"
-  - "Wait for triage/accepted or explicit maintainer direction before implementation"
+  - "Review COMMENT-DRAFT.md and obtain explicit user approval before publication"
+  - "Immediately before any authorized publication, re-verify assignees, comments, labels, and linked implementation PRs"
+  - "Wait for maintainer direction before plan or implementation"

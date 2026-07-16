@@ -18,7 +18,7 @@
 ## 当前活动任务
 
 - 当前 Issue：`kubernetes/kubernetes#140502`（`The generated test scenarios for RWX volume types dont make sense`）
-- 当前阶段：`code-map` 与 Knowledge/Inventory 研究契约补充已完成，状态为 `awaiting-triage`，建议为 `promising`。
+- 当前阶段：`code-map`、Knowledge/Inventory 和维护者方案确认评论草稿已完成；状态为 `awaiting-triage`，建议为 `promising`。评论尚未发布，正等待用户审阅和明确发布授权。
 - 实时状态：Issue open、无人认领、仍有 `needs-triage`、没有 `triage/accepted` 或关联 Kubernetes 实现 PR。
 - 技术结论：`multiVolume` 当前直接选择 ext4、xfs 和 Windows ntfs 的 DynamicPV Pattern；ext3 DynamicPV Pattern 存在但当前不在该 suite。显式 FsType 会进入真实 StorageClass 参数，同时测试创建 Filesystem RWX PVC 并让两个 Pod 共享读写；最可能是 TestPattern/RWX 组合与实际资源请求问题，不只是名称问题。
 - 范围结论：`SupportedFsType` 是开放字符串集合，不能简单在“只排除 ext4/xfs”和“排除所有非空 FsType”之间二选一。需请维护者确认使用已知本地文件系统 predicate，还是为 TestPattern 增加显式 RWX 兼容性元数据。
@@ -53,7 +53,7 @@
 ## 当前阻塞与风险
 
 - `kubernetes/kubernetes#140502` 尚未获得 `triage/accepted`，SIG Storage 也未确认采用本地文件系统 predicate 还是显式 Pattern 兼容性元数据。
-- 下一阶段不应直接实现；应先由普通 Chat 复核代码地图，并决定是否准备一条方案确认评论。
+- 下一阶段不应直接实现；应先审阅 `COMMENT-DRAFT.md`，取得用户对公开发布的单独明确授权，再等待维护者方向。
 - `kubernetes/kubernetes#140523` 不应恢复实现，除非未来重新筛选并明确处理与现有 assignee 的协调问题。
 - 本地 `gh` 的认证状态不是持久事实；需要使用 `gh` 时必须先运行 `gh auth status` 实时核验。
 - 普通 Chat 只能读取已经 Push 的事实，不能读取 Codex 本地尚未提交或尚未 Push 的状态。
@@ -61,10 +61,9 @@
 ## 下一步
 
 ```text
-Codex Push #140502 Knowledge/Inventory 研究契约与记录
-→ Chat 读取 Knowledge、Inventory 并讲解 B+C 根因判断
-→ Chat 决定等待 triage 或生成“方案确认评论”单阶段 Brief
-→ 用户明确授权后 Codex 才能公开评论
+Codex Push #140502 维护者方案确认评论草稿
+→ Chat/用户审阅 COMMENT-DRAFT.md
+→ 用户通过新指令明确授权后 Codex 才能公开评论
 → 获得维护者方向后再生成 plan Brief
 ```
 

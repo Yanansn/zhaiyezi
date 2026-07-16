@@ -20,3 +20,6 @@
 - Added an issue-specific `KNOWLEDGE.md` for readers without Kubernetes Storage or CSI background, and moved introductory concepts out of `ANALYSIS.md` so knowledge, source inventory and inference remain separate.
 - Upgraded the repository research contract: new records include lightweight Knowledge, Inventory remains a conditional `CODE-MAP.md` section, and Lifecycle / Data Flow is recorded only for meaningful multi-stage propagation.
 - Added reusable templates plus lightweight initialization and validation scripts. Active records require `KNOWLEDGE.md`; legacy terminal records without it receive a migration warning instead of failing.
+- Re-verified GitHub at `2026-07-16T15:12:12+08:00`: the Issue remains open and unassigned with `needs-triage`, two unchanged comments, no `triage/accepted`, and no linked Kubernetes implementation PR or maintainer direction.
+- Drafted a concise maintainer confirmation comment that reports the resource path and asks SIG Storage to choose between a case-local known-filesystem predicate and explicit cross-node RWX compatibility metadata on `TestPattern`.
+- Kept the draft unposted. Publication still requires a separate, explicit user authorization after reviewing `COMMENT-DRAFT.md`.
