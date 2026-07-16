@@ -141,7 +141,7 @@ def validate(record: Path) -> tuple[list[str], list[str]]:
             "- Expected GitHub identity:",
             "- Authenticated GitHub identity:",
             "- Identity verified:",
-            "- Reviewed by Chat:",
+            "- Technical review completed:",
             "- User approved:",
             "- Publication authorized:",
             "- Published at:",

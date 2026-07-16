@@ -37,6 +37,6 @@ blockers:
   - "Issue still has needs-triage and no triage/accepted label"
   - "SIG Storage has not confirmed whether the guard should use explicit TestPattern compatibility metadata or a predicate for known local filesystems"
 next_actions:
-  - "Chat review the shortened COMMENT-DRAFT.md, then obtain explicit user authorization before publication"
+  - "Complete a technical review of COMMENT-DRAFT.md, then obtain explicit user authorization before publication"
   - "Immediately before any authorized publication, re-verify assignees, comments, labels, and linked implementation PRs"
   - "Wait for maintainer direction before plan or implementation"

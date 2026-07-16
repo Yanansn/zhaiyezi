@@ -34,14 +34,14 @@ Research
     ↓
 Draft
     ↓
-Chat Review
+Technical Review
     ↓
 User Approval
     ↓
 Publication
 ```
 
-Issue 评论、回复、PR、Review、Discussion、RFC 以及会出现在 GitHub 上的 Commit 信息，最终都代表用户本人。普通 Chat 负责技术 Review 和润色，用户决定是否公开，Codex 只在明确授权后执行发布。完成 Draft 不等于获得发布权限；默认可以按简报准备草稿，默认禁止发布。
+Issue 评论、回复、PR、Review、Discussion、RFC 以及会出现在 GitHub 上的 Commit 信息，最终都代表用户本人。技术 Review 可以由普通 Chat、人工 Reviewer 或团队完成；用户决定是否公开，Codex 只在明确授权后执行发布。完成 Draft 不等于获得发布权限；默认可以按简报准备草稿，默认禁止发布。
 
 ## 协作闭环
 

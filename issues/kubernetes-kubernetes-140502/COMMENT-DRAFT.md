@@ -7,7 +7,7 @@
 - Expected GitHub identity: `bzsuni`
 - Authenticated GitHub identity: verify-before-publish
 - Identity verified: no
-- Reviewed by Chat: no
+- Technical review completed: no
 - User approved: no
 - Publication authorized: no
 - Published at: not-published
@@ -19,31 +19,36 @@ Summarize the source investigation without claiming ownership, and ask SIG Stora
 
 ## Draft
 
-I traced the registration and resource creation path for this test.
+I traced the registration and resource creation path for this case.
 
-This appears to be more than a naming issue: a non-empty `TestPattern.FsType` is passed to the dynamically created StorageClass as `csi.storage.k8s.io/fstype`, while the affected case requests a `ReadWriteMany` Filesystem PVC and validates writable access from two Pods.
+This appears to be more than a naming issue. `TestPattern.FsType` is propagated into the dynamically created StorageClass (`csi.storage.k8s.io/fstype`), while the affected test requests a `ReadWriteMany` Filesystem PVC and validates writable access from two Pods.
 
-The current `multiVolume` patterns include ext4, xfs, and Windows ntfs. Removing explicit filesystem patterns from the entire suite would also remove valid coverage from other cases, while skipping every non-empty `FsType` may be too broad.
+One thing I'm unsure about is the intended fix boundary.
 
-Would SIG Storage prefer a case-local compatibility check for conventional single-host filesystem patterns, or explicit cross-node RWX compatibility metadata on `TestPattern`?
+`multiVolume` currently includes ext4, xfs and Windows ntfs patterns. Removing explicit filesystem patterns from the suite seems too broad, while skipping every non-empty `FsType` also seems broader than necessary.
 
-If a local check is preferred, should ext3, ext4, xfs, and ntfs be handled consistently?
+Would SIG Storage prefer:
+
+- a case-local compatibility check for these filesystem patterns; or
+- explicit compatibility metadata on `TestPattern`?
+
+I'd like to understand the preferred direction before preparing a PR.
 
 ## Claims and evidence
 
 | Claim in draft | Source evidence | Facts record |
 |---|---|---|
-| `multiVolume` selects ext4, xfs and ntfs DynamicPV patterns; ext3 exists outside its defaults. | `test/e2e/storage/testsuites/multivolume.go`: `InitMultiVolumeTestSuite`; `test/e2e/storage/framework/testpattern.go`: `Ext3DynamicPV`, `Ext4DynamicPV`, `XfsDynamicPV`, `NtfsDynamicPV`. | [CODE-MAP.md](CODE-MAP.md#filesystem-and-testpattern-inventory) |
+| `multiVolume` selects ext4, xfs and ntfs DynamicPV patterns. | `test/e2e/storage/testsuites/multivolume.go`: `InitMultiVolumeTestSuite`; `test/e2e/storage/framework/testpattern.go`: `Ext4DynamicPV`, `XfsDynamicPV`, `NtfsDynamicPV`. | [CODE-MAP.md](CODE-MAP.md#filesystem-and-testpattern-inventory) |
 | Pattern names form test names, while `FsType` also affects resource creation. | `test/e2e/storage/framework/testsuite.go`: `DefineTestSuites`, `RegisterTests`; `test/e2e/storage/framework/volume_resource.go`: dynamic volume resource creation. | [CODE-MAP.md](CODE-MAP.md#registration-and-name-generation) |
 | External dynamic provisioning injects non-empty fsType into the StorageClass. | `test/e2e/storage/external/external.go`: `driverDefinition.GetDynamicProvisionStorageClass`. | [CODE-MAP.md](CODE-MAP.md#fstype-propagation) |
 | The case requests RWX and performs writable cross-Pod checks on one PVC. | `test/e2e/storage/testsuites/multivolume.go`: the cross-node `ginkgo.It`; `CreateVolumeResourceWithAccessModes`; `TestConcurrentAccessToSingleVolume`. | [CODE-MAP.md](CODE-MAP.md#lifecycle-and-data-flow) |
 | Driver metadata cannot express conditional fsType/RWX combinations. | `test/e2e/storage/framework/testdriver.go`: independent `DriverInfo.SupportedFsType` and `Capabilities`; `testsuite.go`: independent filters. | [ANALYSIS.md](ANALYSIS.md#current-behavior) |
-| All-non-empty and ext4/xfs-only guards have different compatibility risks. | Open `SupportedFsType` set and complete named-pattern inventory. | [ANALYSIS.md](ANALYSIS.md#likely-fix-layer) |
+| Suite-wide removal and all-non-empty guards have different compatibility risks. | Open `SupportedFsType` set and current suite pattern usage. | [ANALYSIS.md](ANALYSIS.md#likely-fix-layer) |
 
 ## Questions for maintainers
 
-1. Should the affected case use a local compatibility predicate, or should compatibility be explicit TestPattern metadata?
-2. If a predicate is preferred, should ext3, ext4, xfs and ntfs be treated consistently even though ext3 is not currently selected by `multiVolume`?
+1. Should the affected case use a case-local compatibility check, or explicit TestPattern metadata?
+2. Is that direction suitable before preparing a PR?
 
 ## Publication checklist
 

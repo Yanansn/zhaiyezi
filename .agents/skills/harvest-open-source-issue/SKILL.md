@@ -68,7 +68,7 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
    - In the upstream working repository run `git status -sb`, `git log --oneline <upstream-base>..HEAD`, `git diff --check <upstream-base>...HEAD`, and `git diff --stat <upstream-base>...HEAD`.
    - Check the PR template, `CONTRIBUTING`, CLA/DCO, `Signed-off-by`, release-note requirements, Issue linkage, unrelated changes, and whether commits need cleanup or squash.
    - Propose branch name, commit structure and messages, PR title/body, issue linkage, release note, and reviewer notes according to repository rules.
-   - For any GitHub comment, reply, PR description, Review, Discussion or RFC, first create an exact Draft, obtain Chat Review, then wait for explicit user approval. A Draft PR is already public and follows the same gate.
+   - For any GitHub comment, reply, PR description, Review, Discussion or RFC, first create an exact Draft, obtain Technical Review, then wait for explicit user approval. Technical Review may come from ordinary Chat, a human reviewer or a team. A Draft PR is already public and follows the same gate.
    - Treat preparation, initial publication, maintainer reply and update of existing public content as separate permissions. Missing publication fields mean prohibited.
    - Immediately before an authorized publication, obtain the actual authenticated GitHub identity and compare it with the user-specified expected identity. Never infer identity from an SSH key name, remote URL or history; stop if they differ or cannot be verified.
    - Re-verify the live target and exact approved content. Afterward record the URL, publication time, actual content and maintainer-feedback state.

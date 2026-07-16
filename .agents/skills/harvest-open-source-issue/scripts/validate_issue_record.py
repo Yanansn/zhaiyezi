@@ -85,9 +85,9 @@ def main() -> None:
         if communication["published"] and not communication["identity_verified"]:
             raise SystemExit("published communication requires verified identity")
         if communication["user_approved"] and not communication["reviewed"]:
-            raise SystemExit("user approval requires Chat Review")
+            raise SystemExit("user approval requires Technical Review")
         if communication["reviewed"] and not communication["draft_ready"]:
-            raise SystemExit("Chat Review requires a ready Draft")
+            raise SystemExit("Technical Review requires a ready Draft")
         if communication["identity_verified"] and public_value(status_text, "expected_identity") in (None, "null"):
             raise SystemExit("verified identity requires expected_identity")
     comment = args.record / "COMMENT-DRAFT.md"
