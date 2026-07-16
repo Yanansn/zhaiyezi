@@ -18,7 +18,9 @@ STATUSES = {
     "planned", "implementing", "testing", "pr-ready", "submitted",
     "reviewing", "merged", "blocked", "rejected", "superseded", "closed",
 }
-PUBLIC_FIELDS = ("draft_ready", "reviewed", "user_approved", "published")
+PUBLIC_FIELDS = (
+    "draft_ready", "reviewed", "user_approved", "published", "identity_verified",
+)
 
 
 def public_bool(status_text: str, key: str) -> bool | None:
@@ -33,6 +35,20 @@ def public_bool(status_text: str, key: str) -> bool | None:
         section.group("body"),
     )
     return None if not match else match.group(1) == "true"
+
+
+def public_value(status_text: str, key: str) -> str | None:
+    section = re.search(
+        r"(?m)^public_communication:\s*\n(?P<body>(?:^[ \t]+.*(?:\n|$))*)",
+        status_text,
+    )
+    if not section:
+        return None
+    match = re.search(
+        rf"(?m)^\s+{re.escape(key)}:\s*[\"']?([^\"'\n#]+)",
+        section.group("body"),
+    )
+    return None if not match else match.group(1).strip()
 
 
 def main() -> None:
@@ -66,13 +82,23 @@ def main() -> None:
     else:
         if communication["published"] and not communication["user_approved"]:
             raise SystemExit("published communication requires user approval")
+        if communication["published"] and not communication["identity_verified"]:
+            raise SystemExit("published communication requires verified identity")
         if communication["user_approved"] and not communication["reviewed"]:
             raise SystemExit("user approval requires Chat Review")
         if communication["reviewed"] and not communication["draft_ready"]:
             raise SystemExit("Chat Review requires a ready Draft")
+        if communication["identity_verified"] and public_value(status_text, "expected_identity") in (None, "null"):
+            raise SystemExit("verified identity requires expected_identity")
     comment = args.record / "COMMENT-DRAFT.md"
-    if comment.exists() and "## Publication status" not in comment.read_text(encoding="utf-8"):
-        raise SystemExit("COMMENT-DRAFT.md is missing Publication status")
+    if comment.exists():
+        comment_text = comment.read_text(encoding="utf-8")
+        for marker in (
+            "## Publication status", "- Expected GitHub identity:",
+            "- Authenticated GitHub identity:", "- Identity verified:",
+        ):
+            if marker not in comment_text:
+                raise SystemExit(f"COMMENT-DRAFT.md is missing {marker}")
     print("issue record is valid")
 
 

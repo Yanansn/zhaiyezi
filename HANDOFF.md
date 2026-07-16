@@ -29,14 +29,23 @@
 
 - Current draft: `issues/kubernetes-kubernetes-140502/COMMENT-DRAFT.md`
 - Status: `Draft`
-- Expected GitHub identity: `Yanansn`
-- Actual GitHub identity: `verify-before-publish`
+- Expected GitHub identity: `bzsuni`
+- Authenticated GitHub identity: `verify-before-publish`
+- Identity verified: no
 - Chat Review: required again after material body changes
 - User approval: not granted
 - Publication: not authorized and not published
 - Published URL/time: not applicable
 
 所有上游评论、回复、PR、Review、Discussion、RFC 和公开 Commit 信息都代表用户本人。评论正文实质变化使旧 Review 失效；必须先完成新的 Chat Review，再由用户针对该公开动作明确授权。发布前还必须重新核验实际 GitHub 身份、实时 Issue 状态和待发布文本。
+
+Publication checklist：
+
+- Expected GitHub identity
+- Authenticated GitHub identity
+- Identity verified
+
+身份核验必须在每次发布前实时执行，不允许复用历史核验结果，也不得从 SSH key、Git remote 或历史记录推断。
 
 ## 当前仓库模型
 

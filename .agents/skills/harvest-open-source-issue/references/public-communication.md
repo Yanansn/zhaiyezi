@@ -33,7 +33,26 @@ Public Draft records must state:
 - current publication status: `Draft`, `Reviewed by Chat`, `Awaiting user approval`, `Published`, or `Superseded`;
 - whether Chat Review is complete;
 - whether user approval and publication authorization are present;
+- expected and authenticated GitHub identities plus whether they match;
 - publication time and GitHub URL after publication;
 - the exact target Issue, PR, Discussion or repository.
 
 Before publishing, re-verify live community state, user identity, target and exact approved text. Authorization to prepare, publish, reply and update existing public content is separate and non-transferable.
+
+## Identity verification
+
+Before any Issue comment or reply, Pull Request, Pull Request Review, Discussion, RFC, reviewer request, assignment or label command is published, record and verify:
+
+```text
+Expected GitHub identity
+Authenticated GitHub identity
+Identity verified (yes/no)
+```
+
+- The user explicitly specifies the expected GitHub identity.
+- Obtain the authenticated GitHub identity in real time immediately before publication, for example from `gh auth status` or equivalent actual authentication evidence.
+- Stop publication when the authenticated identity does not match the expected identity.
+- Never infer identity from an SSH key name, Git remote URL or historical record.
+- Identity Verification is a mandatory Publish Gate, not a lifecycle or Issue status.
+
+> Identity verification is a mandatory publication gate. Publication must stop if the authenticated GitHub identity does not match the expected identity.

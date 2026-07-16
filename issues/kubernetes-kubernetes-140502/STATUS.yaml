@@ -31,6 +31,8 @@ public_communication:
   reviewed: false
   user_approved: false
   published: false
+  expected_identity: bzsuni
+  identity_verified: false
 blockers:
   - "Issue still has needs-triage and no triage/accepted label"
   - "SIG Storage has not confirmed whether the guard should use explicit TestPattern compatibility metadata or a predicate for known local filesystems"

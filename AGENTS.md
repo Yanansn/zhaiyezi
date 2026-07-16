@@ -137,6 +137,14 @@ Research
 
 即使 `COMMENT-DRAFT.md`、PR Draft 或 RFC Draft 已完成、已通过 Chat Review、已 Commit 或已 Push 到事实仓库，也不得自动发布。`Execution Brief` 中缺少发布字段、字段含糊或写为 `prohibited` 时，一律视为未授权。准备草稿、发布草稿、回复维护者和更新现有公开内容是四个独立审批边界。
 
+### Identity verification
+
+发布 Issue comment/reply、Pull Request、Pull Request Review、Discussion、RFC、Reviewer request、Assignment 或 Label command 前，必须记录 `Expected GitHub identity`、实时取得的 `Authenticated GitHub identity` 和 `Identity verified (yes/no)`。预期身份由用户明确指定；认证身份必须在发布前通过 `gh auth status` 或等价的实际认证信息重新获取，不得复用历史核验。
+
+两者不一致、无法取得认证身份或 `Identity verified` 不是 `yes` 时，必须停止发布。不得根据 SSH key 名称、Git remote 或历史记录推断身份。Identity Verification 是 Publish Gate，不是新的生命周期或 Issue 状态。
+
+> Identity verification is a mandatory publication gate. Publication must stop if the authenticated GitHub identity does not match the expected identity.
+
 发布前必须重新核验目标、实时社区状态、待发布文本、用户身份和授权仍然匹配。发布后立即记录 URL、发布时间、实际发布内容和下一步维护者反馈状态。详细契约见 `.agents/skills/harvest-open-source-issue/references/public-communication.md`。
 
 ## 阶段完成与回传

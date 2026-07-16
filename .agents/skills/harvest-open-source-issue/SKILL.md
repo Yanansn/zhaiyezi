@@ -70,7 +70,8 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
    - Propose branch name, commit structure and messages, PR title/body, issue linkage, release note, and reviewer notes according to repository rules.
    - For any GitHub comment, reply, PR description, Review, Discussion or RFC, first create an exact Draft, obtain Chat Review, then wait for explicit user approval. A Draft PR is already public and follows the same gate.
    - Treat preparation, initial publication, maintainer reply and update of existing public content as separate permissions. Missing publication fields mean prohibited.
-   - Immediately before an authorized publication, re-verify the live target, user identity and exact approved content. Afterward record the URL, publication time, actual content and maintainer-feedback state.
+   - Immediately before an authorized publication, obtain the actual authenticated GitHub identity and compare it with the user-specified expected identity. Never infer identity from an SSH key name, remote URL or history; stop if they differ or cannot be verified.
+   - Re-verify the live target and exact approved content. Afterward record the URL, publication time, actual content and maintainer-feedback state.
    - Perform Commit, Push, PR, comment, or review actions only when the brief or a later user message explicitly authorizes each external boundary.
 7. **Review and close**
    - Diagnose CI failures, respond to review, iterate implementation and tests, and update records.
@@ -111,7 +112,7 @@ Use `scripts/init_issue_record.py` to initialize a record and `scripts/validate_
 
 Inventory and Lifecycle are conditional sections, not new status values or mandatory standalone files. The record contract and suggested section shapes are defined in [research-contract.md](references/research-contract.md).
 
-Public communication lifecycle labels are artifact metadata, not Issue statuses. Keep the existing Issue status model unchanged and track the four simple booleans under `public_communication` in `STATUS.yaml`.
+Public communication lifecycle labels are artifact metadata, not Issue statuses. Keep the existing Issue status model unchanged; track the core booleans plus the lightweight expected-identity and identity-verification gate under `public_communication` in `STATUS.yaml`.
 
 Do not rewrite all record files on every turn. Use this minimum mapping:
 

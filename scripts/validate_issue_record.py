@@ -41,6 +41,7 @@ PUBLIC_COMMUNICATION_FIELDS = (
     "reviewed",
     "user_approved",
     "published",
+    "identity_verified",
 )
 
 
@@ -69,6 +70,20 @@ def yaml_bool_in_section(text: str, section: str, key: str) -> bool | None:
     if not value_match:
         return None
     return value_match.group(1) == "true"
+
+
+def yaml_value_in_section(text: str, section: str, key: str) -> str | None:
+    section_match = re.search(
+        rf"(?m)^{re.escape(section)}:\s*\n(?P<body>(?:^[ \t]+.*(?:\n|$))*)",
+        text,
+    )
+    if not section_match:
+        return None
+    value_match = re.search(
+        rf"(?m)^\s+{re.escape(key)}:\s*[\"']?([^\"'\n#]+)",
+        section_match.group("body"),
+    )
+    return value_match.group(1).strip() if value_match else None
 
 
 def validate(record: Path) -> tuple[list[str], list[str]]:
@@ -105,10 +120,17 @@ def validate(record: Path) -> tuple[list[str], list[str]]:
     else:
         if communication["published"] and not communication["user_approved"]:
             errors.append("published public communication must have user_approved: true")
+        if communication["published"] and not communication["identity_verified"]:
+            errors.append("published public communication must have identity_verified: true")
         if communication["user_approved"] and not communication["reviewed"]:
             errors.append("user-approved public communication must have reviewed: true")
         if communication["reviewed"] and not communication["draft_ready"]:
             errors.append("reviewed public communication must have draft_ready: true")
+        expected_identity = yaml_value_in_section(
+            status_text, "public_communication", "expected_identity"
+        )
+        if communication["identity_verified"] and expected_identity in (None, "null"):
+            errors.append("verified public identity requires expected_identity")
 
     comment_draft = record / "COMMENT-DRAFT.md"
     if comment_draft.exists():
@@ -116,6 +138,9 @@ def validate(record: Path) -> tuple[list[str], list[str]]:
         required_markers = (
             "## Publication status",
             "- Current status:",
+            "- Expected GitHub identity:",
+            "- Authenticated GitHub identity:",
+            "- Identity verified:",
             "- Reviewed by Chat:",
             "- User approved:",
             "- Publication authorized:",

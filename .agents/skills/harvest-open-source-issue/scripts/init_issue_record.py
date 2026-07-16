@@ -18,7 +18,7 @@ DOCUMENTS = {
     "IMPLEMENTATION.md": "# Implementation\n\n## Changes\n\n## Reasoning\n\n## Deviations from plan\n",
     "TESTING.md": "# Testing\n\n## Environment\n\n## Commands and results\n\n## Limitations\n\n## CI results\n",
     "LEARNING.md": "# Learning\n\n## Concepts\n\n## Reusable methods\n\n## Open questions\n",
-    "PR.md": "# Pull request\n\n## Publication status\n\n- Current status: Draft\n- Target repository: not-set\n- Reviewed by Chat: no\n- User approved: no\n- Publication authorized: no\n- Published at: not-published\n- GitHub URL: not-published\n\n## Repositories\n\n- Official upstream:\n- User fork:\n\n## Branches and commits\n\n- Base branch:\n- Head branch:\n- Commits:\n\n## Draft\n\n- Title:\n- Body:\n- Issue linkage:\n- Test summary:\n\n## Submission\n\n- Number:\n- URL:\n- State: not-created\n\n## CI status\n\n## Review feedback\n\n## Final outcome\n",
+    "PR.md": "# Pull request\n\n## Publication status\n\n- Current status: Draft\n- Target repository: not-set\n- Expected GitHub identity: user-must-specify-before-publication\n- Authenticated GitHub identity: verify-before-publish\n- Identity verified: no\n- Reviewed by Chat: no\n- User approved: no\n- Publication authorized: no\n- Published at: not-published\n- GitHub URL: not-published\n\n## Repositories\n\n- Official upstream:\n- User fork:\n\n## Branches and commits\n\n- Base branch:\n- Head branch:\n- Commits:\n\n## Draft\n\n- Title:\n- Body:\n- Issue linkage:\n- Test summary:\n\n## Submission\n\n- Number:\n- URL:\n- State: not-created\n\n## CI status\n\n## Review feedback\n\n## Final outcome\n",
 }
 
 
@@ -68,6 +68,8 @@ public_communication:
   reviewed: false
   user_approved: false
   published: false
+  expected_identity: null
+  identity_verified: false
 blockers: []
 next_actions:
   - verify live issue state

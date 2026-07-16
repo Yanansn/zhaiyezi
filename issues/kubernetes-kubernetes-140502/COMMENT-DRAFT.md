@@ -4,8 +4,9 @@
 
 - Current status: Draft
 - Target: `kubernetes/kubernetes#140502` Issue comment
-- Expected GitHub identity: `Yanansn`
-- Actual GitHub identity: verify-before-publish
+- Expected GitHub identity: `bzsuni`
+- Authenticated GitHub identity: verify-before-publish
+- Identity verified: no
 - Reviewed by Chat: no
 - User approved: no
 - Publication authorized: no
@@ -54,4 +55,5 @@ If a local check is preferred, should ext3, ext4, xfs, and ntfs be handled consi
 - [x] Draft does not promise an implementation or PR.
 - [x] Draft does not make an unverified accusation against the vSphere CSI Driver.
 - [x] Secondary node-affinity observations are excluded.
+- [ ] Authenticated GitHub identity matches expected identity `bzsuni`. **Verify immediately before publication.**
 - [ ] User has explicitly authorized publication. **Not authorized in this stage.**
