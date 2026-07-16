@@ -191,7 +191,7 @@ $harvest-open-source-issue Skill，核验事实、当前分支、提交、远程
 Codex 应报告：
 
 - 简报指定的 Issue、阶段、目标和交付物
-- 项目记录与 GitHub 实时状态
+- 项目记录与 GitHub 实时状态，包括强制 `ECOSYSTEM.md` 中的 Timeline、Development、cross-reference、下游、相关工作和 CI
 - 当前分支、提交、远程地址和未提交改动
 - 差异、阻塞和审批边界
 - 本阶段准备执行的精确动作
@@ -210,7 +210,7 @@ Codex 应报告：
 <Execution Brief>
 ```
 
-Codex 必须按照 `AGENTS.md` 恢复，不依赖旧聊天记忆，也不得把单阶段简报扩展为全面研究任务。
+Codex 必须按照 `AGENTS.md` 恢复，不依赖旧聊天记忆，也不得把单阶段简报扩展为全面研究任务。每个活动 Issue 都必须维护 `ECOSYSTEM.md`；新评论、新 PR、新 Timeline Event、下游 workaround 或 CI 信号出现时先刷新该持续事实文档，再判断当前阶段是否需要变化。
 
 完成后，在简报已经授权 Push 的前提下，将事实记录推送到公开的 `Yanansn/zhaiyezi`。普通 Chat 随后通过 GitHub Connector 读取结果。
 

@@ -38,3 +38,4 @@ blockers:
   - "SIG Storage has not confirmed whether the guard should use explicit TestPattern compatibility metadata or a predicate for known local filesystems"
 next_actions:
   - "Wait for maintainer feedback. Do not begin plan or implementation until direction is confirmed."
+  - "Continuously refresh ECOSYSTEM.md when comments, Timeline events, linked work, downstream workarounds, or CI evidence change."

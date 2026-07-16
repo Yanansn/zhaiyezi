@@ -71,6 +71,25 @@ def main() -> None:
             print("warning: legacy terminal record has no KNOWLEDGE.md")
         else:
             raise SystemExit("active record is missing KNOWLEDGE.md")
+    ecosystem = args.record / "ECOSYSTEM.md"
+    if not ecosystem.exists():
+        if status in TERMINAL_STATUSES:
+            print("warning: legacy terminal record has no ECOSYSTEM.md")
+        else:
+            raise SystemExit("active record is missing mandatory ECOSYSTEM.md")
+    else:
+        ecosystem_text = ecosystem.read_text(encoding="utf-8")
+        for marker in (
+            "## 1. Issue Timeline", "## 2. Timeline Events",
+            "## 3. Development", "## 4. Downstream",
+            "## 5. Related Work", "## 6. CI",
+            "## 7. Maintainer Position", "## 8. Open Questions",
+            "## 9. Current Ecosystem Summary", "Upstream:",
+            "Downstream:", "Known workaround:",
+            "Active implementation:", "Open questions:",
+        ):
+            if marker not in ecosystem_text:
+                raise SystemExit(f"ECOSYSTEM.md is missing {marker}")
     communication = {key: public_bool(status_text, key) for key in PUBLIC_FIELDS}
     if all(value is None for value in communication.values()):
         if status in TERMINAL_STATUSES:

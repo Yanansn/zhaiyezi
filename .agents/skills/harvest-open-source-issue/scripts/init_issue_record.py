@@ -11,6 +11,7 @@ from pathlib import Path
 
 DOCUMENTS = {
     "ISSUE.md": "# Issue\n\n## Source facts\n\n## Requirement summary\n\n## Acceptance signals\n",
+    "ECOSYSTEM.md": "# Issue ecosystem\n\nLast verified: not-verified\n\n## 1. Issue Timeline\n\n### Labels\n\n### Project movement\n\n### Milestone\n\n### Assignee\n\n### State changes\n\n## 2. Timeline Events\n\n## 3. Development\n\nNo linked implementation.\n\n## 4. Downstream\n\n## 5. Related Work\n\n## 6. CI\n\n## 7. Maintainer Position\n\n## 8. Open Questions\n\n## 9. Current Ecosystem Summary\n\n```text\nUpstream:\n\nDownstream:\n\nKnown workaround:\n\nActive implementation:\n\nOpen questions:\n```\n",
     "KNOWLEDGE.md": "# Knowledge\n\n<!-- Add only the background needed to understand this Issue. -->\n",
     "ANALYSIS.md": "# Analysis\n\n## Plain-language explanation\n\n## Current behavior\n\n## Expected behavior\n\n## Scope and non-goals\n\n## Root cause or hypotheses\n",
     "CODE-MAP.md": "# Code map\n\n## Entry points\n\n## Relevant files\n\n## Call flow\n\n## Existing tests and analogues\n",

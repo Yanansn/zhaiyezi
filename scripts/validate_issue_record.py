@@ -169,6 +169,40 @@ def validate(record: Path) -> tuple[list[str], list[str]]:
                 "ANALYSIS.md is substantive while KNOWLEDGE.md is empty; review whether key domain terms need explanation"
             )
 
+    ecosystem_path = record / "ECOSYSTEM.md"
+    if not ecosystem_path.exists():
+        message = "legacy record has no ECOSYSTEM.md; add it before resuming research"
+        if status in TERMINAL_STATUSES:
+            warnings.append(message)
+        else:
+            errors.append("missing mandatory file for an active record: ECOSYSTEM.md")
+    else:
+        ecosystem_text = ecosystem_path.read_text(encoding="utf-8")
+        ecosystem_markers = (
+            "## 1. Issue Timeline",
+            "## 2. Timeline Events",
+            "## 3. Development",
+            "## 4. Downstream",
+            "## 5. Related Work",
+            "## 6. CI",
+            "## 7. Maintainer Position",
+            "## 8. Open Questions",
+            "## 9. Current Ecosystem Summary",
+            "Upstream:",
+            "Downstream:",
+            "Known workaround:",
+            "Active implementation:",
+            "Open questions:",
+        )
+        missing_markers = [
+            marker for marker in ecosystem_markers if marker not in ecosystem_text
+        ]
+        if missing_markers:
+            errors.append(
+                "ECOSYSTEM.md has incomplete mandatory structure: "
+                + ", ".join(missing_markers)
+            )
+
     journal = (record / "JOURNAL.md").read_text(encoding="utf-8")
     if not journal.startswith("# Journal"):
         errors.append("JOURNAL.md must start with '# Journal'")

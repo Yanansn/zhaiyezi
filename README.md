@@ -12,20 +12,29 @@
 - 无论合入、阻塞还是放弃，都记录结果和原因。
 - 默认不使用子 Agent，记录只更新本阶段发生变化的内容。
 
-研究链路按需采用：
+Issue 研究与贡献链路：
 
 ```text
-Knowledge
-→ Inventory
-→ Code Map / Lifecycle
-→ Analysis
+Issue Intake
+→ Issue Ecosystem Analysis
+→ Knowledge
+→ Inventory (when applicable)
+→ Code Map
+→ Root Cause Analysis
+→ Draft Comment
+→ Technical Review
+→ User Approval
+→ Identity Verification
+→ Publish
+→ Maintainer Feedback
 → Plan
 → Implementation
-→ Testing
-→ Review / Outcome
+→ PR
 ```
 
-`KNOWLEDGE.md` 帮助新读者理解必要背景，Inventory 防止局部样本造成范围误判，`CODE-MAP.md` 保存源码组织与运行事实，`ANALYSIS.md` 才负责基于证据推理。并非每个 Issue 都需要同等深度：没有关键领域门槛时可以保持 Knowledge 简短，不涉及集合或扩展对象时不必建立 Inventory，没有多阶段传播时也不必单列 Lifecycle。
+`ECOSYSTEM.md` 是每个 Issue 必须维护的一级事实文档，覆盖 Timeline、Development、下游、关联工作、CI 和维护者立场。它是持续研究记录：新评论、新 PR、新 Timeline Event、下游 workaround 或 CI 线索出现时都要更新。`COMMENT-DRAFT.md` 则是一次公开沟通的冻结 Snapshot，发布后不会为了吸收新生态信息而改写。
+
+`KNOWLEDGE.md` 帮助新读者理解必要背景，Inventory 防止局部样本造成范围误判，`CODE-MAP.md` 保存源码组织与运行事实，`ANALYSIS.md` 才负责基于证据推理。Ecosystem Analysis 强制执行；Knowledge 的深度、Inventory 和 Lifecycle 仍按 Issue 需要控制。
 
 ## 公开沟通
 
