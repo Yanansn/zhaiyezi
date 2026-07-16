@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 from datetime import date
+import json
 from pathlib import Path
 
 
@@ -16,14 +17,23 @@ DOCUMENTS = {
     "IMPLEMENTATION.md": "# Implementation\n\n## Changes\n\n## Reasoning\n\n## Deviations from plan\n",
     "TESTING.md": "# Testing\n\n## Environment\n\n## Commands and results\n\n## Limitations\n\n## CI results\n",
     "LEARNING.md": "# Learning\n\n## Concepts\n\n## Reusable methods\n\n## Open questions\n",
-    "PR.md": "# Pull request\n\n## Branch\n\n## Commits\n\n## Draft\n\n## Review and outcome\n",
+    "PR.md": "# Pull request\n\n## Repositories\n\n- Official upstream:\n- User fork:\n\n## Branches and commits\n\n- Base branch:\n- Head branch:\n- Commits:\n\n## Draft\n\n- Title:\n- Body:\n- Issue linkage:\n- Test summary:\n\n## Submission\n\n- Number:\n- URL:\n- State: not-created\n\n## CI status\n\n## Review feedback\n\n## Final outcome\n",
 }
+
+
+def yaml_value(value: str | None) -> str:
+    return "null" if value is None else json.dumps(value)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("issue", help="Issue identifier, for example owner/repo#123")
     parser.add_argument("--root", default="issues", help="Issue records root")
+    parser.add_argument("--facts-repository", help="Facts repository, for example user/zhaiyezi")
+    parser.add_argument("--facts-branch", default="main", help="Facts repository branch")
+    parser.add_argument("--base-branch", default="main", help="Official upstream base branch")
+    parser.add_argument("--fork-repository", help="User fork, for example user/project")
+    parser.add_argument("--working-branch", help="Upstream working branch")
     args = parser.parse_args()
 
     repo, number = args.issue.split("#", 1)
@@ -35,9 +45,23 @@ def main() -> None:
     status = f'''issue: "{args.issue}"
 status: candidate
 recommendation: pending
-branch: null
-pull_request: null
 last_verified: "{date.today().isoformat()}"
+facts_repository:
+  repository: {yaml_value(args.facts_repository)}
+  branch: {yaml_value(args.facts_branch)}
+  commit: null
+upstream:
+  repository: {yaml_value(repo)}
+  base_branch: {yaml_value(args.base_branch)}
+  base_commit: null
+fork:
+  repository: {yaml_value(args.fork_repository)}
+  branch: {yaml_value(args.working_branch)}
+  commit: null
+pull_request:
+  number: null
+  url: null
+  state: not-created
 blockers: []
 next_actions:
   - verify live issue state

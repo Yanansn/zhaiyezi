@@ -22,6 +22,12 @@
 - 终止原因：Issue 已由 `anshulchikhale30-p` 认领，为避免重复贡献而放弃。
 - 工作分支和 Pull Request 均未创建。
 
+## 当前仓库模型
+
+- 事实仓库：`Yanansn/zhaiyezi`，本地路径为 `~/projects/zhaiyezi`。
+- 当前没有活动的上游工作仓库、本地上游 Clone、用户 Fork 工作分支或 PR。
+- 选定新 Issue 后，必须在 `STATUS.yaml` 和 Execution Brief 中记录官方仓库、用户 Fork、本地 Clone 路径、base branch、working branch 和 PR 状态；不得提前虚构。
+
 ## 已完成
 
 - 创建并安装通用开源 Issue 贡献 Skill。
@@ -36,6 +42,7 @@
 - `main` 已成功推送到 `Yanansn/zhaiyezi`，当前 Ubuntu 使用 SSH Host 别名 `github-yanansn`，实际认证身份已核验为 `Yanansn`。
 - 普通 Chat 已能通过 GitHub Connector 读取事实仓库。
 - 完善普通 Chat、本地 Codex、用户和 GitHub 事实仓库之间的可见性、阶段交接、停止条件与完成回传协议。
+- 补充 facts repository、官方 upstream、用户 Fork、本地 Clone 和 PR 生命周期的多仓库协作规则。
 
 ## 当前阻塞与风险
 

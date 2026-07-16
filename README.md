@@ -18,10 +18,11 @@
 flowchart LR
     Chat[普通 Chat：筛选、教学、方案] --> Brief[单阶段 Execution Brief]
     Brief --> User[用户：审批与交接]
-    User --> Codex[本地 Codex：状态核验与工程执行]
-    Codex --> Records[更新事实记录]
-    Records --> Push[授权后 Commit 和 Push]
-    Push --> Facts[GitHub 事实仓库]
+    User --> Codex[本地 Codex]
+    Codex --> Clone[本地上游 Clone：实现与测试]
+    Clone --> Fork[用户 Fork：工作分支]
+    Fork --> PR[上游官方仓库：PR、CI、Review]
+    PR --> Facts[zhaiyezi：事实记录]
     Facts --> Chat
 ```
 
@@ -31,6 +32,19 @@ flowchart LR
 - 用户：批准外部操作并触发两个 Agent 之间的交接。
 
 > 普通 Chat 只能读取已经推送到 GitHub 的结果；Codex 本地未推送的状态不会自动同步到 Chat。
+
+## 仓库角色
+
+- `Yanansn/zhaiyezi`：事实和交接仓库，保存状态、决策、证据与学习记录。
+- 上游官方仓库：Issue、PR、CI、Review 和最终合入的实时权威来源。
+- 用户 Fork：上游代码工作分支和 Commit 的 Push 位置。
+- 本地上游 Clone：Codex 读取、修改、编译、测试和提交真实代码的工作区。
+
+> 上游项目的真实代码修改和 Commit 不进入 `zhaiyezi`；`zhaiyezi` 只保存已核验的状态、决策、证据和交接记录。
+
+工程贡献流为：`Chat 筛选和决策 → Execution Brief → Codex 操作本地上游 Clone → Commit 到工作分支 → Push 到用户 Fork → 创建上游 PR → 更新 zhaiyezi → Chat 重新读取并处理下一阶段`。
+
+PR 属于状态模型的一部分：`testing → pr-ready → submitted → reviewing → merged/closed/rejected/blocked/superseded`。
 
 ## 当前任务
 

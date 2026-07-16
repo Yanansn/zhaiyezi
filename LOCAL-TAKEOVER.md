@@ -17,6 +17,31 @@ git remote -v
 
 若目录来自压缩包，必须确认其中包含 `.git` 历史；不要在已有仓库中重新执行 `git init`。
 
+## 多仓库本地目录建议
+
+```text
+~/projects/
+├── zhaiyezi/
+└── upstream/
+    └── <project>/
+```
+
+`zhaiyezi` 从自己的 `main` 读取和更新事实；真实上游代码使用独立 Clone。不要把上游 Clone 放进 `zhaiyezi`，避免嵌套 Git 仓库导致误暂存或误提交。
+
+每个阶段开始时分别核验：
+
+```bash
+cd ~/projects/zhaiyezi
+git status -sb
+git log -1 --oneline
+git remote -v
+
+cd ~/projects/upstream/<project>
+git status -sb
+git log -1 --oneline
+git remote -v
+```
+
 ## 设置 GitHub 远程
 
 单一 GitHub SSH 身份环境可以使用：
@@ -37,6 +62,24 @@ git remote -v
 预期 `ssh -T` 显示实际认证身份为 `Yanansn`。不得仅根据私钥文件名推断 GitHub 身份，必须以该命令的实际输出为准。不要在项目文档中写入私钥内容，也不要由 Codex 修改用户的 `~/.ssh/config`。
 
 不要在没有核验实际身份和写权限时 Push。
+
+## 上游项目 remote 结构
+
+推荐在上游项目 Clone 中使用：
+
+```text
+origin    用户 Fork，可在授权后 Push 工作分支
+upstream  官方仓库，用于只读同步和确定 PR base
+```
+
+例如：
+
+```text
+origin    git@github-yanansn:Yanansn/kubernetes.git
+upstream  https://github.com/kubernetes/kubernetes.git
+```
+
+`origin` 不应错误指向官方仓库，除非用户确有官方写权限且项目流程明确要求。默认只把工作分支 Push 到用户 Fork，PR 的 base 指向官方仓库分支。不要 Force Push，除非用户明确授权且已判断不会破坏 Review。
 
 ## 启动 Codex
 
@@ -65,6 +108,7 @@ Codex 应报告：
 - 当前分支、提交、远程地址和未提交改动
 - 差异、阻塞和审批边界
 - 本阶段准备执行的精确动作
+- facts repository、upstream working repository 和 PR 各自的状态
 
 如果报告与 `HANDOFF.md` 或 GitHub 实时状态不一致，应先修正事实记录，不得直接实现。
 

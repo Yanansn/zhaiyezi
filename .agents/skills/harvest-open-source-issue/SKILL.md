@@ -11,7 +11,8 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
 
 - Require an `Execution Brief` containing the issue, confirmed facts, goal, required investigation, constraints, expected deliverables, and approval boundary.
 - Read [execution-brief.md](references/execution-brief.md) when starting a new stage or when the brief is incomplete.
-- Verify the brief against repository records, live GitHub state, local Git state, and real source code before acting.
+- Identify the facts repository and, for real code work, the separate upstream working repository from the brief.
+- Verify the brief against repository records, live GitHub state, and each applicable local repository's branch, commit, remotes, and worktree before acting.
 - If the brief is absent, materially stale, or lacks a stage goal, deliverables, or approval boundary, report the gap and stop. Do not expand into candidate screening or open-ended research.
 
 ## Operating principles
@@ -27,11 +28,13 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
 - Update only records whose facts changed in the current stage.
 - Treat unpushed local results as invisible to ordinary Chat; never present them as shared facts.
 - At the end of each stage, state explicitly what was pushed and what remains local. Use [execution-brief.md](references/execution-brief.md) for the full return contract.
+- Make upstream code changes only in the upstream working repository; make contribution-record changes only in the facts repository.
 
 ## Workflow
 
 1. **Verify intake and discover the project**
    - Parse the Execution Brief and state the exact stage boundary.
+   - Verify the facts repository and upstream working repository independently when both apply.
    - Read `AGENTS.md`, `CONTRIBUTING.md`, issue/PR templates, build files, test guidance, and relevant ownership files.
    - Record language, build system, test framework, CI, contribution rules, CLA/DCO requirements, and community conventions.
    - Read [project-discovery.md](references/project-discovery.md).
@@ -43,24 +46,39 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
    - If maintainers have not accepted the direction, prepare a concise confirmation comment and pause before substantial implementation.
 4. **Implement when requested**
    - Create a descriptive branch after checking repository conventions.
-   - Make the smallest coherent change. Explain important code decisions and connect them to the code map.
+   - Work in the upstream working repository and make the smallest coherent change. Explain important code decisions and connect them to the code map.
 5. **Validate when requested or required by implementation**
    - Format and lint, run targeted unit or package tests, then integration/e2e tests when proportional and feasible.
    - Record exact commands, environment, results, limitations, and CI-only coverage in `TESTING.md`.
    - Read [testing.md](references/testing.md).
 6. **Prepare or publish when authorized**
-   - Inspect the staged diff for unrelated changes.
+   - Inspect both repositories for unrelated changes and keep their commits separate.
+   - Before creating a PR, verify the user Fork remote, official upstream remote, target base branch, and head branch.
+   - In the upstream working repository run `git status -sb`, `git log --oneline <upstream-base>..HEAD`, `git diff --check <upstream-base>...HEAD`, and `git diff --stat <upstream-base>...HEAD`.
+   - Check the PR template, `CONTRIBUTING`, CLA/DCO, `Signed-off-by`, release-note requirements, Issue linkage, unrelated changes, and whether commits need cleanup or squash.
    - Propose branch name, commit structure and messages, PR title/body, issue linkage, release note, and reviewer notes according to repository rules.
    - Perform Commit, Push, PR, comment, or review actions only when the brief or a later user message explicitly authorizes each external boundary.
 7. **Review and close**
    - Diagnose CI failures, respond to review, iterate implementation and tests, and update records.
    - Finish with merged, rejected, superseded, or blocked status plus a learning retrospective and suggested next issue.
 
+## Multi-repository execution order
+
+1. Read the rules, handoff, brief, and issue record in the facts repository.
+2. Verify the facts repository branch, commit, remote, and worktree.
+3. Enter the upstream working repository and verify official upstream, user Fork, base branch, working branch, commit, and worktree.
+4. Verify the live upstream Issue, PR, comments, assignee, CI, and Review state.
+5. Perform the requested investigation, implementation, or validation in the upstream working repository.
+6. Return to the facts repository and update only changed records.
+7. Inspect `git diff` and `git status` separately in both repositories.
+8. Commit, Push, and create or update a PR only under their respective explicit approvals.
+9. Report the facts repository, upstream working repository, and PR states separately.
+
 ## Record contract
 
 Use one directory per issue under `issues/<owner>-<repo>-<number>/`. Maintain:
 
-- `STATUS.yaml`: machine-readable current state, blockers, next actions, branch, PR, and last verification time.
+- `STATUS.yaml`: machine-readable current state, blockers, next actions, facts repository, official upstream/base, user Fork/working branch, PR, and last verification time.
 - `ISSUE.md`: source facts and structured requirement summary.
 - `ANALYSIS.md`: accessible technical explanation, root cause or hypotheses, scope, and non-goals.
 - `CODE-MAP.md`: relevant files, call flow, analogous code, tests, and ownership.
@@ -68,7 +86,7 @@ Use one directory per issue under `issues/<owner>-<repo>-<number>/`. Maintain:
 - `IMPLEMENTATION.md`: actual changes and reasoning.
 - `TESTING.md`: commands, environment, evidence, failures, limitations, and CI results.
 - `LEARNING.md`: concepts learned and reusable problem-solving methods.
-- `PR.md`: branch, commits, PR draft, review feedback, and outcome.
+- `PR.md`: official repository, user Fork, base/head branches, commits, title/body, Issue linkage, URL/number, CI, review feedback, and outcome.
 - `JOURNAL.md`: append-only dated decisions and material actions.
 
 Use `scripts/init_issue_record.py` to initialize a record and `scripts/validate_issue_record.py` before reporting a stage complete. Never overwrite journal history.
