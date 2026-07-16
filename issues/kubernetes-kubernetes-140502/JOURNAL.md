@@ -17,3 +17,6 @@
 - Confirmed `NtfsDynamicPV` is a real Windows-tagged pattern selected by `multiVolume` and reaches the same dynamic StorageClass path as ext4/xfs. `Ext3DynamicPV` exists but is not currently selected by that suite.
 - Confirmed `SupportedFsType` is an open string set decoded from external driver data, while the effective tested values remain bounded by suite-selected TestPatterns.
 - Refined the prospective fix scope: an ext4/xfs-only check is incomplete, while rejecting every non-empty fsType is semantically overbroad. Maintainer confirmation should compare explicit pattern compatibility metadata with a documented known-local-filesystem predicate.
+- Added an issue-specific `KNOWLEDGE.md` for readers without Kubernetes Storage or CSI background, and moved introductory concepts out of `ANALYSIS.md` so knowledge, source inventory and inference remain separate.
+- Upgraded the repository research contract: new records include lightweight Knowledge, Inventory remains a conditional `CODE-MAP.md` section, and Lifecycle / Data Flow is recorded only for meaningful multi-stage propagation.
+- Added reusable templates plus lightweight initialization and validation scripts. Active records require `KNOWLEDGE.md`; legacy terminal records without it receive a migration warning instead of failing.

@@ -44,7 +44,11 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
    - Record language, build system, test framework, CI, contribution rules, CLA/DCO requirements, and community conventions.
    - Read [project-discovery.md](references/project-discovery.md).
 2. **Map when requested**
-   - Trace the relevant code path and existing tests. Record files and responsibilities in `CODE-MAP.md`.
+   - Identify the background a target reader needs. Add only necessary issue-specific explanations to `KNOWLEDGE.md`; reuse links for stable cross-issue material instead of copying it.
+   - Decide whether a collection affects root cause or fix scope. If so, build an Inventory with an explicit counting boundary, method, definitions, usage, extensibility, completeness and limitations.
+   - Trace relevant files, registration, call paths and tests. Add Lifecycle / Data Flow when objects or configuration pass through meaningful creation, conversion, filtering or consumption stages.
+   - Do not infer the whole system from one example or call a keyword-search result complete. Inventory exists to prevent local observations from producing a wrong fix boundary, not to document the entire upstream project.
+   - Record these source facts in `CODE-MAP.md`, then keep conclusions and solution comparisons in `ANALYSIS.md`. Read [research-contract.md](references/research-contract.md).
    - Do not modify upstream code when the brief says the stage is code-map-only.
 3. **Plan when requested**
    - State the root cause or unresolved hypothesis, preferred solution, alternatives, risks, compatibility concerns, and validation strategy.
@@ -88,8 +92,9 @@ Use one directory per issue under `issues/<owner>-<repo>-<number>/`. Maintain:
 
 - `STATUS.yaml`: machine-readable current state, blockers, next actions, facts repository, official upstream/base, user Fork/working branch, PR, and last verification time.
 - `ISSUE.md`: source facts and structured requirement summary.
+- `KNOWLEDGE.md`: optional-in-content background, terms, mental models, distinctions and exceptions needed by a new reader; the file is part of new records but may remain minimal when no domain explanation is needed.
 - `ANALYSIS.md`: accessible technical explanation, root cause or hypotheses, scope, and non-goals.
-- `CODE-MAP.md`: relevant files, call flow, analogous code, tests, and ownership.
+- `CODE-MAP.md`: relevant files, conditional Inventory, call flow, Lifecycle / Data Flow, analogous code, tests, and ownership.
 - `PLAN.md`: chosen solution, alternatives, risk, and validation plan.
 - `IMPLEMENTATION.md`: actual changes and reasoning.
 - `TESTING.md`: commands, environment, evidence, failures, limitations, and CI results.
@@ -99,9 +104,11 @@ Use one directory per issue under `issues/<owner>-<repo>-<number>/`. Maintain:
 
 Use `scripts/init_issue_record.py` to initialize a record and `scripts/validate_issue_record.py` before reporting a stage complete. Never overwrite journal history.
 
+Inventory and Lifecycle are conditional sections, not new status values or mandatory standalone files. The record contract and suggested section shapes are defined in [research-contract.md](references/research-contract.md).
+
 Do not rewrite all record files on every turn. Use this minimum mapping:
 
-- code map: `CODE-MAP.md`, plus `STATUS.yaml` and `JOURNAL.md` only when state or next action changes;
+- discovery or code map: `KNOWLEDGE.md` only when reader prerequisites change, `CODE-MAP.md` for source facts, plus `STATUS.yaml` and `JOURNAL.md` only when state or next action changes;
 - plan: `PLAN.md` and changed status/journal facts;
 - implementation: `IMPLEMENTATION.md` and changed status/journal facts;
 - validation or CI: `TESTING.md` and changed status/journal facts;

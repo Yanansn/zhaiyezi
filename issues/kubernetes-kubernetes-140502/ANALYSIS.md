@@ -1,16 +1,6 @@
 # Analysis
 
-## Concepts
-
-- A **TestPattern** is a reusable bundle of inputs that a Storage E2E suite combines with each of its test cases. Its name labels the generated test, while fields such as volume type, filesystem type and volume mode control resource creation.
-- **FsType** is the filesystem requested for a mounted volume. An explicit value such as `ext4` asks the dynamic CSI path to put that value in the StorageClass fstype parameter. `FsType == ""` means the generic framework does not choose one and leaves the default to the driver or existing StorageClass; it does not prove that the final volume has no filesystem.
-- **RWX / ReadWriteMany** describes the access requested by a PVC: the volume may be mounted read/write by many nodes. It does not identify the storage implementation or filesystem.
-- **Filesystem volume mode** means Pods receive a mounted directory. It is the Kubernetes default when `volumeMode` is omitted. **Block volume mode** exposes a raw device and has no mounted filesystem.
-- **ext4/xfs** are ordinary Linux filesystems normally mounted over a block device. They do not provide the distributed locking/coherency needed for independent hosts to mount the same ordinary filesystem read/write.
-- **Shared filesystems** such as NFS, SMB or CephFS coordinate multi-client access through a server or distributed protocol. Their backing server may internally use ext4/xfs, but that is different from telling each Kubernetes node to mount the CSI volume as ext4/xfs.
-- A **CSI driver** receives the requested access mode and mount capability. Whether its storage can satisfy multi-node writer semantics depends on the volume flavor and driver implementation.
-
-Kubernetes documentation also separates these axes: `Filesystem` and `Block` are volume modes, while `ReadWriteMany` is an access mode whose support depends on the driver. See [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/).
+读懂本分析所需的 PV/PVC、StorageClass、CSI、RWX、Filesystem、TestPattern 和 `multiVolume` 背景，见 [KNOWLEDGE.md](KNOWLEDGE.md)。完整 TestPattern 与 FsType 清单见 [CODE-MAP.md](CODE-MAP.md#filesystem-and-testpattern-inventory)。
 
 ## Current behavior
 

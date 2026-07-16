@@ -12,6 +12,21 @@
 - 无论合入、阻塞还是放弃，都记录结果和原因。
 - 默认不使用子 Agent，记录只更新本阶段发生变化的内容。
 
+研究链路按需采用：
+
+```text
+Knowledge
+→ Inventory
+→ Code Map / Lifecycle
+→ Analysis
+→ Plan
+→ Implementation
+→ Testing
+→ Review / Outcome
+```
+
+`KNOWLEDGE.md` 帮助新读者理解必要背景，Inventory 防止局部样本造成范围误判，`CODE-MAP.md` 保存源码组织与运行事实，`ANALYSIS.md` 才负责基于证据推理。并非每个 Issue 都需要同等深度：没有关键领域门槛时可以保持 Knowledge 简短，不涉及集合或扩展对象时不必建立 Inventory，没有多阶段传播时也不必单列 Lifecycle。
+
 ## 协作闭环
 
 ```mermaid

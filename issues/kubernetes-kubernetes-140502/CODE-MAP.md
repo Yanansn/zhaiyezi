@@ -6,6 +6,8 @@ Inspected upstream: `kubernetes/kubernetes` `master@7e8950f1ec186066fabdfe69d69f
 
 Counting method: `test/e2e/storage/framework/testpattern.go` contains **46 named package-level `TestPattern` definitions**. This is a source-definition count, not a claim that only 46 values can exist at runtime: custom suites accept arbitrary `[]TestPattern`, and `GenericEphemeralTestPatterns` copies `DefaultFsGenericEphemeralVolume` into late- and immediate-binding variants. Of the 46 named definitions, **21 set `FsType` explicitly** and 25 use the zero value `""`.
 
+This inventory deliberately distinguishes three sets: (1) all named definitions in current source, (2) the subset selected by each current default suite—especially `multiVolume`, and (3) the theoretically open strings accepted from external driver configuration. The table is complete for named definitions in this file at the inspected commit; it is not a closed list of runtime-created values or external strings. Counting used a structural scan of every `TestPattern{...}` definition followed by reference searches across `test/e2e/storage/testsuites` and propagation tracing through the framework and external driver adapter, rather than treating a filesystem keyword search as proof of completeness.
+
 The only explicit values are:
 
 | `FsType` | Named definitions | Dynamic pattern used by `multiVolume` |
@@ -132,7 +134,25 @@ Ext4DynamicPV.FsType ("ext4")
 
 `xfs` and, on Windows, `ntfs` follow the identical path. For a dynamically provisioned CSI volume, the external provisioner/driver create the PV. Kubernetes' `CSIPersistentVolumeSource.FSType` is explicitly the filesystem type to mount, but its final value in this test cannot be proven without observing the provisioner result.
 
-## Test behavior facts
+## Lifecycle and data flow
+
+The issue-relevant value crosses these ownership and transformation boundaries:
+
+```text
+external driver YAML/JSON
+  → decode DriverInfo.SupportedFsType and capabilities
+  → DefineTestSuites registers suite × TestPattern names
+  → runtime filters driver interface, FsType, platform and capabilities
+  → multiVolume case requests RWX
+  → VolumeResource creates dynamic StorageClass and PVC
+  → external provisioner / CSI driver creates the volume and PV
+  → two Pods consume the bound PVC
+  → cross-Pod reads and writes observe the result
+```
+
+The source proves registration, filtering and the constructed Kubernetes request. The provisioner owns final PV generation, so its returned CSI fields and real mount outcome require runtime observation.
+
+### Test behavior facts
 
 ### Resource creation
 

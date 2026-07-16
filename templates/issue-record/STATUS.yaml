@@ -1,0 +1,20 @@
+issue: "{{ISSUE}}"
+status: candidate
+recommendation: pending
+last_verified: null
+facts_repository:
+  repository: "Yanansn/zhaiyezi"
+  branch: main
+upstream:
+  repository: "{{OWNER}}/{{REPO}}"
+  base_branch: null
+  base_commit: null
+fork:
+  repository: null
+  branch: null
+pull_request:
+  number: null
+  url: null
+  state: not-created
+blockers: []
+next_actions: []

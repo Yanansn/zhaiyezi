@@ -8,6 +8,7 @@
 
 - 通用 Skill：`.agents/skills/harvest-open-source-issue/`
 - 简报模板：`.agents/skills/harvest-open-source-issue/references/execution-brief.md`
+- 研究契约：`.agents/skills/harvest-open-source-issue/references/research-contract.md`
 - 项目规则：`AGENTS.md`
 - Issue 登记：`registry/issues.yaml`
 - 当前任务记录：`issues/kubernetes-kubernetes-140502/`
@@ -17,16 +18,17 @@
 ## 当前活动任务
 
 - 当前 Issue：`kubernetes/kubernetes#140502`（`The generated test scenarios for RWX volume types dont make sense`）
-- 当前阶段：`code-map` 已完成，状态为 `awaiting-triage`，建议为 `promising`。
+- 当前阶段：`code-map` 与 Knowledge/Inventory 研究契约补充已完成，状态为 `awaiting-triage`，建议为 `promising`。
 - 实时状态：Issue open、无人认领、仍有 `needs-triage`、没有 `triage/accepted` 或关联 Kubernetes 实现 PR。
-- 技术结论：ext4/xfs 会进入真实 StorageClass 参数，同时测试创建 Filesystem RWX PVC 并让两个 Pod 共享读写；最可能是 TestPattern/RWX 组合与实际资源请求问题，不只是名称问题。
+- 技术结论：`multiVolume` 当前直接选择 ext4、xfs 和 Windows ntfs 的 DynamicPV Pattern；ext3 DynamicPV Pattern 存在但当前不在该 suite。显式 FsType 会进入真实 StorageClass 参数，同时测试创建 Filesystem RWX PVC 并让两个 Pod 共享读写；最可能是 TestPattern/RWX 组合与实际资源请求问题，不只是名称问题。
+- 范围结论：`SupportedFsType` 是开放字符串集合，不能简单在“只排除 ext4/xfs”和“排除所有非空 FsType”之间二选一。需请维护者确认使用已知本地文件系统 predicate，还是为 TestPattern 增加显式 RWX 兼容性元数据。
 - 上游工作分支和 Pull Request 均未创建，Kubernetes 源码未修改。
 - 上一个 Issue `kubernetes/kubernetes#140523` 已因其他贡献者认领而 `superseded`。
 
 ## 当前仓库模型
 
 - 事实仓库：`Yanansn/zhaiyezi`，本地路径为 `~/projects/zhaiyezi`。
-- 当前上游 Clone：`/home/sun/go/src/k8s.io/kubernetes`；代码地图核验基线为官方 `master@1b4e48f52199bcfb28ef6efd60522a082c3e78d0`。
+- 当前上游 Clone：`/home/sun/go/src/k8s.io/kubernetes`；代码地图核验基线为官方 `master@7e8950f1ec186066fabdfe69d69f92fbb04592da`。
 - 当前没有用户 Fork 工作分支或 PR；这些字段保持未创建状态，不得提前虚构。
 
 ## 已完成
@@ -45,10 +47,12 @@
 - 完善普通 Chat、本地 Codex、用户和 GitHub 事实仓库之间的可见性、阶段交接、停止条件与完成回传协议。
 - 补充 facts repository、官方 upstream、用户 Fork、本地 Clone 和 PR 生命周期的多仓库协作规则。
 - 完成 `kubernetes/kubernetes#140502` 的测试注册、fsType、RWX capability、资源创建与多 Pod 读写调用链代码地图。
+- 完成 Filesystem/TestPattern 全量 Inventory：46 个命名 Pattern、21 个显式 FsType，区分源码定义、suite 默认选择与外部开放字符串集合。
+- 为 `#140502` 建立面向初学者的 `KNOWLEDGE.md`，并将 Knowledge、Inventory、Lifecycle/Data Flow 纳入通用 Skill、模板和轻量校验契约。
 
 ## 当前阻塞与风险
 
-- `kubernetes/kubernetes#140502` 尚未获得 `triage/accepted`，SIG Storage 也未确认 fsType 过滤范围。
+- `kubernetes/kubernetes#140502` 尚未获得 `triage/accepted`，SIG Storage 也未确认采用本地文件系统 predicate 还是显式 Pattern 兼容性元数据。
 - 下一阶段不应直接实现；应先由普通 Chat 复核代码地图，并决定是否准备一条方案确认评论。
 - `kubernetes/kubernetes#140523` 不应恢复实现，除非未来重新筛选并明确处理与现有 assignee 的协调问题。
 - 本地 `gh` 的认证状态不是持久事实；需要使用 `gh` 时必须先运行 `gh auth status` 实时核验。
@@ -57,8 +61,8 @@
 ## 下一步
 
 ```text
-Codex Push #140502 code-map 记录
-→ Chat 读取并讲解 B+C 根因判断
+Codex Push #140502 Knowledge/Inventory 研究契约与记录
+→ Chat 读取 Knowledge、Inventory 并讲解 B+C 根因判断
 → Chat 决定等待 triage 或生成“方案确认评论”单阶段 Brief
 → 用户明确授权后 Codex 才能公开评论
 → 获得维护者方向后再生成 plan Brief
