@@ -1,4 +1,12 @@
 issues:
+  - id: "kubernetes/kubernetes#140489"
+    url: "https://github.com/kubernetes/kubernetes/issues/140489"
+    title: "Add [Feature:Networking-IPv6] and [Feature:SCTPConnectivity] CI"
+    domain: cloud-native
+    language: yaml-go
+    status: screening
+    recommendation: promising
+    record: "issues/kubernetes-kubernetes-140489"
   - id: "kubernetes/kubernetes#140502"
     url: "https://github.com/kubernetes/kubernetes/issues/140502"
     title: "The generated test scenarios for RWX volume types dont make sense"

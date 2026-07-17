@@ -11,7 +11,7 @@
 - 研究契约：`.agents/skills/harvest-open-source-issue/references/research-contract.md`
 - 项目规则：`AGENTS.md`
 - Issue 登记：`registry/issues.yaml`
-- 当前任务记录：`issues/kubernetes-kubernetes-140502/`
+- 当前任务记录：`issues/kubernetes-kubernetes-140502/` 与 `issues/kubernetes-kubernetes-140489/`
 - 外部事实来源：GitHub
 - 事实仓库：`Yanansn/zhaiyezi`，普通 Chat 已可通过 GitHub Connector 读取已 Push 内容
 
@@ -25,6 +25,18 @@
 - 范围结论：新证据使旧的 predicate/metadata 方案不再可直接实施。当前方向是保留测试并调查名称层，但仍需确认确切命名机制、是否保持底层 `TestPattern.FsType`/StorageClass 行为、非目标和验收标准。
 - 上游工作分支和 Pull Request 均未创建，Kubernetes 源码未修改。
 - 上一个 Issue `kubernetes/kubernetes#140523` 已因其他贡献者认领而 `superseded`。
+
+## #140489 CI Feasibility Screening
+
+- Issue：`kubernetes/kubernetes#140489`（`Add [Feature:Networking-IPv6] and [Feature:SCTPConnectivity] CI`）。
+- 当前状态：`screening`；推荐保持 `promising`，筛选结论为 `pursue-after-maintainer-confirmation`。
+- 实时状态：Issue open、无人认领、无 milestone 或实现 PR，已有 `help wanted` 与 `triage/accepted`。关联 `kubernetes/test-infra#37410` 是 open 的覆盖率分析 PR，不是实现。
+- 测试范围：当前 `e2e` 有 1 个 external-IPv6 与 9 个 SCTP spec，其中 3 个还要求 NetworkPolicy、1 个还要求 dual-stack、2 个 SCTP spec 在源码中自跳过；`e2e_node` 共享 2 个 SCTP spec，其中 1 个自跳过。
+- 最接近参考：`ci-kubernetes-e2e-kind-ipv6-canary` 已在 `k8s-infra-aks-prow-build` 上运行 privileged Kind/IPv6，但当前 `Feature: isEmpty` 过滤器排除所有目标测试，也未配置 NetworkPolicy provider。
+- 已证实限制：现有 SIG Network dual-stack、IPv6 与 NetworkPolicy 参考 Job 均跳过 SCTP；COS/SCTP 失败曾由 `test-infra#35031/#35032` 明确记录。EKS Prow Job 多数实际创建 EC2 测试集群，Prow 调度集群名不能证明 EKS 测试能力。
+- 阻塞：AKS worker 的 SCTP kernel/module 可见性、nested Kind 中的 SCTP-capable NetworkPolicy provider、外部 IPv6 的实际 Pod 路径、一个或多个 Job 的边界，以及 SIG Network/SIG K8s Infra 的所有权与运行验证责任均未确认。
+- 下一步：先对 `COMMENT-DRAFT.md` 做 Technical Review，再由用户决定是否授权向维护者确认上述环境边界。未确认前不得编写实施计划或修改 test-infra。
+- 本阶段未修改 Kubernetes/test-infra、未认领 Issue、未发布评论、未创建分支或 PR。
 
 ## Public communication
 
@@ -81,6 +93,7 @@ Publication checklist：
 - 下一步：确认名称修改的实现范围、底层 FsType 行为、非目标和验收标准；未通过 Confirmed Implementation Boundary Gate 前不得实施。
 - 持续更新 `ECOSYSTEM.md`；实质新讨论必须触发再分析，不得直接改写已发布的 `COMMENT-DRAFT.md` Snapshot。
 - `kubernetes/kubernetes#140523` 不应恢复实现，除非未来重新筛选并明确处理与现有 assignee 的协调问题。
+- `kubernetes/kubernetes#140489` 不能从现有 AKS Job 的名字推断 SCTP/NetworkPolicy 能力；外部贡献者可完成静态配置验证，但关键运行证据需要 Prow 或 cluster owner。
 - 本地 `gh` 的认证状态不是持久事实；需要使用 `gh` 时必须先运行 `gh auth status` 实时核验。
 - 普通 Chat 只能读取已经 Push 的事实，不能读取 Codex 本地尚未提交或尚未 Push 的状态。
 
@@ -91,12 +104,18 @@ Publication checklist：
 3. Re-run discussion analysis on every material update.
 4. Do not prepare a plan or implementation until the Confirmed Implementation Boundary Gate passes and a new Brief authorizes it.
 
+For `#140489`:
+
+1. Technical Review the prepared clarification Draft.
+2. If the user later authorizes publication, ask maintainers to confirm the AKS runtime, NetworkPolicy provider, job split, and validation owner.
+3. Keep the Issue in `screening`; do not prepare a test-infra implementation until those gates are resolved in a new Brief.
+
 ## 新上下文恢复指令
 
 新的 Codex 执行会话必须先执行 `AGENTS.md` 的恢复顺序，并报告：
 
 - 本轮 `Execution Brief` 的阶段、目标、交付物和审批边界
-- 项目记录中的状态（#140502 `awaiting-scope-confirmation`，#140523 `superseded`）
+- 项目记录中的状态（#140489 `screening`，#140502 `awaiting-scope-confirmation`，#140523 `superseded`）
 - GitHub 当前实时状态
 - 两者是否存在差异
 - Git 分支及未提交改动

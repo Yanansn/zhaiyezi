@@ -1,0 +1,45 @@
+issue: "kubernetes/kubernetes#140489"
+status: screening
+recommendation: promising
+last_verified: "2026-07-17T03:50:58Z"
+facts_repository:
+  repository: "Yanansn/zhaiyezi"
+  local_path: "/home/sun/projects/zhaiyezi"
+  branch: main
+  baseline_commit: "947e401e4f90cec174c0a7b56afea3a7cbb4cbb4"
+upstream:
+  repository: "kubernetes/test-infra"
+  local_path: null
+  official_remote: "GitHub API read-only snapshot"
+  base_branch: master
+  base_commit: "04ddafd2e719aead330efeae0290a57906cd732b"
+  local_base_branch: null
+  local_base_commit: null
+  base_ahead_behind: not-applicable
+  worktree: not-cloned
+fork:
+  repository: null
+  branch: null
+  commit: null
+  status: not-created
+pull_request:
+  number: null
+  url: null
+  state: not-created
+public_communication:
+  draft_ready: true
+  reviewed: false
+  user_approved: false
+  published: false
+  expected_identity: null
+  identity_verified: false
+blockers:
+  - "The AKS Prow build cluster is reported to have dual-stack networking and external IPv6, but the checked job configuration does not prove that its worker kernel exposes SCTP to privileged Docker-in-Docker workloads."
+  - "No checked AKS or EKS candidate combines external IPv6, Kubernetes dual-stack, SCTP, and an SCTP-capable NetworkPolicy provider."
+  - "The intended CI ownership and validation path need confirmation: the closest AKS periodic is owned under sig-k8s-infra, while the target tests and analogous jobs are owned by SIG Network."
+  - "A normal contributor can validate YAML and repository policy locally, but cannot independently prove the protected cloud runtime capabilities or run the new periodic before merge."
+next_actions:
+  - "Ask SIG Network and SIG K8s Infra whether a narrow Kind periodic on k8s-infra-aks-prow-build is the intended direction."
+  - "Obtain runtime evidence for SCTP kernel/module availability inside the AKS Docker-in-Docker job and identify an SCTP-capable NetworkPolicy provider."
+  - "Confirm whether one dual-stack job must cover all target labels or whether separate external-IPv6 and SCTP/NetworkPolicy jobs are acceptable."
+  - "Do not plan or modify test-infra until maintainers confirm the cloud resource, ownership, and validation boundary."
