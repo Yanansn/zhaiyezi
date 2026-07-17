@@ -218,20 +218,22 @@ cross-node ginkgo.It
 
 ## Open questions
 
-1. Should a case-local guard enumerate the current local filesystems (`ext4`, `xfs`, and Windows `ntfs`; with `ext3` considered for future suite selection), or should `TestPattern` gain explicit cross-node-RWX compatibility metadata?
-2. Should external driver definitions be split by storage flavor when their capabilities differ, or should the framework gain conditional capabilities?
-3. Does the vSphere test definition use a single StorageClass for block and file volumes, and what CSI capability/PV fsType does its provisioner return for RWX?
-4. When topology affinity already exists, `SetAntiAffinity` appends a separate `NodeSelectorTerm`; because terms are ORed, does the observed run actually place the Pods on different nodes?
+1. Where can the display name be changed only for this RWX multi-Pod case when `TestPattern.Name` is established during suite registration but RWX capability is checked at runtime?
+2. Does the intended naming fix leave `TestPattern.FsType` and the resulting StorageClass parameter unchanged?
+3. Which patterns and generated names are in scope, and what acceptance assertion should cover them?
+4. Should external driver definitions be split by storage flavor when their capabilities differ, or should the framework gain conditional capabilities? This remains a model question, not the current implementation direction.
+5. Does the vSphere test definition use a single StorageClass for block and file volumes, and what CSI capability/PV fsType does its provisioner return for RWX?
+6. When topology affinity already exists, `SetAntiAffinity` appends a separate `NodeSelectorTerm`; because terms are ORed, does the observed run actually place the Pods on different nodes?
 
 ## Minimal validation points
 
-- Add a pure table-driven unit test around a small predicate for cross-node RWX-compatible patterns. Cover default filesystem, ext4, xfs, block, and any maintainer-approved Windows case.
-- If registration structure changes, test the chosen pattern selection without initializing a Ginkgo suite or cluster.
+- No validation design is accepted yet. A confirmed name-layer implementation should first identify a narrow assertion over generated test names while proving that test selection and resource parameters remain as intended.
+- If registration structure changes, test the chosen naming behavior without initializing a Ginkgo suite or cluster where feasible.
 - Existing `TestDriverParameter` verifies external YAML/JSON decoding but not compatibility combinations.
-- Package compilation and the predicate unit test can run without a cluster. Proving real PV fields, CSI requests and simultaneous mounts requires a CSI E2E environment; a full E2E is outside this stage.
+- Package compilation and a targeted naming unit test may run without a cluster once the boundary is confirmed. Proving real PV fields, CSI requests and simultaneous mounts requires a CSI E2E environment; a full E2E is outside this stage.
 
 ## Root-cause and next-stage conclusion
 
-The most likely classification is **B + C**, with **D as a possible configuration/model contributor** and **A insufficient**. The inventory rules out an ext4/xfs-only conclusion: `NtfsDynamicPV` currently reaches the same `multiVolume` RWX case on Windows, while `Ext3DynamicPV` is a nearby future-scope risk.
+The source map still proves that FsType is not only display metadata: the value reaches the StorageClass while the case requests RWX. That source fact remains valid even though new community evidence favors fixing the generated name rather than skipping the test.
 
-Rejecting every non-empty `FsType` is also too broad as a durable rule. `SupportedFsType` accepts arbitrary strings, and a future explicit value could represent a genuinely multi-client filesystem. The more precise design is a case-local semantic compatibility condition—ideally pattern metadata, or a narrowly documented predicate for known single-host filesystems—rather than treating string non-emptiness as the property. The recommended state remains `awaiting-triage`: prepare a short maintainer confirmation comment presenting that inventory and asking which representation SIG Storage prefers, but do not post it without separate authorization.
+Active PR `#140565` implements the previously identified overbroad non-empty-`FsType` skip. Path-relevant reviewer/approver `gnufied` expressed a high-authority preference that the test should not be skipped and that the problem is in the name; the Review state is `COMMENTED`, not approval or changes requested. The code map does not yet reveal a confirmed case-local naming mechanism or acceptance boundary, so the recommended state is `awaiting-scope-confirmation`; no Plan or Implementation should be derived from this map until that gate passes.

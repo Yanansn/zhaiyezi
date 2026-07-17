@@ -44,6 +44,17 @@ Record relevant TestGrid, Prow and downstream CI evidence, including links and l
 
 Separate expressed maintainer positions from open questions and inference.
 
+### Discussion re-analysis log
+
+- Previous assumption:
+- New evidence:
+- Commenter role and authority:
+- Evidence classification:
+- Impact:
+- Updated conclusion:
+- Remaining uncertainty:
+- Next decision gate:
+
 ## 8. Open Questions
 
 ## 9. Current Ecosystem Summary

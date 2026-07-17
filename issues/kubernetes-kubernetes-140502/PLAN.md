@@ -2,11 +2,12 @@
 
 ## Preferred solution
 
-Not selected in the `code-map` stage. Wait for SIG Storage to confirm the intended fsType compatibility rule before preparing an implementation plan.
+Not selected. Discussion re-analysis invalidated the earlier compatibility-guard preference as an implementation-ready direction. Wait for confirmation of the exact naming boundary, underlying `FsType` behavior, non-goals and acceptance criteria before preparing a plan.
 
 ## Alternatives
 
-- Case-local guard in the cross-node RWX test (current smallest candidate).
+- Naming-layer change that preserves the cross-node RWX test (current high-authority preference; exact mechanism unresolved).
+- Case-local guard in the cross-node RWX test (earlier candidate; in tension with the current path-approver preference).
 - Conditional capability model in `DriverInfo` (more expressive, much larger scope).
 - Split downstream external driver definitions by storage flavor (depends on the exact vSphere test configuration).
 
@@ -17,4 +18,4 @@ Not selected in the `code-map` stage. Wait for SIG Storage to confirm the intend
 
 ## Validation plan
 
-To be decided in a future `plan` stage; the code map identifies a pure table-driven predicate test as the minimum candidate.
+To be decided only after the Confirmed Implementation Boundary Gate passes. No current test proposal should be treated as accepted.

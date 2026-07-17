@@ -39,22 +39,33 @@ The test intends to place Pod 2 away from Pod 1 by adding required node anti-aff
 
 | Class | Judgment | Confidence | Evidence |
 |---|---|---:|---|
-| A. Name only | Rejected as the complete explanation | High | `pattern.FsType` is propagated into the StorageClass, not only `pattern.Name`. |
-| B. TestPattern × RWX combination | Primary framework defect | High | The suite registers ext4/xfs patterns for every test case; the cross-node test checks only global `CapRWX`. |
+| A. Name only | Community-favored hypothesis; technical boundary incomplete | Medium | `gnufied` favors the name layer, while `pattern.FsType` also propagates into the StorageClass and its intended preservation is unconfirmed. |
+| B. TestPattern × RWX combination | Source-proven combination; defect classification disputed | High for the combination | The suite registers ext4/xfs patterns for every test case; the cross-node test checks only global `CapRWX`. |
 | C. Actual resource configuration | Present in the generated request | High | The code constructs `RWX + Filesystem + csi.storage.k8s.io/fstype=ext4/xfs`. Runtime driver behavior remains E2E-dependent. |
 | D. Driver capability/configuration | Possible contributing factor, not proven incorrect | Medium | The external definition must expose the filesystem and RWX capabilities for the observed case to run, but each declaration can be true for different volume flavors. The framework cannot express that condition. |
 
 ## Likely fix layer
 
-The smallest coherent layer is the individual cross-node RWX test in `test/e2e/storage/testsuites/multivolume.go`, before it creates resources. A suite-wide skip would incorrectly remove other valid explicit-filesystem `multiVolume` cases. Renaming the pattern would hide real configuration and is insufficient.
+The earlier analysis favored the individual cross-node RWX test in `test/e2e/storage/testsuites/multivolume.go`, before it creates resources. A suite-wide skip would remove other valid explicit-filesystem `multiVolume` cases. That remained an analysis conclusion, not an accepted implementation direction.
 
-An ext4/xfs-only guard is incomplete because `NtfsDynamicPV` reaches the same test on Windows. Conversely, rejecting every non-empty `FsType` confuses representation with semantics: the set is open and a future explicit shared filesystem could legitimately support cross-node RWX. The more precise options are (in increasing structural scope) a narrowly documented predicate for known single-host filesystems or explicit compatibility metadata on `TestPattern`. SIG Storage should choose between those representations before implementation. `ext3` should be discussed as future-proofing because its dynamic pattern exists even though `multiVolume` does not currently select it.
+New discussion changes the decision context. PR `#140565` implements the broad non-empty-`FsType` skip, while path-relevant reviewer/approver `gnufied` says the test should not be skipped and that the problem lies in its name. This places the active PR approach in tension with a high-authority preference and points toward the naming layer, so the former predicate-versus-metadata choice must not be carried forward as the plan.
 
-The maintainer question should therefore be updated from “ext4/xfs versus any non-empty fsType” to: “The inventory finds ext4, xfs and Windows ntfs in the affected suite, plus an existing ext3 dynamic pattern outside it. Should the cross-node RWX case use an explicit pattern compatibility property, or a local-filesystem predicate covering these known values?”
+The new direction still does not specify how a case-local display name should be produced when `TestPattern.Name` is part of registration while RWX capability and driver behavior are checked later. It also does not confirm whether `TestPattern.FsType` and the StorageClass parameter must remain unchanged. These questions affect the change boundary and acceptance test, so no implementation plan is ready.
+
+## Community discussion re-analysis
+
+- **Previous assumption:** the fix likely required a case-local compatibility predicate or explicit `TestPattern` metadata.
+- **New evidence:** `gnufied` explored removing filesystem names from the affected test name; active PR `#140565` instead skips every non-empty `FsType`; `gnufied` expressed a preference in Review not to skip the test.
+- **Authority:** `gnufied` is the reporter, repository member, and path-relevant reviewer/approver. This makes the Review high-weight evidence, but not a replacement for a technically complete boundary.
+- **Classification:** the Issue wording is Proposal/Suggestion; the inline comment is a path-approver Preference in a `COMMENTED` Review, not formal approval, changes requested, SIG consensus or Confirmed Implementation Boundary.
+- **Updated conclusion:** investigate a naming-layer fix that preserves the test, while leaving the exact mechanism and resource behavior open.
+- **Remaining uncertainty:** affected cases, exact generated name, underlying `FsType`/StorageClass behavior, non-goals, and acceptance criteria.
+- **Next gate:** `awaiting-scope-confirmation`; do not enter Plan or Implementation until the boundary is confirmed.
 
 ## Scope and non-goals
 
 - No Kubernetes source modification in this stage.
+- No implementation based solely on the exploratory Issue suggestion or the unapproved PR.
 - No claim that the vSphere driver itself is defective without its exact external test definition and CSI request/response evidence.
 - No attempt to fix the separate node-affinity composition observation.
 - No full cluster or CSI E2E execution.

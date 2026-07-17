@@ -82,6 +82,9 @@ Issue Intake
 → Identity Verification
 → Publish
 → Maintainer Feedback
+→ Discussion Re-analysis (when material discussion changes)
+→ Awaiting Scope Confirmation (when the boundary remains incomplete)
+→ Confirmed Implementation Boundary Gate
 → Plan
 → Implementation
 → PR
@@ -91,7 +94,7 @@ Issue Intake
 - Ecosystem、Knowledge、来源事实、代码事实、测试证据、推断和决策必须分开记录。
 - 每个 Issue 必须有 `ECOSYSTEM.md`。它持续记录 label/project/milestone/assignee/state 变化、mention/reference/cross-reference、linked Issue/PR、Development、Downstream、Related Work、CI、Maintainer Position 和 Open Questions。
 - 对每个关联事件必须判断它是上游实现、下游 workaround、相关证据还是仅引用；不得把 cross-reference 自动等同于修复 PR。无法读取 Project 等元数据时，记录权限或可见性限制，不得猜测。
-- 新评论、新 PR、新 Timeline Event、新 Downstream PR、新 workaround 或新 CI 证据出现时更新 `ECOSYSTEM.md`。已审阅或已发布的 `COMMENT-DRAFT.md` 是 Snapshot，不用它承载持续生态变化，也不得因此改写已发布正文。
+- 新评论、新 PR、新 Timeline Event、新 Downstream PR、新 workaround 或新 CI 证据出现时更新 `ECOSYSTEM.md`。其中可能影响判断的社区讨论必须进入 Discussion Re-analysis；不得沿用旧结论自动继续 Plan 或 Implementation。已审阅或已发布的 `COMMENT-DRAFT.md` 是 Snapshot，不用它承载持续生态变化，也不得因此改写已发布正文。
 - 专业名词首次成为关键推理前，应按需在 Issue 的 `KNOWLEDGE.md` 中用目标读者能理解的方式解释。Knowledge 只覆盖理解当前 Issue 所需内容，不得扩展成无关的百科全书式研究。
 - 若枚举、注册表、能力矩阵、插件、驱动、状态、Handler 或其他对象集合会影响根因或修复范围，必须在 `CODE-MAP.md` 建立 Inventory。Inventory 必须说明统计范围、方法、定义与使用位置、是否完整、扩展机制和局限。
 - 不得把一次关键词搜索称为完整 Inventory；不得把开放字符串集合误写成固定枚举；不得把当前源码中的命名定义集合误写成运行时或外部配置可能值的全集。
@@ -101,6 +104,57 @@ Issue Intake
 - 测试必须记录工作目录、前置条件、命令、目的、结果和限制。
 - 只更新发生变化且与当前阶段有关的记录；状态或下一步变化时更新 `STATUS.yaml` 和 `JOURNAL.md`，交接摘要变化时再更新 `HANDOFF.md`。
 - Issue 完成或终止时，必须记录最终结果、原因、Review 反馈和学习总结。
+
+## 社区讨论再分析
+
+本节是社区讨论状态、分类与实施门槛的主要事实来源；README 和 Skill 只概述或映射执行步骤，不另建平行状态机。
+
+核心原则：**Do not optimize for implementation speed. Optimize for convergence with project maintainers. Implementation is triggered by evidence, not by ideas.** 新评论是新证据，不天然是实施指令。
+
+### 触发与状态
+
+- Issue 进入社区讨论后，新的评论、Review、关联 PR 或其他可能改变判断的讨论证据一经发现，立即暂停 Plan、Coding 和未完成的 Implementation，进入 `discussion-reanalysis`。
+- `discussion-reanalysis` 表示必须重新读取完整相关讨论并复核已有判断；它不是只阅读最后一条评论，也不是把新意见直接覆盖旧结论。
+- 再分析完成但问题定义、实现边界、关键技术假设、非目标或验收标准仍不清楚时，进入 `awaiting-scope-confirmation`。该状态禁止编码。
+- 只有通过 Confirmed Implementation Boundary Gate 后，才可进入现有 `planned` 状态；`implementing` 仍需新的、明确授权实现的 Execution Brief。
+- 后续任一阶段出现新的实质讨论，均可从当前阶段回到 `discussion-reanalysis`。这是一条回退边，不是另一套生命周期。
+
+### 评论者角色与权限
+
+区分 Issue reporter/author、community contributor、repository member、reviewer、approver、maintainer，以及 SIG/subproject lead。Issue 发起者不必然是最终决策者，社区成员的建议不代表 SIG 共识；Reviewer、Approver 和 Maintainer 的权限也必须对应实际代码路径或子项目。
+
+必要时结合目标路径的 `OWNERS`/`OWNERS_ALIASES`、SIG 或 subproject 归属、历史 Review 和当前 Issue/PR 中的实际职责核验权限。GitHub 身份标签只能作为证据之一；权限权重不能替代技术分析，也不能单独制造共识。
+
+### 讨论证据分类
+
+- **Proposal / Suggestion**：探索性建议，例如 “I wonder if…”, “Maybe…”, “Could we…”, “I think…” 或 “What about…”。不得解释为最终决定。
+- **Preference**：某位参与者倾向的方案，尚未形成共识。
+- **Clarification**：对问题、范围、约束或历史行为的解释。
+- **Emerging Consensus**：具有相关责任的参与者和技术证据逐渐趋同，但仍可能有未决问题；不能仅按评论数量判断。
+- **Maintainer Direction**：责任范围内的维护者明确给出推荐方向；仍需检查技术边界是否足够具体。
+
+`Confirmed Implementation Boundary` 不是评论类型、人员角色或单条证据的标签，而是综合上述证据后得出的决策 Gate：修复内容、非目标和验收边界已足够清楚，且不存在会改变方案选择的关键歧义，才允许进入 Plan。
+
+### 再分析记录与最小检查清单
+
+`ECOSYSTEM.md` 是动态记录。每次实质更新保留历史判断，并记录 `Previous assumption`、`New evidence`、`Commenter role and authority`、`Evidence classification`、`Impact`、`Updated conclusion`、`Remaining uncertainty` 和 `Next decision gate`；不得简单覆盖旧判断而丢失变化链路。
+
+1. 获取并阅读完整最新讨论。
+2. 识别新增评论及其上下文。
+3. 判断评论者角色和与目标范围相关的权限。
+4. 区分建议、偏好、澄清、共识、维护者方向或正式边界。
+5. 检查问题定义和技术假设是否改变。
+6. 检查实现范围与非目标是否改变。
+7. 检查是否存在相互冲突的意见或实现。
+8. 更新 `ECOSYSTEM.md`、必要的分析记录和 Issue 状态。
+9. 选择继续调查、请求澄清、等待更多意见、准备实施、暂停或放弃。
+10. 只有满足实施门槛后才进入 Coding。
+
+### Confirmed Implementation Boundary Gate
+
+对新建或重新评估的 Issue，进入 `planned` 前必须确认：问题定义清楚；实现边界和非目标清楚；没有影响方案选择的关键技术歧义；相关社区证据和维护者方向（如需要）足以支持该边界；冲突意见已解决、已有明确处理方式或不影响当前选择；验收标准可描述；现有调查证据仍有效；不需要先向社区确认会改变方案选择的范围问题。Gate 不要求形式化标签、正式批准或由维护者指定全部实现细节；小型明确 Issue 可以凭充分证据通过。代码调查、原型分析和方案比较不受此 Gate 阻止，但不得把原型当作已授权 Implementation。
+
+历史上已经处于 `planned` 或更后阶段的记录不会因本规则自动获得 Gate 认证，也不会被自动降级；恢复或重新评估时必须按当前证据复核。任一 Gate 条件不满足时，保持 `discussion-reanalysis` 或 `awaiting-scope-confirmation`，不得为了更快编码降低标准。
 
 ## 输出要求
 

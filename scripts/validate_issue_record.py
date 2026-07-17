@@ -28,6 +28,8 @@ KNOWN_STATUSES = {
     "awaiting-triage",
     "selected",
     "analyzing",
+    "discussion-reanalysis",
+    "awaiting-scope-confirmation",
     "planned",
     "implementing",
     "testing",
@@ -43,6 +45,17 @@ PUBLIC_COMMUNICATION_FIELDS = (
     "published",
     "identity_verified",
 )
+DISCUSSION_STATUSES = {"discussion-reanalysis", "awaiting-scope-confirmation"}
+DISCUSSION_FIELDS = (
+    "Previous assumption",
+    "New evidence",
+    "Commenter role and authority",
+    "Evidence classification",
+    "Impact",
+    "Updated conclusion",
+    "Remaining uncertainty",
+    "Next decision gate",
+)
 
 
 def yaml_scalar(text: str, key: str) -> str | None:
@@ -54,6 +67,11 @@ def meaningful_markdown(text: str) -> str:
     text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
     lines = [line for line in text.splitlines() if not line.lstrip().startswith("#")]
     return "\n".join(lines).strip()
+
+
+def markdown_field(text: str, field: str) -> str | None:
+    matches = re.findall(rf"(?m)^-[ \t]+{re.escape(field)}:[ \t]*(.*)$", text)
+    return matches[-1].strip() if matches else None
 
 
 def yaml_bool_in_section(text: str, section: str, key: str) -> bool | None:
@@ -202,6 +220,48 @@ def validate(record: Path) -> tuple[list[str], list[str]]:
                 "ECOSYSTEM.md has incomplete mandatory structure: "
                 + ", ".join(missing_markers)
             )
+        discussion_heading = "### Discussion re-analysis log"
+        if discussion_heading not in ecosystem_text:
+            message = (
+                "legacy ECOSYSTEM.md has no Discussion re-analysis log; "
+                "add it when material discussion is next re-analyzed"
+            )
+            if status in DISCUSSION_STATUSES:
+                errors.append(
+                    f"status {status!r} requires a Discussion re-analysis log"
+                )
+            else:
+                warnings.append(message)
+        else:
+            discussion_values = {
+                field: markdown_field(ecosystem_text, field)
+                for field in DISCUSSION_FIELDS
+            }
+            missing_fields = [
+                field for field, value in discussion_values.items() if value is None
+            ]
+            if missing_fields:
+                errors.append(
+                    "Discussion re-analysis log is missing fields: "
+                    + ", ".join(missing_fields)
+                )
+            if status == "discussion-reanalysis":
+                required = DISCUSSION_FIELDS[:5] + ("Next decision gate",)
+                empty_fields = [field for field in required if not discussion_values[field]]
+                if empty_fields:
+                    errors.append(
+                        "discussion-reanalysis requires evidence fields: "
+                        + ", ".join(empty_fields)
+                    )
+            elif status == "awaiting-scope-confirmation":
+                empty_fields = [
+                    field for field, value in discussion_values.items() if not value
+                ]
+                if empty_fields:
+                    errors.append(
+                        "awaiting-scope-confirmation requires a completed re-analysis log: "
+                        + ", ".join(empty_fields)
+                    )
 
     journal = (record / "JOURNAL.md").read_text(encoding="utf-8")
     if not journal.startswith("# Journal"):

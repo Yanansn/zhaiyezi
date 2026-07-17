@@ -49,6 +49,7 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
    - Inspect label, project, milestone, assignee and state changes; mentions, references, cross-references, linked Issues and linked PRs; the Development section; downstream projects and workarounds; related or historical work; TestGrid, Prow and downstream CI; maintainer positions; and open questions.
    - Classify every linked item as an upstream implementation, downstream workaround, related evidence, historical work or reference-only event. A cross-reference is not proof of an implementation PR.
    - Treat `ECOSYSTEM.md` as continuous research. Refresh it when a new comment, PR, Timeline event, downstream change, workaround or CI signal appears. Treat public Drafts as frozen snapshots; do not rewrite a reviewed or published Draft merely to absorb new ecosystem facts.
+   - When new discussion may affect the problem, assumptions, scope, risk, acceptance, or community viability, set `discussion-reanalysis`, pause planning or implementation, and follow the authoritative discussion re-analysis contract in `AGENTS.md`.
    - Record access or visibility limitations instead of inferring unavailable Project or relationship metadata.
 3. **Map when requested**
    - Identify the background a target reader needs. Add only necessary issue-specific explanations to `KNOWLEDGE.md`; reuse links for stable cross-issue material instead of copying it.
@@ -59,8 +60,9 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
    - Do not modify upstream code when the brief says the stage is code-map-only.
 4. **Plan when requested**
    - State the root cause or unresolved hypothesis, preferred solution, alternatives, risks, compatibility concerns, and validation strategy.
-   - If maintainers have not accepted the direction, prepare a concise confirmation comment and pause before substantial implementation.
+   - Plan only after the Confirmed Implementation Boundary Gate in `AGENTS.md` passes. If re-analysis is complete but material scope remains uncertain, use `awaiting-scope-confirmation`, prepare a concise confirmation comment when requested, and pause before implementation.
 5. **Implement when requested**
+   - Require a confirmed implementation boundary and a new Brief that explicitly authorizes implementation. New material discussion returns the Issue to `discussion-reanalysis` and pauses coding.
    - Create a descriptive branch from the verified official base after checking repository conventions.
    - Treat updating an existing working branch as separate from synchronizing the local base. Never merge or rebase the official base into a branch with commits without explicit authorization; do not rebase or force-push an open PR by default.
    - Work in the upstream working repository and make the smallest coherent change. Explain important code decisions and connect them to the code map.
@@ -79,7 +81,13 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
    - Immediately before an authorized publication, obtain the actual authenticated GitHub identity and compare it with the user-specified expected identity. Never infer identity from an SSH key name, remote URL or history; stop if they differ or cannot be verified.
    - Re-verify the live target and exact approved content. Afterward record the URL, publication time, actual content and maintainer-feedback state.
    - Perform Commit, Push, PR, comment, or review actions only when the brief or a later user message explicitly authorizes each external boundary.
-8. **Review and close**
+8. **Re-analyze updated community discussion (mandatory trigger)**
+   - Read the full current discussion, not only the newest comment; identify the new evidence in context.
+   - Establish the commenter's project- and path-relevant role using ownership, SIG/subproject responsibility, review history and current duties when necessary. Do not treat identity as a substitute for technical evidence.
+   - Classify discussion evidence as Proposal/Suggestion, Preference, Clarification, Emerging Consensus, or Maintainer Direction. Exploratory wording is not a final decision. Assess Confirmed Implementation Boundary separately as the decision Gate defined in `AGENTS.md`, not as a comment type.
+   - Recheck the problem definition, technical assumptions, scope, non-goals, conflicting views, risks, acceptance criteria and validity of prior research. Preserve the previous assumption and evidence-to-conclusion change in `ECOSYSTEM.md`.
+   - Choose continued investigation, clarification, waiting, planning, pause or abandonment. Coding remains prohibited until the gate in `AGENTS.md` passes.
+9. **Review and close**
    - Diagnose CI failures, respond to review, iterate implementation and tests, and update records.
    - Finish with merged, rejected, superseded, or blocked status plus a learning retrospective and suggested next issue.
 
@@ -103,7 +111,7 @@ Use one directory per issue under `issues/<owner>-<repo>-<number>/`. Maintain:
 
 - `STATUS.yaml`: machine-readable current state, blockers, next actions, facts repository, official upstream/base, user Fork/working branch, PR, and last verification time.
 - `ISSUE.md`: source facts and structured requirement summary.
-- `ECOSYSTEM.md`: mandatory first-class, continuously refreshed facts about Timeline, Development, downstream impact and workarounds, related work, CI, maintainer positions, open questions, and the current ecosystem summary.
+- `ECOSYSTEM.md`: mandatory first-class, continuously refreshed facts about Timeline, Development, downstream impact and workarounds, related work, CI, maintainer positions, discussion re-analysis history, open questions, and the current ecosystem summary.
 - `KNOWLEDGE.md`: optional-in-content background, terms, mental models, distinctions and exceptions needed by a new reader; the file is part of new records but may remain minimal when no domain explanation is needed.
 - `ANALYSIS.md`: accessible technical explanation, root cause or hypotheses, scope, and non-goals.
 - `CODE-MAP.md`: relevant files, conditional Inventory, call flow, Lifecycle / Data Flow, analogous code, tests, and ownership.
@@ -123,7 +131,7 @@ Public communication lifecycle labels are artifact metadata, not Issue statuses.
 
 Do not rewrite all record files on every turn. Use this minimum mapping:
 
-- ecosystem: `ECOSYSTEM.md` whenever Timeline, Development, downstream, related work, CI, maintainer position or open questions change, plus `STATUS.yaml` and `JOURNAL.md` only when state or next action changes;
+- ecosystem or discussion update: `ECOSYSTEM.md` whenever Timeline, Development, downstream, related work, CI, maintainer position or open questions change; for material discussion also update the re-analysis log, `STATUS.yaml`, `JOURNAL.md`, and any conclusion whose validity changed;
 - discovery or code map: refresh `ECOSYSTEM.md` first, then `KNOWLEDGE.md` only when reader prerequisites change and `CODE-MAP.md` for source facts, plus `STATUS.yaml` and `JOURNAL.md` only when state or next action changes;
 - plan: `PLAN.md` and changed status/journal facts;
 - implementation: `IMPLEMENTATION.md` and changed status/journal facts;
@@ -133,9 +141,9 @@ Do not rewrite all record files on every turn. Use this minimum mapping:
 
 ## Status model
 
-Use one of: `candidate`, `screening`, `awaiting-triage`, `selected`, `analyzing`, `planned`, `implementing`, `testing`, `pr-ready`, `submitted`, `reviewing`, `merged`, `blocked`, `rejected`, `superseded`, `closed`.
+Use one of: `candidate`, `screening`, `awaiting-triage`, `selected`, `analyzing`, `discussion-reanalysis`, `awaiting-scope-confirmation`, `planned`, `implementing`, `testing`, `pr-ready`, `submitted`, `reviewing`, `merged`, `blocked`, `rejected`, `superseded`, `closed`.
 
-Ordinary Chat normally hands off an issue after screening. Do not skip from an unverified brief directly to implementation. A contribution is complete only when its outcome and learning retrospective are recorded.
+Ordinary Chat normally hands off an issue after screening. Do not skip from an unverified brief or unconfirmed discussion directly to implementation. For new or re-evaluated records, entering `planned` means the Confirmed Implementation Boundary Gate has passed; existing historical `planned` records are not retroactively certified and must be checked when resumed. `discussion-reanalysis` and `awaiting-scope-confirmation` prohibit implementation, while read-only investigation, prototypes and solution comparison may continue within an authorized Brief. A contribution is complete only when its outcome and learning retrospective are recorded.
 
 ## Adaptation
 

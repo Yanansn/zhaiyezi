@@ -1,7 +1,7 @@
 issue: "kubernetes/kubernetes#140502"
-status: awaiting-triage
+status: awaiting-scope-confirmation
 recommendation: promising
-last_verified: "2026-07-16"
+last_verified: "2026-07-17"
 facts_repository:
   repository: "Yanansn/zhaiyezi"
   local_path: "/home/sun/projects/zhaiyezi"
@@ -35,7 +35,10 @@ public_communication:
   identity_verified: true
 blockers:
   - "Issue still has needs-triage and no triage/accepted label"
-  - "SIG Storage has not confirmed whether the guard should use explicit TestPattern compatibility metadata or a predicate for known local filesystems"
+  - "gnufied expressed a path-approver preference for fixing the generated test name instead of skipping the test, but the exact naming mechanism and implementation boundary are not confirmed"
+  - "Active PR kubernetes/kubernetes#140565 implements a broader non-empty FsType skip that is in tension with gnufied's COMMENTED review and has no approving review"
+  - "It remains unclear whether underlying TestPattern.FsType and StorageClass behavior must stay unchanged and what acceptance criteria define the name-focused fix"
 next_actions:
-  - "Wait for maintainer feedback. Do not begin plan or implementation until direction is confirmed."
-  - "Continuously refresh ECOSYSTEM.md when comments, Timeline events, linked work, downstream workarounds, or CI evidence change."
+  - "Confirm the exact scope: display-name change versus TestPattern.FsType and StorageClass behavior, including non-goals and acceptance criteria."
+  - "Monitor kubernetes/kubernetes#140565 and the full Issue discussion; re-run discussion analysis on material updates."
+  - "Do not begin plan or implementation until the Confirmed Implementation Boundary Gate passes and a new Brief authorizes implementation."

@@ -27,12 +27,15 @@ Issue Intake
 → Identity Verification
 → Publish
 → Maintainer Feedback
+→ Discussion Re-analysis (when material discussion changes)
+→ Awaiting Scope Confirmation (when the boundary remains incomplete)
+→ Confirmed Implementation Boundary Gate
 → Plan
 → Implementation
 → PR
 ```
 
-`ECOSYSTEM.md` 是每个 Issue 必须维护的一级事实文档，覆盖 Timeline、Development、下游、关联工作、CI 和维护者立场。它是持续研究记录：新评论、新 PR、新 Timeline Event、下游 workaround 或 CI 线索出现时都要更新。`COMMENT-DRAFT.md` 则是一次公开沟通的冻结 Snapshot，发布后不会为了吸收新生态信息而改写。
+`ECOSYSTEM.md` 是每个 Issue 必须维护的一级事实文档，覆盖 Timeline、Development、下游、关联工作、CI 和维护者立场。它是持续研究记录：新评论、新 PR、新 Timeline Event、下游 workaround 或 CI 线索出现时都要更新。可能影响判断的新讨论必须先完成再分析；建议和探索性意见不能直接触发编码，只有确认实现边界后才可进入 Plan。`COMMENT-DRAFT.md` 则是一次公开沟通的冻结 Snapshot，发布后不会为了吸收新生态信息而改写。
 
 `KNOWLEDGE.md` 帮助新读者理解必要背景，Inventory 防止局部样本造成范围误判，`CODE-MAP.md` 保存源码组织与运行事实，`ANALYSIS.md` 才负责基于证据推理。Ecosystem Analysis 强制执行；Knowledge 的深度、Inventory 和 Lifecycle 仍按 Issue 需要控制。
 
@@ -96,4 +99,8 @@ PR 属于状态模型的一部分：`testing → pr-ready → submitted → revi
 
 ## 状态流转
 
-`candidate → screening → awaiting-triage/selected → analyzing → planned → implementing → testing → pr-ready → submitted → reviewing → merged/closed/blocked/rejected/superseded`
+主线：`candidate → screening → awaiting-triage/selected → analyzing → planned → implementing → testing → pr-ready → submitted → reviewing → merged/closed/blocked/rejected/superseded`
+
+实质讨论回退边：`任一活动状态 → discussion-reanalysis → awaiting-scope-confirmation 或 planned`。只有边界仍不完整时进入 `awaiting-scope-confirmation`；通过 Gate 后才回到 `planned`。
+
+状态机和社区讨论再分析的规范性定义以 [AGENTS.md](AGENTS.md) 为准；本页只提供概览。

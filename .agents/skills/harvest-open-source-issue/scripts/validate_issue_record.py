@@ -15,12 +15,29 @@ REQUIRED = {
 TERMINAL_STATUSES = {"merged", "blocked", "rejected", "superseded", "closed"}
 STATUSES = {
     "candidate", "screening", "awaiting-triage", "selected", "analyzing",
+    "discussion-reanalysis", "awaiting-scope-confirmation",
     "planned", "implementing", "testing", "pr-ready", "submitted",
     "reviewing", "merged", "blocked", "rejected", "superseded", "closed",
 }
 PUBLIC_FIELDS = (
     "draft_ready", "reviewed", "user_approved", "published", "identity_verified",
 )
+DISCUSSION_STATUSES = {"discussion-reanalysis", "awaiting-scope-confirmation"}
+DISCUSSION_FIELDS = (
+    "Previous assumption",
+    "New evidence",
+    "Commenter role and authority",
+    "Evidence classification",
+    "Impact",
+    "Updated conclusion",
+    "Remaining uncertainty",
+    "Next decision gate",
+)
+
+
+def markdown_field(text: str, field: str) -> str | None:
+    matches = re.findall(rf"(?m)^-[ \t]+{re.escape(field)}:[ \t]*(.*)$", text)
+    return matches[-1].strip() if matches else None
 
 
 def public_bool(status_text: str, key: str) -> bool | None:
@@ -83,13 +100,54 @@ def main() -> None:
             "## 1. Issue Timeline", "## 2. Timeline Events",
             "## 3. Development", "## 4. Downstream",
             "## 5. Related Work", "## 6. CI",
-            "## 7. Maintainer Position", "## 8. Open Questions",
+            "## 7. Maintainer Position",
+            "## 8. Open Questions",
             "## 9. Current Ecosystem Summary", "Upstream:",
             "Downstream:", "Known workaround:",
             "Active implementation:", "Open questions:",
         ):
             if marker not in ecosystem_text:
                 raise SystemExit(f"ECOSYSTEM.md is missing {marker}")
+        discussion_heading = "### Discussion re-analysis log"
+        if discussion_heading not in ecosystem_text:
+            if status in DISCUSSION_STATUSES:
+                raise SystemExit(
+                    f"status {status!r} requires a Discussion re-analysis log"
+                )
+            print(
+                "warning: legacy ECOSYSTEM.md has no Discussion re-analysis log; "
+                "add it when material discussion is next re-analyzed"
+            )
+        else:
+            discussion_values = {
+                field: markdown_field(ecosystem_text, field)
+                for field in DISCUSSION_FIELDS
+            }
+            missing_fields = [
+                field for field, value in discussion_values.items() if value is None
+            ]
+            if missing_fields:
+                raise SystemExit(
+                    "Discussion re-analysis log is missing fields: "
+                    + ", ".join(missing_fields)
+                )
+            if status == "discussion-reanalysis":
+                required = DISCUSSION_FIELDS[:5] + ("Next decision gate",)
+                empty_fields = [field for field in required if not discussion_values[field]]
+                if empty_fields:
+                    raise SystemExit(
+                        "discussion-reanalysis requires evidence fields: "
+                        + ", ".join(empty_fields)
+                    )
+            elif status == "awaiting-scope-confirmation":
+                empty_fields = [
+                    field for field, value in discussion_values.items() if not value
+                ]
+                if empty_fields:
+                    raise SystemExit(
+                        "awaiting-scope-confirmation requires a completed re-analysis log: "
+                        + ", ".join(empty_fields)
+                    )
     communication = {key: public_bool(status_text, key) for key in PUBLIC_FIELDS}
     if all(value is None for value in communication.values()):
         if status in TERMINAL_STATUSES:

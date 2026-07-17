@@ -18,11 +18,11 @@
 ## 当前活动任务
 
 - 当前 Issue：`kubernetes/kubernetes#140502`（`The generated test scenarios for RWX volume types dont make sense`）
-- 当前阶段：`Awaiting maintainer feedback`。Issue 状态保持 `awaiting-triage`，建议为 `promising`；维护者方案确认评论已经发布。
-- 实时状态：Issue open、无人认领、仍有 `needs-triage`、没有 `triage/accepted`、实现认领或活跃关联 Kubernetes 实现 PR；发布前没有新的维护者方向。
-- Issue Ecosystem：已建立强制一级事实文档 `issues/kubernetes-kubernetes-140502/ECOSYSTEM.md`。Timeline 中的 `openshift/release#81632` 是已合并的 downstream CI workaround，仅为 OpenShift 4.23 job 增加 `vsanfs=true` pool selector，不是 Kubernetes 实现 PR；当前无 Active implementation。
-- 技术结论：`multiVolume` 当前直接选择 ext4、xfs 和 Windows ntfs 的 DynamicPV Pattern；ext3 DynamicPV Pattern 存在但当前不在该 suite。显式 FsType 会进入真实 StorageClass 参数，同时测试创建 Filesystem RWX PVC 并让两个 Pod 共享读写；最可能是 TestPattern/RWX 组合与实际资源请求问题，不只是名称问题。
-- 范围结论：`SupportedFsType` 是开放字符串集合，不能简单在“只排除 ext4/xfs”和“排除所有非空 FsType”之间二选一。需请维护者确认使用已知本地文件系统 predicate，还是为 TestPattern 增加显式 RWX 兼容性元数据。
+- 当前阶段：`Awaiting Scope Confirmation`。Issue 状态为 `awaiting-scope-confirmation`，建议为 `promising`；不得进入 Plan 或 Implementation。
+- 实时状态：Issue open、无人认领、仍有 `needs-triage`。Issue 新增探索性命名建议，并出现活跃但未获批准的 Kubernetes PR `#140565`。
+- Issue Ecosystem：`openshift/release#81632` 仍是已合并的 downstream CI workaround。上游 PR `#140565` 提议跳过所有非空 `FsType`；路径 reviewer/approver `gnufied` 在 `COMMENTED` Review 中表达了不跳过测试、倾向处理测试名称的高权重偏好，但这不是正式 approval、changes requested、SIG 共识或完整实现边界。
+- 技术结论：源码确认显式 FsType 会同时进入测试名称和真实 StorageClass 参数，而测试创建 Filesystem RWX PVC 并让两个 Pod 共享读写。社区当前更偏向名称层，底层资源行为是否需要改变仍未确认。
+- 范围结论：新证据使旧的 predicate/metadata 方案不再可直接实施。当前方向是保留测试并调查名称层，但仍需确认确切命名机制、是否保持底层 `TestPattern.FsType`/StorageClass 行为、非目标和验收标准。
 - 上游工作分支和 Pull Request 均未创建，Kubernetes 源码未修改。
 - 上一个 Issue `kubernetes/kubernetes#140523` 已因其他贡献者认领而 `superseded`。
 
@@ -77,25 +77,26 @@ Publication checklist：
 
 ## 当前阻塞与风险
 
-- `kubernetes/kubernetes#140502` 尚未获得 `triage/accepted`，SIG Storage 也未确认采用本地文件系统 predicate 还是显式 Pattern 兼容性元数据。
-- 下一步：Monitor maintainer response; do not implement without a new Brief.
-- 持续更新 `ECOSYSTEM.md`；新评论、Timeline Event、关联 PR、下游 workaround 或 CI 证据不得直接改写已发布的 `COMMENT-DRAFT.md` Snapshot。
+- `kubernetes/kubernetes#140502` 尚未获得 `triage/accepted`；`#140565` 的 skip 方案与 `gnufied` 的 path-approver 偏好存在张力，且没有 approving Review。
+- 下一步：确认名称修改的实现范围、底层 FsType 行为、非目标和验收标准；未通过 Confirmed Implementation Boundary Gate 前不得实施。
+- 持续更新 `ECOSYSTEM.md`；实质新讨论必须触发再分析，不得直接改写已发布的 `COMMENT-DRAFT.md` Snapshot。
 - `kubernetes/kubernetes#140523` 不应恢复实现，除非未来重新筛选并明确处理与现有 assignee 的协调问题。
 - 本地 `gh` 的认证状态不是持久事实；需要使用 `gh` 时必须先运行 `gh auth status` 实时核验。
 - 普通 Chat 只能读取已经 Push 的事实，不能读取 Codex 本地尚未提交或尚未 Push 的状态。
 
 ## Next step
 
-1. Monitor maintainer response.
-2. Refresh ECOSYSTEM.md when the Issue ecosystem changes.
-3. Do not prepare a plan or implementation until community direction is confirmed in a new Brief.
+1. Monitor the full Issue discussion and PR `#140565` Review state.
+2. Obtain scope confirmation for the exact naming change and unchanged behavior/non-goals.
+3. Re-run discussion analysis on every material update.
+4. Do not prepare a plan or implementation until the Confirmed Implementation Boundary Gate passes and a new Brief authorizes it.
 
 ## 新上下文恢复指令
 
 新的 Codex 执行会话必须先执行 `AGENTS.md` 的恢复顺序，并报告：
 
 - 本轮 `Execution Brief` 的阶段、目标、交付物和审批边界
-- 项目记录中的状态（#140502 `awaiting-triage`，#140523 `superseded`）
+- 项目记录中的状态（#140502 `awaiting-scope-confirmation`，#140523 `superseded`）
 - GitHub 当前实时状态
 - 两者是否存在差异
 - Git 分支及未提交改动
@@ -105,6 +106,6 @@ Publication checklist：
 
 ## 最近检查
 
-- 项目记录日期：2026-07-16
+- 项目记录日期：2026-07-17
 - 当前分支应以 `git branch --show-current` 为准。
 - 当前提交应以 `git log -1 --oneline` 为准，避免交接文件在每次提交后产生自引用漂移。

@@ -4,7 +4,7 @@ issues:
     title: "The generated test scenarios for RWX volume types dont make sense"
     domain: cloud-native
     language: go
-    status: awaiting-triage
+    status: awaiting-scope-confirmation
     recommendation: promising
     record: "issues/kubernetes-kubernetes-140502"
   - id: "kubernetes/kubernetes#140523"

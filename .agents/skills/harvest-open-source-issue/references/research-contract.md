@@ -35,6 +35,21 @@ The analysis must cover label, project, milestone, assignee and state changes; m
 
 `ECOSYSTEM.md` is continuous knowledge. `COMMENT-DRAFT.md`, PR descriptions and other public Drafts are snapshots governed by the Public Communication Contract. New ecosystem facts update `ECOSYSTEM.md`; they do not silently mutate a reviewed or published public artifact.
 
+Material community discussion also requires a durable re-analysis entry under `## 7. Maintainer Position`. New records include the following shape; legacy records add it when material discussion next triggers re-analysis. Preserve, rather than overwrite, completed entries:
+
+```text
+Previous assumption:
+New evidence:
+Commenter role and authority:
+Evidence classification:
+Impact:
+Updated conclusion:
+Remaining uncertainty:
+Next decision gate:
+```
+
+Append a new field block for each material re-analysis instead of replacing an earlier completed block; validators evaluate the latest occurrence of each field. The authoritative evidence classes, status transitions, checklist and implementation gate are defined in the repository `AGENTS.md`. This contract defines the record shape, not a second workflow.
+
 ## Knowledge decision
 
 Create `KNOWLEDGE.md` for every new record, but fill only what the issue needs. Explain a domain term before it becomes essential to reasoning. Prefer a link to stable shared knowledge when it is sufficient, while keeping issue-specific prerequisites local so a cold start remains understandable.

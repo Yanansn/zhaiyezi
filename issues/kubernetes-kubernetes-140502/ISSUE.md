@@ -5,9 +5,10 @@
 - Upstream: [`kubernetes/kubernetes#140502`](https://github.com/kubernetes/kubernetes/issues/140502)
 - Title: `The generated test scenarios for RWX volume types dont make sense`
 - Opened by `gnufied` on 2026-07-13.
-- State verified on 2026-07-16: open, no assignee, no linked Kubernetes implementation PR.
+- State verified on 2026-07-17: open, no assignee, no milestone, and still awaiting triage.
 - Labels: `kind/bug`, `sig/storage`, `needs-triage`; `triage/accepted` is absent.
-- Discussion consists of the automatic awaiting-triage message and the author's `/sig storage` command. No contributor has claimed implementation.
+- After `bzsuni` asked for the preferred fix boundary, Issue author `gnufied` suggested exploring removal of filesystem names from the affected test name. The wording is exploratory and does not by itself confirm an implementation boundary.
+- Contributor `darshansreenivas` linked active Kubernetes PR [`#140565`](https://github.com/kubernetes/kubernetes/pull/140565), which skips the case whenever `pattern.FsType` is non-empty. In an inline comment within a `COMMENTED` Review, `gnufied` said the test should not be skipped and the problem is the test name. The PR remains open and blocked, with no approving or changes-requested Review.
 - The timeline cross-references merged `openshift/release#81632`, which changes an OpenShift vSphere CI pool selector (`vsanfs=true`); it is not a Kubernetes implementation fix.
 - Reported test name:
 
@@ -32,6 +33,6 @@ The author's statement that “RWX cannot support ext4” needs qualification. A
 
 ## Acceptance signals and current gate
 
-- A correct fix must prevent an invalid explicit filesystem/RWX combination without removing valid ext4/xfs tests elsewhere in `multiVolume`.
-- It must preserve valid RWX tests for shared filesystems and raw block modes.
-- SIG Storage has not accepted or directed the issue yet. Implementation should wait for `triage/accepted` or a maintainer-confirmed direction because the correct compatibility rule (specific filesystems versus all explicit `FsType` values) is a policy decision.
+- The highest-authority current preference is not to skip the test, but the exact way to change the generated name has not been established.
+- It is not confirmed whether a fix should preserve `TestPattern.FsType` and the resulting StorageClass parameters unchanged, nor which generated names are in scope.
+- Non-goals and an observable acceptance criterion remain unstated. The Issue is therefore `awaiting-scope-confirmation`, not ready for Plan or Coding.
