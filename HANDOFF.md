@@ -11,7 +11,7 @@
 - 研究契约：`.agents/skills/harvest-open-source-issue/references/research-contract.md`
 - 项目规则：`AGENTS.md`
 - Issue 登记：`registry/issues.yaml`
-- 当前任务记录：`issues/kubernetes-kubernetes-140502/` 与 `issues/kubernetes-kubernetes-140489/`
+- 当前任务记录：`issues/kubernetes-kubernetes-140502/`、`issues/kubernetes-kubernetes-140489/` 与已终止筛选的 `issues/kubernetes-kubernetes-136785/`
 - 外部事实来源：GitHub
 - 事实仓库：`Yanansn/zhaiyezi`，普通 Chat 已可通过 GitHub Connector 读取已 Push 内容
 
@@ -37,6 +37,16 @@
 - 阻塞：AKS worker 的 SCTP kernel/module 可见性、nested Kind 中的 SCTP-capable NetworkPolicy provider、外部 IPv6 的实际 Pod 路径、一个或多个 Job 的边界，以及 SIG Network/SIG K8s Infra 的所有权与运行验证责任均未确认。
 - 下一步：先对 `COMMENT-DRAFT.md` 做 Technical Review，再由用户决定是否授权向维护者确认上述环境边界。未确认前不得编写实施计划或修改 test-infra。
 - 本阶段未修改 Kubernetes/test-infra、未认领 Issue、未发布评论、未创建分支或 PR。
+
+## #136785 RuntimeClass.Handler Screening
+
+- 候选子任务：把 `RuntimeClass.Handler` immutable validation 迁移到 Declarative Validation。
+- 终态：`superseded`；推荐同为 `superseded`，不得进入 `selected`、Plan 或 Implementation。
+- 实时 Issue：`kubernetes/kubernetes#136785` 仍 open，带 `help wanted`、`triage/accepted`、`sig/api-machinery` 和 `area/api-validation`；任务清单仍错误地把 RuntimeClass 项显示为未完成。
+- 决定性事实：上游 PR `#135046` 已于 2025-12-18 合并，早于本 Issue 创建；官方 `master@8bd10c1aede` 已包含三版本 tag、生成 validator、RuntimeClass strategy 接线、HV coverage marker、v1alpha1 path normalization 和 equivalence tests。
+- 版本边界：kube-apiserver 当前仅 REST serve `node.k8s.io/v1` RuntimeClass；scheme 与 generated equivalence tests 还覆盖 v1beta1 的 `handler` 及 v1alpha1 的 `spec.runtimeHandler`。
+- 本地验证：RuntimeClass declarative equivalence 与 node handwritten validation tests 均通过，无需集群；测试路径在本地基线与抓取的最新官方 master 间无差异。
+- 本阶段未修改 Kubernetes、未运行生成器、未创建分支、未认领或发布；事实记录已获用户单独授权 Commit 并 Push 到 `zhaiyezi/main`。
 
 ## Public communication
 

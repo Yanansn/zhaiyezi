@@ -1,0 +1,38 @@
+issue: "kubernetes/kubernetes#136785"
+status: superseded
+recommendation: superseded
+last_verified: "2026-07-17T16:39:37+08:00"
+facts_repository:
+  repository: "Yanansn/zhaiyezi"
+  branch: main
+  commit: "c007161"
+  pushed: true
+upstream:
+  repository: "kubernetes/kubernetes"
+  official_remote: upstream
+  base_branch: master
+  base_commit: "8bd10c1aede813509875bac792f3bce79fbb6414"
+  local_base_commit: "7e8950f1ec186066fabdfe69d69f92fbb04592da"
+  local_base_ahead: 0
+  local_base_behind: 57
+fork:
+  repository: "bzsuni/kubernetes"
+  remote: origin
+  branch: null
+pull_request:
+  number: null
+  url: null
+  state: not-created
+public_communication:
+  draft_ready: false
+  reviewed: false
+  user_approved: false
+  published: false
+  expected_identity: null
+  identity_verified: false
+blockers:
+  - "RuntimeClass.Handler was already migrated by merged PR #135046 before tracking issue #136785 was opened"
+  - "The unchecked task-list entry in issue #136785 is stale relative to upstream master"
+next_actions:
+  - "Do not claim or implement RuntimeClass.Handler"
+  - "Select and screen a different still-unmigrated scalar field from current source and live PR state"

@@ -1,4 +1,12 @@
 issues:
+  - id: "kubernetes/kubernetes#136785"
+    url: "https://github.com/kubernetes/kubernetes/issues/136785"
+    title: "Migrate 'Good First Migration' Immutable Fields to Declarative Validation"
+    domain: cloud-native
+    language: go
+    status: superseded
+    recommendation: superseded
+    record: "issues/kubernetes-kubernetes-136785"
   - id: "kubernetes/kubernetes#140489"
     url: "https://github.com/kubernetes/kubernetes/issues/140489"
     title: "Add [Feature:Networking-IPv6] and [Feature:SCTPConnectivity] CI"
