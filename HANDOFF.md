@@ -9,7 +9,8 @@
 - 候选筛选 Skill：`.agents/skills/screen-open-source-issue/`
 - 筛选简报模板：`.agents/skills/screen-open-source-issue/references/execution-brief.md`
 - 筛选记录目录：`screenings/<owner>-<repo>/<scan-id>/`
-- Candidate Admission Gate：只有完整审计后的 `available` 候选、足够置信度和用户明确决定才能进入正式贡献系统；registry 与 Issue 初始化仍需单独授权
+- 筛选记录契约：`RESULTS.yaml` schema v2 分离 `quick_filtered_out` 与三个 Deep Audit bucket，并用严格 funnel 等式核验完整扫描
+- Candidate Admission Gate：`available` 候选必须用独立 `admission` mapping 保存 Gate 状态、证据刷新、用户决定和 medium-confidence 限制接受；registry、Issue 初始化与贡献 Brief 仍需分别授权
 - 通用 Skill：`.agents/skills/harvest-open-source-issue/`
 - 简报模板：`.agents/skills/harvest-open-source-issue/references/execution-brief.md`
 - 研究契约：`.agents/skills/harvest-open-source-issue/references/research-contract.md`

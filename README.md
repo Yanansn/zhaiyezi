@@ -37,7 +37,7 @@ Issue Screening
 → PR
 ```
 
-`.agents/skills/screen-open-source-issue/` 负责在有限范围内发现和严格审计候选，结果以轻量记录保存在 `screenings/`；被排除或观察中的候选不建立完整 Issue 目录。只有分类为 `available`、通过 Candidate Admission Gate 且用户明确决定继续的 Issue，才可在另行授权后进入 `registry/issues.yaml` 与 `issues/`。
+`.agents/skills/screen-open-source-issue/` 负责在有限范围内发现和严格审计候选，结果以轻量记录保存在 `screenings/`；被排除或观察中的候选不建立完整 Issue 目录。Stage 2 的 `quick_filtered_out` 只保存低成本元数据排除，不产生筛选分类；Deep Audit 才产生 `available`、`watchlist` 或审计后排除。`available` 与独立持久化的 Admission Gate 决定仍是两件事，只有 Gate 通过且用户明确决定继续的 Issue，才可在另行授权后进入 `registry/issues.yaml` 与 `issues/`。
 
 `.agents/skills/harvest-open-source-issue/` 保持负责 Issue 被正式接纳后的生态研究、代码调查、范围确认、实现、测试和 PR。筛选分类不是贡献生命周期状态，`available` 也不等于 `selected`。
 

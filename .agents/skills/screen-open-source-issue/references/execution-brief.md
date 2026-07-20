@@ -64,4 +64,6 @@ Stop and report before mutation when the Brief is absent/unbounded, repository b
 
 ## Return contract
 
-Report scope and funnel counts; final classifications/confidence and limitations; files changed; validation commands and outcomes; branch, HEAD, worktree, diff status; and which of Commit, Push, registry mutation, formal Issue initialization, and public actions were or were not performed.
+Report schema-v2 funnel counts (`quick_filtered_out` separately from all Deep Audit buckets); final classifications/confidence and limitations; persisted admission state for available candidates; files changed; validation commands and outcomes; branch, HEAD, worktree, diff status; and which of Commit, Push, registry mutation, formal Issue initialization, and public actions were or were not performed.
+
+Quick Filter records never carry screening classification/confidence or admission data. Candidate Admission Gate evaluation updates the independent `admission` mapping and never authorizes registry mutation, Issue initialization, or contribution-Brief creation by implication. Use [output-schema.md](output-schema.md) as the authoritative data contract.

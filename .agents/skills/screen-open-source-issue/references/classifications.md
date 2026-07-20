@@ -1,10 +1,10 @@
 # Screening classifications and confidence
 
-`screening_classification` is independent of the formal Issue `status`. Choose exactly one classification per audited candidate.
+`screening_classification` is independent of the formal Issue `status` and exists only for Deep Audit candidates. Quick Filter exclusions have a `rule`, not a classification. Choose exactly one classification per deeply audited candidate.
 
 | Classification | Definition and required evidence | Admission | Recheck |
 | --- | --- | --- | --- |
-| `available` | Every mandatory check passed; no known assignee, owner, implementation conflict, current fix, blocking design ambiguity, infrastructure/third-party ownership, or infeasible scope. | Eligible for Gate | Re-verify immediately before admission |
+| `available` | Every mandatory check passed; no known assignee, owner, implementation conflict, current fix, blocking design ambiguity, infrastructure/third-party ownership, or infeasible scope. | Eligible for Gate, but not passed by classification alone | Re-verify immediately before admission |
 | `occupied` | A current assignee or explicit accepted owner is actively responsible. | No | When ownership is released or stale by project convention |
 | `implicit-owner` | Context shows an unassigned contributor actively investigating, reproducing, fixing, or preparing a PR. | No | When contributor abandons work or maintainers reopen it |
 | `author-implementation` | Issue author reports a local/ready implementation or tests. | No | When author abandons or invites another implementation |
@@ -62,3 +62,5 @@ Interpret these in context: distinguish brief interest from active investigation
 - `low`: material evidence is incomplete, stale, inaccessible, or contradictory. It cannot pass the Gate.
 
 Confidence cannot be `high` when comment pagination or Timeline is incomplete; GitHub search, Development, Project, or a relevant PR is inaccessible; core symbol/current-base search is incomplete; or design/ownership remains uncertain.
+
+Bucket rules and the persisted Admission Gate state are defined once in [output-schema.md](output-schema.md).

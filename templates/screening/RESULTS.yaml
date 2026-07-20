@@ -1,16 +1,18 @@
-schema_version: 1
+schema_version: 2
 
 scan_id: "{{SCAN_ID}}"
 repository: "{{REPOSITORY}}"
 
 summary:
   discovered: 0
-  quick_filtered: 0
+  quick_filtered_out: 0
+  deep_audit_queue: 0
   deeply_audited: 0
   available: 0
   watchlist: 0
-  excluded: 0
+  excluded_after_audit: 0
 
+quick_filtered_out: []
 available: []
 watchlist: []
-excluded: []
+excluded_after_audit: []

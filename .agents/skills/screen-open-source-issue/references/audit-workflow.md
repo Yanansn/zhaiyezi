@@ -14,9 +14,11 @@ This is the normative stage order. Save concise facts and URLs in `RESULTS.yaml`
 
 - Input: discovered candidates.
 - Checks: state, include/exclude labels, obvious category mismatch, duplicate, terminal resolution.
-- Conclusions: deep-audit queue or excluded with reason.
+- Conclusions: deep-audit queue or `quick_filtered_out` with one allowed low-cost rule.
 - Stop: explicit excluded label/category or clearly closed/out of scope.
-- Evidence: Issue URL, state, labels, short exclusion reason.
+- Evidence: Issue URL/title, filter time/rule/reason, state, labels, assignees, and the three minimum metadata checks defined by `output-schema.md`.
+
+Quick Filter does not read the complete discussion or assign `screening_classification`, `screening_confidence`, or `admission`. If exclusion requires PR search, ownership judgment, design analysis, or any other Deep Audit evidence, enqueue the candidate instead.
 
 ## Stage 3 — Issue Metadata Audit
 
@@ -102,7 +104,7 @@ This is the normative stage order. Save concise facts and URLs in `RESULTS.yaml`
 
 - Input: completed evidence.
 - Checks: use one allowed classification and confidence from `classifications.md`; hard blockers override scores or preferences.
-- Conclusions: final screening classification, confidence, reason, next action.
+- Conclusions: final `screening_classification`, `screening_confidence`, reason, and next action in `available`, `watchlist`, or `excluded_after_audit`.
 - Stop: contradictory or missing facts become `insufficient-evidence` or `watchlist`.
 - Evidence: concise evidence chain, limitations, audited time.
 
@@ -110,14 +112,15 @@ This is the normative stage order. Save concise facts and URLs in `RESULTS.yaml`
 
 - Input: an `available` candidate and completed record.
 - Checks: apply every condition in `candidate-admission-gate.md`; obtain explicit user approval for admission actions.
-- Conclusions: admitted, awaiting user decision, or not admitted.
+- Conclusions: update the available candidate's independent `admission` mapping; do not alter its classification to represent Gate state.
 - Stop: any failed Gate condition or missing approval.
 - Evidence: Gate decision, decision time, user authorization, separately authorized mutations.
 
 ## Mandatory flow
 
 ```text
-Issue → body → labels → assignee → comments → Development
+Issue → metadata Quick Filter (`quick_filtered_out` or Deep Audit queue)
+→ body → labels → assignee → comments → Development
 → number and closing-reference searches
 → title, error, test, log and symbol searches
 → open every related PR/commit/Issue/Discussion

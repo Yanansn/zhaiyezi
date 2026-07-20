@@ -64,10 +64,22 @@ Reject an absent or unbounded Brief. Confirm the facts-repository branch, HEAD, 
 - Missing or inaccessible evidence produces `insufficient-evidence` or `watchlist`, never a guess.
 - Open every high-relevance Issue, PR, commit, or Discussion and classify its relationship.
 - Respect explicit investigation or implementation ownership even when no assignee or PR exists.
+- Quick Filter records are metadata-only exclusions and do not carry Deep Audit classifications, confidence, or admission state.
+- `screening_classification: available` does not mean the Candidate Admission Gate passed; persist Gate evaluation separately in `admission`.
+
+## Record layers
+
+```text
+Quick Filter record
+≠ Deep Audit classification
+≠ Candidate Admission Gate decision
+```
+
+Stage 2 may emit `quick_filtered_out` only for explicit, low-cost, reproducible rules. Anything requiring full comments, PR search, ownership judgment, or design analysis enters Deep Audit. Stage 13 assigns classification and confidence to Deep Audit candidates. Stage 14 updates only the `admission` mapping of an `available` candidate. The authoritative schema is [output-schema.md](references/output-schema.md).
 
 ## Boundary with the contribution lifecycle
 
-Screening classifications are not Issue statuses. `available` means only that the audit found no known conflict or blocker. It does not mean `selected`.
+Screening classifications are not Issue statuses. `available` means only that the Deep Audit found no known conflict or blocker. It means neither Gate passed nor `selected`.
 
 ```text
 screening_classification: available

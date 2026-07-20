@@ -15,6 +15,10 @@
 
 ## Candidate funnel
 
+## Quick filtered out
+
+None.
+
 ## Available
 
 None.
@@ -23,9 +27,17 @@ None.
 
 None.
 
+## Excluded after audit
+
+None.
+
 ## Primary exclusion reasons
 
 None.
+
+## Candidate Admission Gate
+
+No admission decision has been recorded.
 
 ## Search and access limitations
 
