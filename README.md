@@ -12,10 +12,12 @@
 - 无论合入、阻塞还是放弃，都记录结果和原因。
 - 默认不使用子 Agent，记录只更新本阶段发生变化的内容。
 
-Issue 研究与贡献链路：
+候选筛选、Issue 研究与贡献链路：
 
 ```text
-Issue Intake
+Issue Screening
+→ Candidate Admission Gate
+→ Issue Intake
 → Issue Ecosystem Analysis
 → Knowledge
 → Inventory (when applicable)
@@ -34,6 +36,10 @@ Issue Intake
 → Implementation
 → PR
 ```
+
+`.agents/skills/screen-open-source-issue/` 负责在有限范围内发现和严格审计候选，结果以轻量记录保存在 `screenings/`；被排除或观察中的候选不建立完整 Issue 目录。只有分类为 `available`、通过 Candidate Admission Gate 且用户明确决定继续的 Issue，才可在另行授权后进入 `registry/issues.yaml` 与 `issues/`。
+
+`.agents/skills/harvest-open-source-issue/` 保持负责 Issue 被正式接纳后的生态研究、代码调查、范围确认、实现、测试和 PR。筛选分类不是贡献生命周期状态，`available` 也不等于 `selected`。
 
 `ECOSYSTEM.md` 是每个 Issue 必须维护的一级事实文档，覆盖 Timeline、Development、下游、关联工作、CI 和维护者立场。它是持续研究记录：新评论、新 PR、新 Timeline Event、下游 workaround 或 CI 线索出现时都要更新。可能影响判断的新讨论必须先完成再分析；建议和探索性意见不能直接触发编码，只有确认实现边界后才可进入 Plan。`COMMENT-DRAFT.md` 则是一次公开沟通的冻结 Snapshot，发布后不会为了吸收新生态信息而改写。
 
@@ -85,7 +91,7 @@ flowchart LR
 
 > 上游项目的真实代码修改和 Commit 不进入 `zhaiyezi`；`zhaiyezi` 只保存已核验的状态、决策、证据和交接记录。
 
-工程贡献流为：`Chat 筛选和决策 → Execution Brief → Codex 操作本地上游 Clone → Commit 到工作分支 → Push 到用户 Fork → 创建上游 PR → 更新 zhaiyezi → Chat 重新读取并处理下一阶段`。
+工程贡献流为：`Issue Screening → Candidate Admission Gate → Chat 决策与贡献 Execution Brief → Codex 操作本地上游 Clone → Commit 到工作分支 → Push 到用户 Fork → 创建上游 PR → 更新 zhaiyezi → Chat 重新读取并处理下一阶段`。
 
 PR 属于状态模型的一部分：`testing → pr-ready → submitted → reviewing → merged/closed/rejected/blocked/superseded`。
 
@@ -95,7 +101,7 @@ PR 属于状态模型的一部分：`testing → pr-ready → submitted → revi
 
 新上下文或新 Agent 应先读取 `AGENTS.md` 和 `HANDOFF.md`，再核验 GitHub 实时状态。
 
-详细规则见 [AGENTS.md](AGENTS.md)，当前状态见 [HANDOFF.md](HANDOFF.md)，Ubuntu 操作见 [LOCAL-TAKEOVER.md](LOCAL-TAKEOVER.md)，阶段交接使用 [Execution Brief 模板](.agents/skills/harvest-open-source-issue/references/execution-brief.md)。
+详细规则见 [AGENTS.md](AGENTS.md)，当前状态见 [HANDOFF.md](HANDOFF.md)，Ubuntu 操作见 [LOCAL-TAKEOVER.md](LOCAL-TAKEOVER.md)。候选筛选使用 [Screening Brief 模板](.agents/skills/screen-open-source-issue/references/execution-brief.md)，正式贡献阶段使用 [Harvest Brief 模板](.agents/skills/harvest-open-source-issue/references/execution-brief.md)。
 
 ## 状态流转
 

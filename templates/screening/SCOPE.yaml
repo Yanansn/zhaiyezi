@@ -1,0 +1,32 @@
+schema_version: 1
+
+repository: "{{REPOSITORY}}"
+
+scan:
+  id: "{{SCAN_ID}}"
+  started_at: null
+  completed_at: null
+  candidate_limit: {{CANDIDATE_LIMIT}}
+  sort: created-desc
+  state: open
+
+include:
+  labels: []
+
+exclude:
+  labels: []
+  categories:
+    - infrastructure
+    - third-party
+
+technical_preferences:
+  languages: []
+  areas: []
+
+search_capabilities:
+  issue_search: false
+  pr_search: false
+  code_search: false
+  timeline_access: false
+
+limitations: []

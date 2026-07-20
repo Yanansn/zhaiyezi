@@ -1,0 +1,16 @@
+schema_version: 1
+
+scan_id: "{{SCAN_ID}}"
+repository: "{{REPOSITORY}}"
+
+summary:
+  discovered: 0
+  quick_filtered: 0
+  deeply_audited: 0
+  available: 0
+  watchlist: 0
+  excluded: 0
+
+available: []
+watchlist: []
+excluded: []

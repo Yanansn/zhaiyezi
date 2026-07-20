@@ -6,6 +6,10 @@
 
 ## 工作系统
 
+- 候选筛选 Skill：`.agents/skills/screen-open-source-issue/`
+- 筛选简报模板：`.agents/skills/screen-open-source-issue/references/execution-brief.md`
+- 筛选记录目录：`screenings/<owner>-<repo>/<scan-id>/`
+- Candidate Admission Gate：只有完整审计后的 `available` 候选、足够置信度和用户明确决定才能进入正式贡献系统；registry 与 Issue 初始化仍需单独授权
 - 通用 Skill：`.agents/skills/harvest-open-source-issue/`
 - 简报模板：`.agents/skills/harvest-open-source-issue/references/execution-brief.md`
 - 研究契约：`.agents/skills/harvest-open-source-issue/references/research-contract.md`
@@ -108,6 +112,12 @@ Publication checklist：
 - 普通 Chat 只能读取已经 Push 的事实，不能读取 Codex 本地尚未提交或尚未 Push 的状态。
 
 ## Next step
+
+For candidate screening structure:
+
+1. Use `screen-open-source-issue` only with a bounded screening Brief.
+2. Keep screening classifications in lightweight `screenings/` records, separate from Issue lifecycle status.
+3. After the Candidate Admission Gate and explicit user approval, create a new contribution Brief for `harvest-open-source-issue`; do not mutate registry or initialize Issue records automatically.
 
 1. Monitor the full Issue discussion and PR `#140565` Review state.
 2. Obtain scope confirmation for the exact naming change and unchanged behavior/non-goals.
