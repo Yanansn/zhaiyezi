@@ -47,6 +47,50 @@ Issue Screening
 
 默认情况下，Codex 不重新读取 Issue、调查 GitHub、搜索 PR、判断 Owner 或重复 Deep Audit；筛选调查结果只保留一份。只有用户明确要求 Codex 执行完整 Issue Screening 时，Codex 才运行完整筛选。`Code Verification Brief` 只授权核验指定代码事实，不等于 Issue Screening，也不得扩展成完整筛选。Issue 通过 Candidate Admission Gate 并进入 `harvest-open-source-issue` 后，Codex 才开始正式 Code Map、Root Cause、Implementation、Testing 和 PR 工作。
 
+### GitHub 候选发现脚本
+
+`scripts/discover_github_issues.py` 使用 GitHub REST API 获取给定仓库中 open、无人认领的 Issues，并采集已知关联 PR 证据。它依次检查 Timeline 中可访问的结构化关联事件、Commit→PR 关联、Issue 正文和完整评论中的显式引用，并通过一次精确 `#编号` PR 搜索覆盖 `Fixes`、`Closes`、`Related-to`、`Refs` 等表达式。每个命中项都会再次通过 API 核验是否确实为 PR。
+
+Token 只从环境变量读取：
+
+```bash
+export GITHUB_TOKEN='your-token'
+
+python3 scripts/discover_github_issues.py \
+  --repository kubernetes/kubernetes \
+  --limit 50 \
+  --include-label "help wanted" \
+  --exclude-label "kind/feature" \
+  --output candidates.json \
+  --chat-output candidates-chat.md
+```
+
+`--include-label` 与 `--exclude-label` 均可重复。`--limit` 必填且范围为 1–1000，用于限制 API 请求规模；不指定 `--output` 时完整 JSON 写到标准输出。`--chat-output` 是可选的紧凑 Markdown，只列出 `no_known_related_pr` 候选及最小扫描上下文，适合直接交给 Chat 做后续 Deep Audit；完整 PR evidence 仍保存在 JSON 中。脚本只执行只读请求，不认领 Issue、不修改标签，也不发布评论。
+
+如果只想在终端得到紧凑版，同时把完整证据保存到文件：
+
+```bash
+python3 scripts/discover_github_issues.py \
+  --repository kubernetes/kubernetes \
+  --limit 20 \
+  --output candidates.json \
+  --chat-output -
+```
+
+完整 JSON 与紧凑 Markdown 不能同时输出到标准输出。
+
+运行期间，逐 Issue 进度写到标准错误，不会混入 JSON；使用 `--quiet` 可以关闭进度。脚本在候选搜索前先验证仓库访问权限。401/403 凭据或组织策略错误会立即终止整个扫描，而不会把同一个全局错误重复记录到每个候选中。
+
+如果 GitHub 返回 fine-grained PAT lifetime 错误，需要在 GitHub Token 设置中把该 Token 的有效期缩短到目标组织允许的范围，或创建符合该策略的新 Token，然后重新运行。此类错误下生成的旧结果属于证据不足，不能用于判断 Issue 是否存在关联 PR。
+
+每个候选使用以下状态之一：
+
+- `related_pr_found`：找到了 PR 证据，并已确认目标对象确实是 PR；普通 cross-reference 仍不自动等同于修复。
+- `no_known_related_pr`：所有必需查询成功，但没有发现已知 PR；这不是“绝对不存在 PR”的证明。
+- `insufficient_evidence`：Timeline、评论、搜索或 PR 核验存在失败、截断或访问限制。
+
+输出是候选发现证据，不是 `screening_classification`，也不代表 Candidate Admission Gate 已通过。脚本为每个 Issue 执行一次编号 PR 搜索，并另外读取 Timeline、评论及命中的对象；输出中的分资源 `rate_limit` 和 `limitations` 应在后续 Deep Audit 中保留和复核。
+
 `ECOSYSTEM.md` 是每个 Issue 必须维护的一级事实文档，覆盖 Timeline、Development、下游、关联工作、CI 和维护者立场。它是持续研究记录：新评论、新 PR、新 Timeline Event、下游 workaround 或 CI 线索出现时都要更新。可能影响判断的新讨论必须先完成再分析；建议和探索性意见不能直接触发编码，只有确认实现边界后才可进入 Plan。`COMMENT-DRAFT.md` 则是一次公开沟通的冻结 Snapshot，发布后不会为了吸收新生态信息而改写。
 
 `KNOWLEDGE.md` 帮助新读者理解必要背景，Inventory 防止局部样本造成范围误判，`CODE-MAP.md` 保存源码组织与运行事实，`ANALYSIS.md` 才负责基于证据推理。Ecosystem Analysis 强制执行；Knowledge 的深度、Inventory 和 Lifecycle 仍按 Issue 需要控制。
