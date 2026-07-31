@@ -1,17 +1,36 @@
 ---
 name: screen-open-source-issue
-description: Scan and rigorously audit candidate open-source Issues to identify work that is safe and worthwhile to admit into the zhaiyezi contribution workflow; this Skill does not implement source changes or perform unapproved public actions.
+description: Record Chat-produced candidate screening results by default, or rigorously audit bounded open-source Issues only when the user explicitly asks Codex to screen them; this Skill does not implement fixes or perform unapproved public actions.
 ---
 
 # Screen Open Source Issues
 
-Use this Skill only with a bounded issue-screening Execution Brief. It discovers and audits candidates, records lightweight results, and applies the Candidate Admission Gate. It does not implement fixes, initialize formal Issue records without approval, or publish comments, assignments, labels, branches, commits, pushes, or PRs.
+By default, use this Skill to record a bounded `Screening Result Brief` produced by Chat. Chat performs candidate discovery, Quick Filter, Deep Audit, classification, and recommendation; Codex treats that result as factual input and does not repeat the GitHub investigation. Codex initializes and updates the lightweight screening record, runs the validator, updates handoff facts when needed, and performs Git operations only when separately authorized.
+
+Codex performs the complete screening investigation only when the user explicitly requests Codex to do so. A `Code Verification Brief` is a separate narrow mode that authorizes only the listed source-code facts; it never authorizes a repeat of the entire Screening.
+
+This Skill does not implement fixes, initialize formal Issue records without approval, or publish comments, assignments, labels, branches, commits, pushes, or PRs.
 
 After admission, hand the candidate to `harvest-open-source-issue`; do not copy that Skill's ecosystem research, code-map, implementation, testing, or PR lifecycle into this one.
 
-## Intake
+## Operating modes and intake
 
-Require these fields:
+### Default: record a Chat Screening Result Brief
+
+Require a bounded Brief containing the candidate set, classifications, confidence, recommendations, evidence summaries, limitations, Gate recommendation, scan scope/time, output location, and approval boundaries. Validate internal completeness and schema compatibility, but do not reopen Issues, search PRs, re-evaluate ownership, or repeat Deep Audit. If required record data is missing or contradictory, report the gap instead of investigating it yourself.
+
+The default Codex workflow is:
+
+1. Verify the facts-repository baseline and approval boundary.
+2. Initialize the screening record when authorized.
+3. Record the supplied facts in `SCOPE.yaml`, `RESULTS.yaml`, and `REPORT.md`.
+4. Run `scripts/validate_screening_record.py` and report any Brief/schema gaps.
+5. Update `HANDOFF.md` only when the durable handoff summary changes.
+6. Commit or Push only under separate explicit authorization.
+
+### Exception: user-authorized complete Codex Screening
+
+Only an explicit user request for Codex to screen a bounded candidate set activates the full investigation workflow below. Require these fields:
 
 ```yaml
 repository:
@@ -41,9 +60,13 @@ technical_preferences:
 scan_date: 2026-07-20
 ```
 
-Reject an absent or unbounded Brief. Confirm the facts-repository branch, HEAD, remote, and worktree before writing. Stop on unknown local changes. Read [execution-brief.md](references/execution-brief.md) for the approval contract.
+Reject an absent or unbounded Brief. Confirm the facts-repository branch, HEAD, remote, and worktree before writing. Stop on unknown local changes. Read [execution-brief.md](references/execution-brief.md) for all three input modes and the approval contract.
 
-## Workflow
+### Exception: Code Verification Brief
+
+Verify only the enumerated code facts and return source paths, baseline, commands, results, and limitations. Do not inspect the complete Issue ecosystem, search for ownership or competing PRs, assign a screening classification, or make a Gate recommendation unless the Brief separately and explicitly authorizes complete Screening.
+
+## Full investigation workflow (explicit authorization only)
 
 1. Create the scan scope and lightweight record using `scripts/init_screening_record.py` when authorized.
 2. Follow all fourteen stages in [audit-workflow.md](references/audit-workflow.md).

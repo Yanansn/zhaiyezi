@@ -41,6 +41,12 @@ Issue Screening
 
 `.agents/skills/harvest-open-source-issue/` 保持负责 Issue 被正式接纳后的生态研究、代码调查、范围确认、实现、测试和 PR。筛选分类不是贡献生命周期状态，`available` 也不等于 `selected`。
 
+## 默认筛选协作
+
+默认采用“Chat 调查，Codex 记录”：Chat 完成 Candidate Discovery、Quick Filter、Deep Audit、Classification 和 Screening Recommendation，并把候选、分类、confidence、recommendation、证据摘要、limitations 与 Gate 建议整理成 `Screening Result Brief`。Codex 把该 Brief 视为事实输入，负责初始化 screening record、填写 `SCOPE.yaml`、`RESULTS.yaml`、`REPORT.md`、运行 validator、按需更新 `HANDOFF.md`，以及在单独授权后执行 Git 操作。
+
+默认情况下，Codex 不重新读取 Issue、调查 GitHub、搜索 PR、判断 Owner 或重复 Deep Audit；筛选调查结果只保留一份。只有用户明确要求 Codex 执行完整 Issue Screening 时，Codex 才运行完整筛选。`Code Verification Brief` 只授权核验指定代码事实，不等于 Issue Screening，也不得扩展成完整筛选。Issue 通过 Candidate Admission Gate 并进入 `harvest-open-source-issue` 后，Codex 才开始正式 Code Map、Root Cause、Implementation、Testing 和 PR 工作。
+
 `ECOSYSTEM.md` 是每个 Issue 必须维护的一级事实文档，覆盖 Timeline、Development、下游、关联工作、CI 和维护者立场。它是持续研究记录：新评论、新 PR、新 Timeline Event、下游 workaround 或 CI 线索出现时都要更新。可能影响判断的新讨论必须先完成再分析；建议和探索性意见不能直接触发编码，只有确认实现边界后才可进入 Plan。`COMMENT-DRAFT.md` 则是一次公开沟通的冻结 Snapshot，发布后不会为了吸收新生态信息而改写。
 
 `KNOWLEDGE.md` 帮助新读者理解必要背景，Inventory 防止局部样本造成范围误判，`CODE-MAP.md` 保存源码组织与运行事实，`ANALYSIS.md` 才负责基于证据推理。Ecosystem Analysis 强制执行；Knowledge 的深度、Inventory 和 Lifecycle 仍按 Issue 需要控制。

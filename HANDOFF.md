@@ -11,6 +11,8 @@
 - 筛选记录目录：`screenings/<owner>-<repo>/<scan-id>/`
 - 筛选记录契约：`RESULTS.yaml` schema v2 分离 `quick_filtered_out` 与三个 Deep Audit bucket，并用严格 funnel 等式核验完整扫描
 - Candidate Admission Gate：`available` 候选必须用独立 `admission` mapping 保存 Gate 状态、证据刷新、用户决定和 medium-confidence 限制接受；registry、Issue 初始化与贡献 Brief 仍需分别授权
+- 默认筛选协作：Chat 完成候选调查并输出 `Screening Result Brief`；Codex 默认只负责筛选记录落盘、validator、必要的交接更新和获授权的 Git 操作，不重复 GitHub/Issue/PR/Owner 调查
+- 调查例外：只有用户明确授权完整 Codex Screening，或 Chat 提供只核验指定代码事实的 `Code Verification Brief`；后者不得扩展成完整 Screening
 - 通用 Skill：`.agents/skills/harvest-open-source-issue/`
 - 简报模板：`.agents/skills/harvest-open-source-issue/references/execution-brief.md`
 - 研究契约：`.agents/skills/harvest-open-source-issue/references/research-contract.md`
@@ -116,7 +118,7 @@ Publication checklist：
 
 For candidate screening structure:
 
-1. Use `screen-open-source-issue` only with a bounded screening Brief.
+1. By default, use `screen-open-source-issue` to record a bounded Chat `Screening Result Brief`; run complete Codex Screening only when the user explicitly authorizes it.
 2. Keep screening classifications in lightweight `screenings/` records, separate from Issue lifecycle status.
 3. After the Candidate Admission Gate and explicit user approval, create a new contribution Brief for `harvest-open-source-issue`; do not mutate registry or initialize Issue records automatically.
 

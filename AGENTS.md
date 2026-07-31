@@ -6,8 +6,8 @@
 
 ## 角色分工
 
-- 普通 Chat 负责候选 Issue 筛选、易懂讲解、学习路径、方案比较、维护者评论解读和最终执行要求整理；在有明确筛选 Brief 时，普通 Chat 或本地 Codex 均可执行严格候选筛选。
-- 本地 Codex 是阶段化工程执行 Agent，负责按筛选 Brief 审计候选，或按贡献 Brief 读取真实代码、建立精确代码路径、实现、格式化、测试、诊断编译或 CI 问题、更新事实记录，以及在授权后 Commit、Push 和创建 PR。
+- 普通 Chat 默认负责候选发现、Quick Filter、Deep Audit、分类、筛选建议、易懂讲解、学习路径、方案比较、维护者评论解读和最终执行要求整理，并输出 `Screening Result Brief`。
+- 本地 Codex 默认把 `Screening Result Brief` 作为事实输入，负责建立和校验筛选记录；只有用户明确要求完整 Codex Screening、Chat 提供窄范围 `Code Verification Brief`，或 Issue 已进入正式贡献流程时，才执行相应范围的调查或工程工作。
 - 公开的 `Yanansn/zhaiyezi` 仓库是普通 Chat 与本地 Codex 之间的持久事实通道。
 - 每个阶段只进行一次人工交接：普通 Chat 生成 `Execution Brief`，用户将其交给 Codex；Codex 完成后把授权范围内的结果发布到事实仓库。
 
@@ -15,9 +15,18 @@ Codex 不负责无边界的候选筛选、长篇教学或重复讨论已经确�
 
 ## 候选筛选与接纳边界
 
-- `.agents/skills/screen-open-source-issue/` 只负责有界的候选发现、快速过滤、完整审计、关联实现与隐性 Owner 搜索、设计/基础设施阻塞判断、筛选分类和 Candidate Admission Gate；不负责源码实现。
+### 默认协作规则
+
+- 默认是 **Chat 调查，Codex 记录**。Chat 完成 Candidate Discovery、Quick Filter、Deep Audit、Classification 和 Screening Recommendation；Codex 不重复读取 Issue、搜索 PR、判断 Owner 或重做 Deep Audit。
+- Chat 的 `Screening Result Brief` 必须包含候选列表、classification、confidence、recommendation、证据摘要、limitations 和是否建议进入 Candidate Admission Gate。Codex 默认相信这些内容是本阶段的事实输入，并只负责初始化/更新 `SCOPE.yaml`、`RESULTS.yaml`、`REPORT.md`、运行 validator、必要时更新 `HANDOFF.md`，以及执行另行授权的 Git 操作。
+- 同一次 Screening 的调查结果只保留一份。Codex 不以“复核”为由默认重复完整调查；若 Brief 内部矛盾、缺少 schema 必填信息或无法通过 validator，应报告缺口并停止记录，不得自行补做 GitHub 调查。
+- 只有用户明确要求 Codex 执行完整候选筛选时，Codex 才可按有界 `issue-screening` Brief 完成全部调查阶段。一般性的“记录结果”“继续”或提供 Screening Result Brief 不构成该授权。
+- `Code Verification Brief` 与 Issue Screening 是不同阶段。它只允许 Codex 验证列出的代码事实，例如当前基线是否已有修复、符号或测试是否存在、是否跨 package、是否可本地运行；不得扩展为 Issue/PR/Owner/设计边界的完整筛选。
+- Issue 通过 Candidate Admission Gate 并正式进入 `harvest-open-source-issue` 后，Codex 才按贡献 Brief 开始 Code Map、Root Cause、Implementation、Testing 和 PR。
+
+- `.agents/skills/screen-open-source-issue/` 默认负责把 Chat 筛选结果写入轻量记录；仅在用户明确授权完整 Codex Screening 时，负责有界的候选发现、快速过滤、完整审计、关联实现与隐性 Owner 搜索、设计/基础设施阻塞判断、筛选分类和 Candidate Admission Gate。它不负责源码实现。
 - `.agents/skills/harvest-open-source-issue/` 继续负责已经接纳 Issue 的 Intake、Ecosystem Analysis、Knowledge、Code Map、范围确认、Plan、Implementation、Testing 和 PR。
-- 筛选必须有独立的 `stage: issue-screening` Brief，明确仓库、有限候选范围、过滤条件、强制检查、输出位置和审批边界。没有有效筛选 Brief 时，普通 Chat 与 Codex 均不得无限扫描。
+- 默认记录必须有完整的 `Screening Result Brief`；完整 Codex Screening 必须有明确授权的 `stage: issue-screening` Brief；代码核验必须有窄范围 `Code Verification Brief`。各 Brief 都要明确范围、交付物和审批边界，没有对应有效 Brief 时不得扩大工作。
 - 筛选结果保存在 `screenings/` 的轻量记录中。不得为每个被排除或观察中的候选创建完整 `issues/<owner>-<repo>-<number>/` 目录。
 - Quick Filter 只允许按明确、低成本、可复核的元数据规则写入 `quick_filtered_out`，不产生 `screening_classification`、置信度或 admission；需要完整评论、PR 搜索、Owner 或设计判断的候选必须进入 Deep Audit。
 - `screening_classification` 与贡献生命周期 `status` 完全分离，不得把 `implicit-owner`、`implementation-pr-exists` 等筛选分类加入现有状态枚举。
@@ -65,12 +74,12 @@ Codex 不负责无边界的候选筛选、长篇教学或重复讨论已经确�
 
 每次开始工作或更换上下文时，必须按顺序执行：
 
-1. 根据 Brief 使用仓库级 Skill：`stage: issue-screening` 使用 `.agents/skills/screen-open-source-issue/`；已接纳 Issue 的贡献阶段使用 `.agents/skills/harvest-open-source-issue/`。
+1. 根据 Brief 使用仓库级 Skill：`Screening Result Brief`、明确授权的完整 `stage: issue-screening` 或 `Code Verification Brief` 使用 `.agents/skills/screen-open-source-issue/`；已接纳 Issue 的贡献阶段使用 `.agents/skills/harvest-open-source-issue/`。
 2. 读取根目录 `HANDOFF.md`。
 3. 读取本轮用户提供的对应 `Execution Brief`；筛选格式见 `.agents/skills/screen-open-source-issue/references/execution-brief.md`，贡献格式见 `.agents/skills/harvest-open-source-issue/references/execution-brief.md`。
 4. 若为已接纳 Issue 的贡献 Brief，读取 `registry/issues.yaml`，确认当前活动 Issue 与简报目标一致；候选筛选 Brief 不要求候选预先进入 registry。
 5. 若存在活动 Issue，读取其 `STATUS.yaml`、`JOURNAL.md`、强制一级事实文档 `ECOSYSTEM.md` 以及本阶段所需记录。
-6. 按简报范围从 GitHub 核验 Issue、PR、评论、标签、认领人、完整 Timeline、Development、关联工作、下游影响和 CI 实时事实。
+6. 按 Brief 类型执行：默认 `Screening Result Brief` 只落盘并校验，不重新调查 GitHub；明确授权的完整 Codex Screening 才核验 Issue、PR、评论、Timeline、Development、Owner 和相关事实；`Code Verification Brief` 只核验指定代码事实；正式贡献 Brief 按 harvest 契约核验所需实时事实。
 7. 检查当前 Git 分支、最近提交、远程地址和未提交改动。
 8. 在执行前报告“简报目标、记录状态、实时状态、差异、阻塞、审批边界和本阶段动作”。
 
@@ -78,7 +87,7 @@ Codex 不负责无边界的候选筛选、长篇教学或重复讨论已经确�
 
 项目文件是历史决定与工作状态的权威记录；GitHub 是外部 Issue、PR 和 CI 实时状态的权威来源。不得仅依靠对话记忆继续任务。
 
-如果对应 Skill 没有自动显示，先确认 Codex 从仓库根目录启动，再按 Brief 类型检查：`stage: issue-screening` 检查 `.agents/skills/screen-open-source-issue/SKILL.md`；正式贡献 Brief 检查 `.agents/skills/harvest-open-source-issue/SKILL.md`。
+如果对应 Skill 没有自动显示，先确认 Codex 从仓库根目录启动，再按 Brief 类型检查：`Screening Result Brief`、完整 `stage: issue-screening` 或 `Code Verification Brief` 检查 `.agents/skills/screen-open-source-issue/SKILL.md`；正式贡献 Brief 检查 `.agents/skills/harvest-open-source-issue/SKILL.md`。
 
 ## 阶段化执行
 
