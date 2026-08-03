@@ -1,0 +1,44 @@
+schema_version: 1
+task_id: agent-protocol-self-test
+created_by: codex
+decision_author: codex
+materialized_by: codex
+status: review
+revision: 1
+request_ref: REQUEST.yaml
+outputs:
+  - RESULT.yaml
+  - REPORT.md
+actions_performed:
+  - read_repository
+  - analyze_code
+  - run_tests
+  - write_result
+  - write_report
+actions_not_performed:
+  - materialize_user_artifact
+  - modify_registry
+  - initialize_formal_issue
+  - fetch_official_upstream
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+validation:
+  - "Initial validator: passed"
+  - "Initial queue list: task appeared as ready"
+  - "Initial queue next --agent codex: selected agent-protocol-self-test"
+  - "Final queue list: task appeared as awaiting-review"
+  - "Final queue next --agent codex: no matching tasks"
+  - "Protocol consistency: schema, ownership, materialization, and standing authorization rules are consistent"
+  - "tests.test_agent_protocol: 40 tests passed"
+  - "tests.test_repository_agnostic_contracts: 14 tests passed"
+  - "tests.test_screening_records: 21 tests passed"
+  - "YAML parse check: 29 files parsed"
+  - "git diff --check: passed"
+limitations:
+  - No REVIEW.yaml was created, so the task intentionally remains awaiting-review rather than completed.
