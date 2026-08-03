@@ -39,7 +39,7 @@ python3 scripts/agent_queue.py show --task example-task
 1. Read the latest pushed `main`; local Codex state is not shared state.
 2. Run the validator and inspect `python3 scripts/agent_queue.py list --agent chat` plus tasks in `awaiting-review` or `changes-requested`.
 3. Write only Chat-owned artifacts. Review the exact result revision named by `REVIEW.yaml`.
-4. Create a new `RESULT.yaml` revision after `changes-requested`; never rewrite the old Review.
+4. Record `changes-requested` in `REVIEW.yaml`. Codex then creates a new `RESULT.yaml` revision; Chat must not modify `RESULT.yaml` or rewrite the previous `REVIEW.yaml`.
 5. Obtain fresh user approval for actions that cannot be covered by standing authorization.
 
 ## Authorization boundary
