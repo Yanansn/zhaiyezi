@@ -1,0 +1,70 @@
+schema_version: 1
+
+task_queue:
+  statuses: [ready, active, blocked, review, completed, failed]
+  transitions:
+    ready: [active, blocked, failed]
+    active: [review, blocked, failed]
+    blocked: [ready, active, failed]
+    review: [active, blocked, completed, failed]
+    completed: []
+    failed: []
+  directory_states:
+    inbox: [ready]
+    active: [active, review]
+    blocked: [blocked]
+    completed: [completed]
+
+contribution_coordination:
+  states:
+    - discovered
+    - evidence_requested
+    - evidence_completed
+    - awaiting_review
+    - deep_audit
+    - admission_pending
+    - implementation_ready
+    - implementing
+    - verification
+    - pr_ready
+    - completed
+  transitions:
+    discovered: [evidence_requested]
+    evidence_requested: [evidence_completed]
+    evidence_completed: [awaiting_review]
+    awaiting_review: [deep_audit]
+    deep_audit: [admission_pending]
+    admission_pending: [implementation_ready]
+    implementation_ready: [implementing]
+    implementing: [verification]
+    verification: [pr_ready]
+    pr_ready: [completed]
+    completed: []
+  gates:
+    evidence_completed_to_awaiting_review:
+      owner: chat
+      rule: Evidence must be reviewed before Deep Audit or Admission.
+    deep_audit_to_admission_pending:
+      owner: chat
+      rule: Use the existing Screening classification and Candidate Admission Gate contract.
+    admission_pending_to_implementation_ready:
+      owner: user
+      rule: Gate passage and each required repository mutation authorization must be recorded separately.
+    implementation_ready_to_implementing:
+      owner: chat
+      rule: A bounded implementation REQUEST.yaml is required.
+    pr_ready_to_completed:
+      owner: chat
+      rule: If a real PR is in scope, existing submitted/reviewing/terminal Issue statuses remain authoritative.
+
+forbidden_shortcuts:
+  - [evidence_completed, admission_pending]
+  - [evidence_completed, implementation_ready]
+  - [awaiting_review, implementation_ready]
+  - [admission_pending, implementing]
+
+compatibility:
+  screening_classification_source: .agents/skills/screen-open-source-issue/references/output-schema.md
+  admission_source: .agents/skills/screen-open-source-issue/references/candidate-admission-gate.md
+  issue_status_source: AGENTS.md
+  harvest_source: .agents/skills/harvest-open-source-issue/SKILL.md

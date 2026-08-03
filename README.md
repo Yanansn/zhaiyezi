@@ -1,6 +1,6 @@
 # 摘叶子
 
-以真实开源 Issue 为入口的 repository-agnostic 开源贡献工作流：由普通 Chat 负责教学与方案整理、本地 Codex 负责阶段化工程执行，并把过程沉淀为可查询的学习记录。Kubernetes 只是一个 ecosystem Profile，不是系统默认假设；同一契约可用于 Python、C++、CUDA、Rust 与 AI 推理基础设施仓库。
+以真实开源 Issue 为入口的 **repository-agnostic open source contribution operating system**：由普通 Chat 负责决策与 Review、本地 Codex 负责阶段化工程执行，仓库负责共享记忆、任务队列和证据存储。Kubernetes 只是一个 ecosystem Profile，不是系统默认假设；同一契约可用于 Kubernetes、LMCache、vLLM、SGLang、Dynamo 和其他 GitHub 项目。
 
 ## 工作原则
 
@@ -11,6 +11,21 @@
 - 未经确认，不执行公开留言、认领、推送或创建 PR。
 - 无论合入、阻塞还是放弃，都记录结果和原因。
 - 默认不使用子 Agent，记录只更新本阶段发生变化的内容。
+
+## Agent Coordination Layer
+
+Chat 与 Codex 的跨会话交接通过仓库中的 [agent-protocol](agent-protocol/README.md) 和 `agent-work/` 完成：
+
+```text
+Chat REQUEST.yaml
+→ Codex RESULT.yaml + REPORT.md + evidence
+→ Chat REVIEW.yaml
+→ user APPROVAL.yaml（仅受保护动作需要）
+```
+
+Chat 是 `decision-agent`，负责 Deep Audit、贡献决策、任务和 Review；Codex 是 `execution-agent`，负责 Evidence Collection、代码分析、实现、测试和执行报告。队列协议是现有 Screening 与 Harvest 的外层协调机制，不会把 Evidence 自动升级为 Admission，也不会授权 Commit、Push、上游写入或公开发布。
+
+运行 `python3 scripts/validate_agent_protocol.py` 可以校验协议文件、任务状态、Agent 所有权和 Approval 边界。示例任务位于 `agent-work/inbox/example-task/`，不指向任何真实 Issue。
 
 候选筛选、Issue 研究与贡献链路：
 

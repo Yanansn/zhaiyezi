@@ -1,0 +1,106 @@
+schema_version: 1
+
+request:
+  filename: REQUEST.yaml
+  owner: chat
+  required_fields:
+    - schema_version
+    - task_id
+    - task_type
+    - created_by
+    - assigned_agent
+    - repository
+    - issue
+    - status
+    - input_refs
+    - goal
+    - allowed_actions
+    - prohibited_actions
+    - expected_outputs
+    - completion
+  field_types:
+    task_id: string
+    task_type: enum
+    created_by: enum
+    assigned_agent: enum
+    repository: string
+    issue: [string, 'null']
+    status: enum
+    input_refs: list
+    goal: string
+    allowed_actions: list
+    prohibited_actions: list
+    expected_outputs: list
+    completion: mapping
+
+result:
+  filename: RESULT.yaml
+  owner: codex
+  required_fields:
+    - schema_version
+    - task_id
+    - created_by
+    - status
+    - request_ref
+    - outputs
+    - actions_performed
+    - actions_not_performed
+    - validation
+    - limitations
+
+review:
+  filename: REVIEW.yaml
+  owner: chat
+  required_fields:
+    - schema_version
+    - task_id
+    - created_by
+    - status
+    - result_ref
+    - decision
+    - findings
+    - next_actions
+
+approval:
+  filename: APPROVAL.yaml
+  owner: user
+  required_fields:
+    - schema_version
+    - task_id
+    - approved_by
+    - status
+    - actions
+    - scope
+
+enums:
+  task_type:
+    - example
+    - evidence-collection
+    - screening-record
+    - code-verification
+    - ecosystem-analysis
+    - code-map
+    - plan
+    - implementation
+    - validation
+    - publication
+    - review
+    - documentation-contract-update
+  created_by: [chat, user]
+  assigned_agent: [chat, codex]
+  task_status: [ready, active, blocked, review, completed, failed]
+  result_status: [active, blocked, review, failed]
+  review_status: [active, blocked, completed, failed]
+  review_decision: [approved, changes-requested, rejected]
+  approval_status: [approved, revoked]
+
+completion_contract:
+  required_fields: [criteria, validation, handoff]
+  completed_requires_approved_review: true
+  protected_actions_require_approval: true
+
+compatibility:
+  coordination_status_is_not_screening_classification: true
+  coordination_status_is_not_issue_status: true
+  evidence_completed_is_not_available: true
+  evidence_completed_is_not_admission: true

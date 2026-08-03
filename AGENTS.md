@@ -13,6 +13,30 @@
 
 Codex 不负责无边界的候选筛选、长篇教学或重复讨论已经确认的知识。没有 `Execution Brief` 时，不得自行扩展为全面研究任务。
 
+## Agent Coordination Rules
+
+`agent-protocol/` 是 Chat 与 Codex 的仓库级协调层，`agent-work/` 是持久任务队列。它们只负责传递任务、结果、Review 和 Approval，不替代本文件、Screening schema、Candidate Admission Gate 或 Harvest 生命周期。
+
+所有 Agent 必须：
+
+1. 启动时读取 `agent-protocol/`，并遵守其中的角色所有权和权限规则。
+2. 只执行分配给自己的、结构有效的 `REQUEST.yaml`；`REQUEST.yaml` 必须引用本阶段适用的 Brief 或包含同等边界信息。
+3. 不跳过任务状态转换，也不把协调层状态当作筛选分类、Admission 或正式 Issue 状态。
+4. 不根据聊天上下文扩大或执行仓库中未记录的任务。聊天可以提醒 Agent 读取任务，但不能替代任务文件。
+5. 以仓库中已提交并 Push 的状态作为跨 Agent 共享事实；本地未 Push 状态只属于当前执行环境。
+6. 通过各自拥有的文件协作：Chat 写 `REQUEST.yaml`/`REVIEW.yaml`/`decisions/`，Codex 写 `RESULT.yaml`/`REPORT.md`/`evidence/`，用户批准写入 `APPROVAL.yaml`。
+
+任务来源优先级：
+
+1. Repository task files
+2. Decision records
+3. Current instructions
+4. Chat messages
+
+该优先级不允许低层来源覆盖系统安全规则、本 `AGENTS.md`、用户审批边界或上游实时事实。来源冲突时停止执行，在当前角色拥有的 artifact 中记录差异，不自动合并或覆盖他人修改。
+
+Evidence task 完成后必须进入 Chat Review；`evidence_completed` 不得直接解释为 `available`、Admission passed、`selected` 或 implementation authorization。Commit、Push、上游写入和所有公开动作继续分别要求任务授权与用户确认。
+
 ## 候选筛选与接纳边界
 
 ### 默认协作规则

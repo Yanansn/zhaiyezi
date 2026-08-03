@@ -6,6 +6,7 @@
 
 ## 工作系统
 
+- Agent Coordination Protocol 已启用：Chat/Codex 任务通过 `agent-work/` 同步，协议与角色权限见 `agent-protocol/`。本地未 Commit/Push 的队列变化仍不可被另一 Agent 视为共享事实。
 - 候选筛选 Skill：`.agents/skills/screen-open-source-issue/`
 - 筛选简报模板：`.agents/skills/screen-open-source-issue/references/execution-brief.md`
 - 筛选记录目录：`screenings/<owner>-<repo>/<scan-id>/`

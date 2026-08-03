@@ -1,0 +1,93 @@
+schema_version: 1
+
+actors:
+  chat:
+    role: decision-agent
+  codex:
+    role: execution-agent
+  user:
+    role: approval-authority
+
+roles:
+  decision-agent:
+    allowed_actions:
+      - read_repository
+      - create_task
+      - create_review
+      - create_decision
+    owned_paths:
+      - decisions/**
+      - agent-work/*/*/REQUEST.yaml
+      - agent-work/*/*/REVIEW.yaml
+  execution-agent:
+    allowed_actions:
+      - read_repository
+      - collect_evidence
+      - analyze_code
+      - modify_facts_repository
+      - run_tests
+      - write_result
+      - write_report
+      - write_evidence
+    owned_paths:
+      - agent-work/*/*/RESULT.yaml
+      - agent-work/*/*/REPORT.md
+      - agent-work/*/*/evidence/**
+  approval-authority:
+    allowed_actions:
+      - approve_protected_action
+    owned_paths:
+      - agent-work/*/*/APPROVAL.yaml
+
+shared_serialized_paths:
+  - HANDOFF.md
+
+action_catalog:
+  read_repository: local-read
+  create_task: local-write
+  create_review: local-write
+  create_decision: local-write
+  collect_evidence: local-write
+  analyze_code: local-read
+  modify_facts_repository: local-write
+  run_tests: local-execution
+  write_result: local-write
+  write_report: local-write
+  write_evidence: local-write
+  commit_facts_repository: task-authorization-required
+  push_facts_repository: user-confirmation-required
+  fetch_official_upstream: user-confirmation-required
+  upstream_write: user-confirmation-required
+  push_upstream_branch: user-confirmation-required
+  create_issue: user-confirmation-required
+  comment_issue: user-confirmation-required
+  assign_issue: user-confirmation-required
+  add_labels: user-confirmation-required
+  create_pull_request: user-confirmation-required
+
+default_prohibited_actions:
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+
+approval_required_actions:
+  - push_facts_repository
+  - fetch_official_upstream
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+
+rules:
+  default: deny
+  missing_action: prohibited
+  approval_is_task_scoped: true
+  approval_is_action_scoped: true
+  publication_requires_live_identity_verification: true
