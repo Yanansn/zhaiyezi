@@ -1,0 +1,442 @@
+schema_version: 1
+stage: issue-evidence-collection
+repository: LMCache/LMCache
+issue: "LMCache/LMCache#4086"
+url: https://github.com/LMCache/LMCache/issues/4086
+title: "[Bug]: Multimodal KV cache collision — identical text prompt with different images produces wrong cache hit due to 16-bit mm hash truncation and ignored extra_keys"
+collected_at: "2026-08-03T08:32:14Z"
+
+metadata:
+  state: open
+  state_reason: null
+  author: uraniumchonk
+  author_association: NONE
+  labels: []
+  assignees: []
+  milestone: null
+  created_at: "2026-07-11T10:14:52Z"
+  updated_at: "2026-07-13T20:10:21Z"
+  reported_comment_count: 1
+  default_branch: dev
+  baseline_commit: a012dd9977eb1482940b70a9f8a196734cb9c7ff
+  baseline_commit_url: https://github.com/LMCache/LMCache/commit/a012dd9977eb1482940b70a9f8a196734cb9c7ff
+
+body:
+  complete: true
+  text: |
+    **Describe the bug**
+    When using LMCache with vLLM for multimodal (vision) requests, if two requests share the **identical text prompt (`question`)** but target **different images**, LMCache incorrectly returns a cache hit from a previous image's KV cache. This causes the LLM to hallucinate a seamless concatenation/splice of two different images in its vision analysis output.
+
+    The root cause is that the KV cache key (chunk_hash) is computed from token IDs via prefix hash, but the multimodal hash injection (`apply_mm_hashes_to_token_ids`) either:
+    1. Is not executed (mm_features empty/not passed through the request pipeline), or
+    2. Uses only a 16-bit int (`hex_hash_to_int16`) to represent the image hash, creating a high collision surface (1/65536), or
+    3. Is executed AFTER the chunk_hash is computed in some code paths
+
+    As a result, different images with the same text prompt produce identical chunk_hashes, causing LMCache to return wrong KV entries.
+
+    **To Reproduce**
+    Steps to reproduce the behavior:
+    1. Setup: vLLM + LMCache (v0.5.0, chunk_size=256, L1 CPU 60GB, L2 disk 200GB, enable_blending=False)
+    2. Send vision request A: `vision_analyze(image=A.jpg, question="這是一張什麼圖片？詳細描述所有細節...")`
+    3. Send vision request B: `vision_analyze(image=B.jpg, question="這是一張什麼圖片？詳細描述所有細節...")` (same question text, different image)
+    4. Observe: Request B's analysis describes a hybrid of image A and image B (e.g., image A's UI elements floating over image B's subject)
+    5. Workaround confirmed: Prepend random digits to the question (`7382910283 這是一張什麼圖片...`) and request B returns correct analysis
+
+    **Expected behavior**
+    Each image should produce a unique KV cache key, regardless of whether the text prompt is identical. Different images must never share KV cache entries.
+
+    **Actual behavior**
+    - Image A (`d34dd879...jpg`): Correctly analyzed as Android home screen
+    - Image B (`7a65eaf5...jpg`): Incorrectly analyzed as a hybrid of Android home screen + woman's legs (image A's content spliced into image B's analysis)
+    - Image B with modified question: Correctly analyzed as Cosplay character
+
+    All image files verified on disk as correct. Base64 payload verified as correct. The bug is exclusively at the LMCache KV cache lookup layer.
+
+    **Environment**
+    - LMCache version: 0.5.0 (commit g389b9cfc)
+    - vLLM: integrated via lmcache_mp_connector
+    - Model: Qwen3.6-27B-AWQ-INT4
+    - Config: chunk_size=256, local_cpu=true, max_local_cpu_size=60, local_disk=200GB, enable_blending=False
+    - OS: Ubuntu 24.04.4 LTS, AMD Athlon 3000G, 78GB RAM, 2x RTX 3080
+    - Python: 3.12
+
+    **Root Cause Analysis**
+
+    The issue is in the multimodal hash injection pipeline:
+
+    1. **`lmcache/integration/vllm/utils.py` L171-L188**: `apply_mm_hashes_to_token_ids()` overwrites placeholder tokens with `hex_hash_to_int16(hash_str)` — a 16-bit integer. This means the entire placeholder range (often 64-1280 tokens) is filled with a single 16-bit value, giving only 65536 possible representations for all images.
+
+    2. **`lmcache/v1/token_database.py` L291-L293**: `extra_keys` parameter in `_hash_tokens()` is explicitly ignored:
+       ```python
+       # Ignore extra keys for now
+       # Extra keys are for multi-modal inputs and
+       # request specific metadata (e.g., LoRA ID).
+       ```
+       This means even if `extra_keys` were passed with multimodal identifiers, they would not affect the chunk_hash.
+
+    3. **`lmcache/integration/vllm/vllm_v1_adapter.py` L1402-L1411**: The mm hash injection happens before `lookup()`, but only if `mm_hashes and mm_positions` are both non-empty. If the request pipeline (e.g., through llama-swap router or non-standard entry points) does not populate `mm_features` correctly, `extract_mm_features()` returns `([], [])` and the injection becomes a no-op.
+
+    **Proposed Fix**
+
+    **Option 1 (Recommended)**: Include multimodal identifiers in the chunk_hash computation
+    - Remove the `# Ignore extra keys for now` comment in `token_database.py` and actually incorporate `extra_keys` into the hash
+    - Pass `mm_hashes` as `extra_keys` through `process_tokens()` → `_hash_tokens()`
+    - This ensures different images always produce different chunk_hashes regardless of text prompt
+
+    **Option 2**: Use full hash (not 16-bit truncation) for multimodal token injection
+    - Replace `hex_hash_to_int16()` with a function that uses more bits (e.g., 64-bit or full SHA-256)
+    - Fill placeholder tokens with a pattern derived from the full hash, not a single repeated int16
+
+    **Option 3**: Add multimodal hash to `CacheEngineKey` or `ObjectKey` directly
+    - Extend `CacheEngineKey` or `ObjectKey` with an optional `mm_hash` field
+    - Include it in the serialized key so that multimodal requests are always isolated from text-only and cross-image collisions
+
+    **Additional context**
+
+    This bug is silently producing incorrect results with no error signal. The LLM returns confident but completely fabricated analysis that appears plausible (describing elements from both images). This is especially dangerous in production environments where users cannot easily verify the correctness of vision analysis.
+
+    The workaround (adding unique text to each question) confirms that the issue is purely a cache key collision — any change to the text prefix produces a different chunk_hash and avoids the bug.
+
+comments:
+  pagination_complete: true
+  reported_total: 1
+  fetched_total: 1
+  pages_fetched: 1
+  items:
+    - id: 4962231244
+      author: ApostaC
+      author_association: CONTRIBUTOR
+      created_at: "2026-07-13T20:10:21Z"
+      updated_at: "2026-07-13T20:10:21Z"
+      url: https://github.com/LMCache/LMCache/issues/4086#issuecomment-4962231244
+      summary: Confirms the report is a bug; says the referenced non-MP code will be deprecated in Q3-Q4, welcomes and offers review of a PR for it, and announces planned MP multimodal support in Q3.
+      text: |
+        Hi @uraniumchonk , thanks for creating the issue!
+
+        I agree with you that this is a bug. However, the current code is in the non-MP mode, which will be gradually deprecated in Q3-Q4. If you want to still create a PR to fix this, we are happy to review it and get it merged.
+
+        We are going to add Multi-Modal support in MP mode in Q3 soon. If you are interested, please stay tuned, thanks!
+
+timeline:
+  complete: true
+  pages_fetched: 1
+  item_count: 4
+  items:
+    - event: subscribed
+      actor: DRXD1000
+      created_at: "2026-07-13T14:55:14Z"
+      url: https://api.github.com/repos/LMCache/LMCache/issues/events/27914906145
+    - event: commented
+      actor: ApostaC
+      created_at: "2026-07-13T20:10:21Z"
+      url: https://github.com/LMCache/LMCache/issues/4086#issuecomment-4962231244
+    - event: mentioned
+      actor: uraniumchonk
+      created_at: "2026-07-13T20:10:22Z"
+      url: https://api.github.com/repos/LMCache/LMCache/issues/events/27928767363
+    - event: subscribed
+      actor: uraniumchonk
+      created_at: "2026-07-13T20:10:22Z"
+      url: https://api.github.com/repos/LMCache/LMCache/issues/events/27928767401
+
+development:
+  complete: true
+  items: []
+  sources_checked:
+    - paginated REST Issue Timeline
+    - REST Issue events
+    - GraphQL closedByPullRequestsReferences
+    - GraphQL projectItems
+  empty_result_note: No linked PR, branch, commit, cross-reference, closing reference, or referenced Issue appeared in the accessible relationship surfaces. This empty observation does not prove that no implementation exists.
+
+searches:
+  explicit_issue_number:
+    - query: 'repo:LMCache/LMCache is:pr "#4086"'
+      total_count: 0
+      incomplete_results: false
+      items: []
+    - query: 'repo:LMCache/LMCache is:pr "Fixes #4086"'
+      total_count: 0
+      incomplete_results: false
+      items: []
+    - query: 'repo:LMCache/LMCache is:pr "Closes #4086"'
+      total_count: 0
+      incomplete_results: false
+      items: []
+    - query: 'repo:LMCache/LMCache is:pr "Related-to #4086"'
+      total_count: 0
+      incomplete_results: false
+      items: []
+    - query: 'repo:LMCache/LMCache is:pr "Refs #4086"'
+      total_count: 0
+      incomplete_results: false
+      items: []
+  title_symptom:
+    - query: 'repo:LMCache/LMCache "multimodal" "KV cache" collision'
+      total_count: 5
+      incomplete_results: false
+      matches: ['issue#3301', 'issue#4086', 'pull#2932', 'pull#3145', 'pull#2634']
+    - query: 'repo:LMCache/LMCache "different images" "same text" "cache hit"'
+      total_count: 1
+      incomplete_results: false
+      matches: ['issue#4086']
+    - query: 'repo:LMCache/LMCache "multimodal hash" truncation'
+      total_count: 1
+      incomplete_results: false
+      matches: ['issue#4086']
+    - query: 'repo:LMCache/LMCache "16-bit" "multimodal hash"'
+      total_count: 4
+      incomplete_results: false
+      matches: ['issue#3301', 'pull#2932', 'issue#4086', 'pull#2276']
+    - query: 'repo:LMCache/LMCache "extra_keys" ignored'
+      total_count: 1
+      incomplete_results: false
+      matches: ['issue#4086']
+    - query: 'repo:LMCache/LMCache "wrong cache hit" multimodal'
+      total_count: 2
+      incomplete_results: false
+      matches: ['issue#4086', 'issue#3301']
+  symbols:
+    - query: apply_mm_hashes_to_token_ids
+      exists: true
+      total_count: 4
+      incomplete_results: false
+      paths: [lmcache/integration/vllm/utils.py, lmcache/integration/vllm/vllm_v1_adapter.py, lmcache/integration/vllm/lmcache_mp_connector.py, lmcache/integration/vllm/tests/test_mm_hash_utils.py]
+    - query: hex_hash_to_int16
+      exists: true
+      total_count: 3
+      incomplete_results: false
+      paths: [lmcache/integration/vllm/utils.py, tests/v1/test_mp_connector_mm_keys.py, lmcache/integration/vllm/tests/test_mm_hash_utils.py]
+    - query: extra_keys
+      exists: true
+      total_count: 1
+      incomplete_results: false
+      paths: [lmcache/v1/token_database.py]
+    - query: CacheEngineKey
+      exists: true
+      total_count: 97
+      returned_count: 20
+      truncated: true
+      incomplete_results: false
+      representative_paths: [lmcache/utils.py, lmcache/v1/token_database.py]
+    - query: ObjectKey
+      exists: true
+      total_count: 193
+      returned_count: 20
+      truncated: true
+      incomplete_results: false
+      representative_paths: [lmcache/v1/multiprocess/custom_types.py]
+    - query: extract_mm_features
+      exists: true
+      total_count: 3
+      incomplete_results: false
+      paths: [lmcache/integration/vllm/utils.py, lmcache/integration/vllm/vllm_v1_adapter.py, lmcache/integration/vllm/lmcache_mp_connector.py]
+    - query: lmcache_mp_connector
+      exists: true
+      total_count: 20
+      returned_count: 20
+      truncated: false
+      incomplete_results: false
+      note: Broad string search includes configuration, documentation, and test references in addition to the connector module.
+  semantic_related_work:
+    - query: 'repo:LMCache/LMCache "multimodal cache key"'
+      total_count: 6
+      incomplete_results: false
+      matches: ['pull#4176', 'issue#4198', 'pull#2932', 'issue#3301', 'pull#3902', 'pull#2634']
+    - query: 'repo:LMCache/LMCache "multimodal hash"'
+      total_count: 13
+      incomplete_results: false
+      matches: ['pull#4176', 'pull#2932', 'issue#3301', 'issue#4086', 'pull#3902', 'pull#1583', 'pull#1582', 'issue#2258', 'pull#1463', 'pull#916', 'pull#2276', 'issue#945', 'pull#2634']
+    - query: 'repo:LMCache/LMCache extra_keys multimodal'
+      total_count: 1
+      incomplete_results: false
+      matches: ['issue#4086']
+    - query: 'repo:LMCache/LMCache "image hash"'
+      total_count: 5
+      incomplete_results: false
+      matches: ['issue#3301', 'issue#4086', 'pull#2276', 'issue#690', 'pull#878']
+    - query: 'repo:LMCache/LMCache "cache collision" multimodal'
+      total_count: 3
+      incomplete_results: false
+      matches: ['issue#4086', 'issue#3301', 'pull#2932']
+    - query: 'repo:LMCache/LMCache "multimodal connector"'
+      total_count: 6
+      incomplete_results: false
+      matches: ['pull#4176', 'pull#3902', 'pull#3901', 'issue#3106', 'pull#3665', 'pull#2634']
+    - query: 'repo:LMCache/LMCache "object key" multimodal'
+      total_count: 0
+      incomplete_results: false
+      matches: []
+
+# Raw candidates are deliberately separate from the adjudicated related_items
+# field because evidence collection is not authorized to decide blocking effect.
+raw_related_item_candidates:
+  - type: issue
+    repository: LMCache/LMCache
+    number: 3301
+    url: https://github.com/LMCache/LMCache/issues/3301
+    state: open
+    relationship: partial-overlap
+    explicit_issue_reference: false
+    overlap_evidence: Reports collision risk from the same 16-bit multimodal identifier projection.
+    blocking_effect: not-evaluated
+  - type: pull-request
+    repository: LMCache/LMCache
+    number: 2932
+    url: https://github.com/LMCache/LMCache/pull/2932
+    state: open
+    relationship: semantic-implementation
+    explicit_issue_reference: false
+    overlap_evidence: Replaces 16-bit multimodal key material with signed-int64-safe 63-bit values in vLLM integration utilities and adds unit tests; its body says it fixes #3301.
+    paths: [lmcache/integration/vllm/utils.py, lmcache/integration/vllm/tests/test_mm_hash_utils.py]
+    blocking_effect: not-evaluated
+  - type: pull-request
+    repository: LMCache/LMCache
+    number: 3902
+    url: https://github.com/LMCache/LMCache/pull/3902
+    state: open
+    relationship: partial-overlap
+    explicit_issue_reference: false
+    overlap_evidence: Adds VLM-aware cache identity for vLLM MP CacheBlend and a signed-int64 surrogate-id path; explicitly fails closed for a non-MP V1 path.
+    blocking_effect: not-evaluated
+  - type: pull-request
+    repository: LMCache/LMCache
+    number: 4176
+    url: https://github.com/LMCache/LMCache/pull/4176
+    state: open
+    relationship: partial-overlap
+    explicit_issue_reference: false
+    overlap_evidence: Proposes multimodal cache-key identity across vLLM MP and SGLang adapters; discussion points to merged PR #4183 for MP multimodal support.
+    blocking_effect: not-evaluated
+  - type: pull-request
+    repository: LMCache/LMCache
+    number: 4183
+    url: https://github.com/LMCache/LMCache/pull/4183
+    state: merged
+    merged_on: "2026-07-25"
+    merge_commit: 927897db1fa3ff494b1b16bdf98c52472aa2e453
+    relationship: source-change
+    explicit_issue_reference: false
+    overlap_evidence: Adds MP multimodal key identity and tests same-prompt/different-image behavior, while retaining the existing hex_hash_to_int16 projection.
+    blocking_effect: not-evaluated
+  - type: pull-request
+    repository: LMCache/LMCache
+    number: 2276
+    url: https://github.com/LMCache/LMCache/pull/2276
+    state: merged
+    relationship: source-change
+    explicit_issue_reference: false
+    overlap_evidence: Adds stable handling for non-hex multimodal identifiers while preserving 16-bit output behavior.
+    blocking_effect: not-evaluated
+  - type: issue
+    repository: LMCache/LMCache
+    number: 4198
+    url: https://github.com/LMCache/LMCache/issues/4198
+    state: open
+    relationship: reference-only
+    explicit_issue_reference: false
+    overlap_evidence: Tracks MP encoder-cache support and describes #4183's KV-cache-key correctness as a separate concern.
+    blocking_effect: not-evaluated
+
+ownership_signals:
+  - actor: ApostaC
+    actor_role: CONTRIBUTOR
+    type: review-invitation
+    strength: conditional-interest
+    active: null
+    summary: Offers project review and merge consideration if the reporter submits a non-MP fix; this is not a statement that ApostaC is implementing it.
+    url: https://github.com/LMCache/LMCache/issues/4086#issuecomment-4962231244
+    observed_at: "2026-07-13T20:10:21Z"
+  - actor: ApostaC
+    actor_role: CONTRIBUTOR
+    type: roadmap-intent
+    strength: implementation-intent
+    active: null
+    summary: Announces planned MP multimodal support in Q3 without naming an implementer, branch, or PR in the Issue comment.
+    url: https://github.com/LMCache/LMCache/issues/4086#issuecomment-4962231244
+    observed_at: "2026-07-13T20:10:21Z"
+
+related_items: []
+
+current_source_facts:
+  - path: lmcache/integration/vllm/utils.py
+    lines: 143-168
+    fact: hex_hash_to_int16 returns a 16-bit value for both hex and SHA-256 fallback inputs.
+    url: https://github.com/LMCache/LMCache/blob/a012dd9977eb1482940b70a9f8a196734cb9c7ff/lmcache/integration/vllm/utils.py#L143-L168
+  - path: lmcache/integration/vllm/utils.py
+    lines: 171-187
+    fact: apply_mm_hashes_to_token_ids fills each multimodal placeholder span with the corresponding 16-bit value.
+    url: https://github.com/LMCache/LMCache/blob/a012dd9977eb1482940b70a9f8a196734cb9c7ff/lmcache/integration/vllm/utils.py#L171-L187
+  - path: lmcache/v1/token_database.py
+    lines: 250-295
+    fact: _canonicalize_hash_inputs converts extra_keys to a tuple and _hash_tokens passes that tuple to hash_func; the adjacent Ignore-extra-keys comment does not match the executed data flow.
+    url: https://github.com/LMCache/LMCache/blob/a012dd9977eb1482940b70a9f8a196734cb9c7ff/lmcache/v1/token_database.py#L250-L295
+  - path: lmcache/integration/vllm/lmcache_mp_connector.py
+    lines: 252-327
+    fact: The MP request tracker extracts multimodal features, applies the identifier projection to prompt tokens, and returns adjusted token IDs for key derivation.
+    url: https://github.com/LMCache/LMCache/blob/a012dd9977eb1482940b70a9f8a196734cb9c7ff/lmcache/integration/vllm/lmcache_mp_connector.py#L252-L327
+  - path: tests/v1/test_mp_connector_mm_keys.py
+    lines: 90-159
+    fact: Unit tests cover placeholder replacement, different image identifiers producing different key tokens, and adjusted tokens in store/retrieve metadata.
+    url: https://github.com/LMCache/LMCache/blob/a012dd9977eb1482940b70a9f8a196734cb9c7ff/tests/v1/test_mp_connector_mm_keys.py#L90-L159
+
+feasibility_leads:
+  languages:
+    directly_involved: [Python]
+    repository_also_contains: [Go, Shell, C++, Cuda, Rust, JavaScript, C, CMake]
+    note: The inspected key-construction and connector paths are Python; no C++ path was shown to be directly involved by this bounded collection.
+  likely_subsystems:
+    - vLLM integration multimodal feature extraction
+    - MP request tracking and lookup/store/retrieve token identity
+    - token database prefix hashing
+    - cache key serialization
+  cpu_testability:
+    appears_possible: true
+    evidence: Existing pytest tests use fake requests and token lists to exercise multimodal key-token construction, but import vLLM and torch.
+  full_validation:
+    gpu_may_be_required: true
+    multimodal_model_may_be_required: true
+    multi_gpu_requirement: unknown
+    evidence: The reported reproduction uses Qwen3.6-27B-AWQ-INT4 and two RTX 3080 GPUs; a full wrong-KV-output reproduction was not run.
+  dependencies:
+    - vLLM request and connector APIs
+    - PyTorch
+    - multimodal model/runtime for end-to-end validation
+  compatibility_dimensions:
+    - MP versus non-MP connector paths
+    - vLLM versions and mm_features population
+    - hex versus non-hex multimodal identifiers
+    - cache-key integer serialization range
+    - text-only request behavior
+  ci_or_hardware_dependent:
+    - Full model-level correctness may require project CI or GPU hardware.
+    - Bounded key-construction unit behavior appears separable from model inference.
+  final_feasibility_score: not-assigned
+
+profiles_applied:
+  - languages/python
+  - languages/cpp
+  - ecosystems/llm-inference
+  - repositories/lmcache
+profiles_note: Profiles were used as investigation checklists only; no full Project Discovery was performed.
+
+source_inventory:
+  - GitHub REST Issue metadata and complete body
+  - GitHub REST paginated Issue comments
+  - GitHub REST paginated Issue Timeline and Issue events
+  - GitHub GraphQL closing-PR references and projectItems
+  - GitHub Issue/PR search API for explicit, title/symptom, and semantic queries
+  - GitHub code search API on dev
+  - GitHub Contents API for current source excerpts
+  - GitHub repository metadata, languages, branch protection, and dev HEAD
+  - Opened current Issue/PR pages and their files/comments for high-relevance semantic candidates
+
+limitations:
+  - GitHub Classic Projects could not be queried because the GraphQL field is retired; current projectItems and required relationship sources were accessible.
+  - Empty Timeline, Development, closing-reference, and explicit-number PR results do not prove that no implementation exists.
+  - CacheEngineKey and ObjectKey code-search results were paginated/truncated and are representative matches, not a complete inventory.
+  - GitHub code search and Contents API were used against dev at a012dd9977eb1482940b70a9f8a196734cb9c7ff; no upstream clone or local runtime inspection was authorized.
+  - No reproduction, CPU unit test, GPU inference, multimodal model run, CI execution, or cross-repository vLLM source audit was performed.
+  - Reporter root-cause statements and proposed fixes are preserved as claims; current-source facts are recorded separately and do not establish a final root cause.
+  - Semantic candidates were opened selectively by relevance; evidence mode does not assign their final relationship, blocking effect, ownership implication, or contribution impact.
+  - The schema requires a boolean blocks_contribution for adjudicated related_items. Evidence mode is not authorized to decide that boolean, so raw candidates use a separate schema-compatible extension and related_items remains empty.

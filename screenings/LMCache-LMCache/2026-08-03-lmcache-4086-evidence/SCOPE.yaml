@@ -1,0 +1,39 @@
+schema_version: 1
+stage: issue-evidence-collection
+
+repository: "LMCache/LMCache"
+
+scan:
+  id: "2026-08-03-lmcache-4086-evidence"
+  started_at: null
+  completed_at: "2026-08-03T08:32:14Z"
+  candidate_limit: 1
+  sort: created-desc
+  state: open
+
+include:
+  labels: []
+
+exclude:
+  labels: []
+  categories:
+    - infrastructure
+    - third-party
+
+technical_preferences:
+  languages:
+    - python
+    - cpp
+  areas:
+    - llm-inference
+    - multimodal-cache-identity
+
+search_capabilities:
+  issue_search: true
+  pr_search: true
+  code_search: true
+  timeline_access: true
+
+limitations:
+  - GitHub Classic Projects could not be queried because its GraphQL field is retired; REST Timeline, GraphQL closing-PR references, and current projectItems remained accessible.
+  - GitHub code search was used against the remote dev baseline; no upstream clone or full Project Discovery was authorized.
