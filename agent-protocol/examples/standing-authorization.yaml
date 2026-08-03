@@ -1,0 +1,46 @@
+schema_version: 1
+kind: standing-authorization
+template_only: true
+authorization_id: example-facts-repository-sync
+approved_by: user
+status: approved
+repository: Yanansn/zhaiyezi
+branch: main
+effective_from: "2026-08-03T00:00:00Z"
+expires_at: null
+
+grants:
+  chat:
+    actions:
+      - commit_facts_repository
+      - push_facts_repository
+    paths:
+      - agent-work/tasks/*/REQUEST.yaml
+      - agent-work/tasks/*/REVIEW.yaml
+      - decisions/**
+  codex:
+    actions:
+      - commit_facts_repository
+      - push_facts_repository
+    paths:
+      - agent-work/tasks/*/RESULT.yaml
+      - agent-work/tasks/*/REPORT.md
+      - agent-work/tasks/*/evidence/**
+      - screenings/**
+
+always_requires_new_approval:
+  - modify_registry
+  - initialize_formal_issue
+  - fetch_official_upstream
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+
+revocation:
+  supported: true
+  revoked_at: null

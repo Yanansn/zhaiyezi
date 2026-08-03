@@ -1,34 +1,24 @@
 # Conflict resolution
 
-## Ownership first
+Task directories remain at `agent-work/tasks/<task-id>/`; changing state never moves a directory. Ownership is per artifact:
 
-- Chat-owned: `REQUEST.yaml`, `REVIEW.yaml`, and `decisions/**`.
-- Codex-owned: `RESULT.yaml`, `REPORT.md`, and task `evidence/**`.
-- User-owned approval: `APPROVAL.yaml`.
-- Shared and serialized: `HANDOFF.md`.
+- Chat: `REQUEST.yaml`, `REVIEW.yaml`, `decisions/**`
+- Codex: `RESULT.yaml`, `REPORT.md`, `evidence/**`, `screenings/**`
+- User: `APPROVAL.yaml`
+- serialized: `HANDOFF.md`
 
-An Agent must not edit another role's owned file. Corrections are expressed through a new owned artifact: Chat requests changes in `REVIEW.yaml`; Codex explains a contract problem in `RESULT.yaml` or `REPORT.md`.
+Before editing, validate the protocol, derive the current state, verify the owned output paths, and check branch/HEAD/worktree. Stop when an owned artifact changed since the recorded input baseline.
 
-## Before editing
+Never auto-merge or overwrite another actor's artifact. Chat requests corrections in an immutable `REVIEW.yaml`; Codex responds with a higher `RESULT.revision` and keeps the Review as history. Contract ambiguity or an approved/rejected Review that would need rewriting is a blocker, not permission to mutate history.
 
-1. Verify the task directory, queue, effective status, and owned output paths.
-2. Verify branch, HEAD, remote, and worktree.
-3. Synchronize the facts repository only when authorized and only by fast-forward. `git pull --ff-only` must never be used to conceal a dirty or diverged state; the auditable equivalent is `git fetch --prune origin` followed by `git merge --ff-only origin/main`.
-4. Stop if another Agent changed an owned file since the task's `input_refs` baseline.
+Legacy queue directories are not active queues. Follow [migration.md](migration.md); preserve each artifact and stop on collisions.
 
-## Conflict handling
-
-- Never auto-merge an owned-file conflict.
-- Never overwrite another Agent's artifact.
-- Never use reset, stash, clean, restore, rebase, or force-push as automatic recovery.
-- Preserve both facts by stopping the task and writing a blocker in the current Agent's owned artifact.
-- Chat resolves task-contract conflicts by issuing a replacement `REQUEST.yaml` or Review.
-- A `HANDOFF.md` collision requires serialization: finish or abandon one task before the other updates it.
-
-The validator can check a proposed change set with actor/path pairs and rejects cross-owner edits or two Agents touching the same owned/shared path:
+The validator rejects cross-owner edits and concurrent writers:
 
 ```bash
 python3 scripts/validate_agent_protocol.py \
   --change chat:HANDOFF.md \
   --change codex:HANDOFF.md
 ```
+
+Do not use reset, stash, clean, restore, rebase, or force-push as automatic conflict recovery.

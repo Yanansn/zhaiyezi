@@ -7,7 +7,7 @@ scan:
   id: "{{SCAN_ID}}"
   started_at: null
   completed_at: null
-  candidate_limit: {{CANDIDATE_LIMIT}}
+  candidate_limit: "{{CANDIDATE_LIMIT}}"
   sort: created-desc
   state: open
 

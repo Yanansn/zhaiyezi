@@ -72,6 +72,7 @@ def main() -> int:
                 )
             if args.stage == "issue-evidence-collection" and template.name == "SCOPE.yaml":
                 content = content.replace("stage: issue-screening", "stage: issue-evidence-collection")
+            content = content.replace('"{{CANDIDATE_LIMIT}}"', str(args.candidate_limit))
             for marker, value in replacements.items():
                 content = content.replace(marker, value)
             (destination / template.name).write_text(content, encoding="utf-8")

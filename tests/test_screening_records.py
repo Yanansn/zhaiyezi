@@ -170,6 +170,7 @@ class ScreeningRecordTests(unittest.TestCase):
             }
             for template in (REPOSITORY_ROOT / "templates" / "screening").iterdir():
                 content = template.read_text(encoding="utf-8")
+                content = content.replace('"{{CANDIDATE_LIMIT}}"', "10")
                 for marker, value in replacements.items():
                     content = content.replace(marker, value)
                 (record / template.name).write_text(content, encoding="utf-8")

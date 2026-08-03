@@ -15,16 +15,36 @@ Codex 不负责无边界的候选筛选、长篇教学或重复讨论已经确�
 
 ## Agent Coordination Rules
 
-`agent-protocol/` 是 Chat 与 Codex 的仓库级协调层，`agent-work/` 是持久任务队列。它们只负责传递任务、结果、Review 和 Approval，不替代本文件、Screening schema、Candidate Admission Gate 或 Harvest 生命周期。
+`agent-protocol/` 是 Chat 与 Codex 的仓库级协调层，真实任务固定保存在 `agent-work/tasks/<task-id>/`。目录不随状态移动；状态由 REQUEST、RESULT 和 REVIEW 推导。它们只负责传递任务、结果、Review 和 Approval，不替代本文件、Screening schema、Candidate Admission Gate 或 Harvest 生命周期。
 
 所有 Agent 必须：
 
-1. 启动时读取 `agent-protocol/`，并遵守其中的角色所有权和权限规则。
+1. 启动时读取 `agent-protocol/`，运行 `python3 scripts/validate_agent_protocol.py`，并遵守其中的角色所有权和权限规则。
 2. 只执行分配给自己的、结构有效的 `REQUEST.yaml`；`REQUEST.yaml` 必须引用本阶段适用的 Brief 或包含同等边界信息。
 3. 不跳过任务状态转换，也不把协调层状态当作筛选分类、Admission 或正式 Issue 状态。
 4. 不根据聊天上下文扩大或执行仓库中未记录的任务。聊天可以提醒 Agent 读取任务，但不能替代任务文件。
 5. 以仓库中已提交并 Push 的状态作为跨 Agent 共享事实；本地未 Push 状态只属于当前执行环境。
-6. 通过各自拥有的文件协作：Chat 写 `REQUEST.yaml`/`REVIEW.yaml`/`decisions/`，Codex 写 `RESULT.yaml`/`REPORT.md`/`evidence/`，用户批准写入 `APPROVAL.yaml`。
+6. 通过各自拥有的文件协作：Chat 写 `REQUEST.yaml`/`REVIEW.yaml`/`decisions/`，Codex 写 `RESULT.yaml`/`REPORT.md`/`evidence/`，用户批准写入 `APPROVAL.yaml`；任何 Agent 都不得通过移动任务目录改变他人文件路径。
+
+Codex 启动顺序：
+
+1. 验证 facts repository 的 remote、branch、HEAD 和 clean worktree。
+2. 仅在已有授权时执行 fast-forward 同步。
+3. 读取 `AGENTS.md`、`HANDOFF.md`、`agent-protocol/`、对应 Brief 与 Skill。
+4. 运行 `python3 scripts/validate_agent_protocol.py`。
+5. 运行 `python3 scripts/agent_queue.py next --agent codex`。
+6. 一次只执行返回的一个 `ready` 任务，只写 Codex-owned Artifacts。
+7. 仅依据当前任务 Approval 或精确匹配的有效 standing authorization 决定是否 Commit/Push facts repository。
+8. facts-repository standing authorization 永远不能授权上游动作或公开动作。
+
+Chat 启动顺序：
+
+1. 读取远端 `main`，不把 Codex 本地状态当成共享事实。
+2. 验证协议，并列出 `awaiting-review`、`blocked` 与分配给 Chat 的任务。
+3. 读取 `RESULT.yaml`、`REPORT.md` 和 evidence，写 Chat-owned `REVIEW.yaml`，需要时创建下一份 `REQUEST.yaml`。
+4. 只有存在当前任务 Approval 或精确匹配的有效 standing authorization 时，才 Commit/Push Chat-owned Artifacts。
+
+Standing authorization 是用户可选机制；只有 `decisions/authorizations/*.yaml` 中真实、有效、未撤销且 repository/branch/actor/action/path 全部匹配的文件才生效。`agent-protocol/examples/` 中的模板不构成授权；没有真实授权时保持 default deny。Registry、正式 Issue 初始化、上游 fetch/code/write/branch Push 和所有 GitHub 公开动作始终需要新的用户确认。
 
 任务来源优先级：
 
@@ -35,7 +55,7 @@ Codex 不负责无边界的候选筛选、长篇教学或重复讨论已经确�
 
 该优先级不允许低层来源覆盖系统安全规则、本 `AGENTS.md`、用户审批边界或上游实时事实。来源冲突时停止执行，在当前角色拥有的 artifact 中记录差异，不自动合并或覆盖他人修改。
 
-Evidence task 完成后必须进入 Chat Review；`evidence_completed` 不得直接解释为 `available`、Admission passed、`selected` 或 implementation authorization。Commit、Push、上游写入和所有公开动作继续分别要求任务授权与用户确认。
+Evidence task 完成后必须进入 Chat Review；`evidence_completed` 不得直接解释为 `available`、Admission passed、`selected` 或 implementation authorization。facts repository 的 Commit/Push 需要任务授权或有效 standing authorization；上游写入和所有公开动作继续逐次要求用户确认。
 
 ## 候选筛选与接纳边界
 

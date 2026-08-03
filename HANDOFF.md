@@ -6,7 +6,7 @@
 
 ## 工作系统
 
-- Agent Coordination Protocol 已启用：Chat/Codex 任务通过 `agent-work/` 同步，协议与角色权限见 `agent-protocol/`。本地未 Commit/Push 的队列变化仍不可被另一 Agent 视为共享事实。
+- Agent Coordination Protocol v2 已启用：真实任务固定在 `agent-work/tasks/<task-id>/`，状态由 Artifact 推导；使用 `scripts/agent_queue.py` 确定性读取，示例不进入队列。可选 standing authorization 只覆盖精确匹配的 facts-repository Commit/Push，上游与公开动作仍逐次审批。本地未 Commit/Push 的变化仍不可被另一 Agent 视为共享事实。
 - 候选筛选 Skill：`.agents/skills/screen-open-source-issue/`
 - 筛选简报模板：`.agents/skills/screen-open-source-issue/references/execution-brief.md`
 - 筛选记录目录：`screenings/<owner>-<repo>/<scan-id>/`

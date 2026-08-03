@@ -17,8 +17,8 @@ roles:
       - create_decision
     owned_paths:
       - decisions/**
-      - agent-work/*/*/REQUEST.yaml
-      - agent-work/*/*/REVIEW.yaml
+      - agent-work/tasks/*/REQUEST.yaml
+      - agent-work/tasks/*/REVIEW.yaml
   execution-agent:
     allowed_actions:
       - read_repository
@@ -30,14 +30,15 @@ roles:
       - write_report
       - write_evidence
     owned_paths:
-      - agent-work/*/*/RESULT.yaml
-      - agent-work/*/*/REPORT.md
-      - agent-work/*/*/evidence/**
+      - agent-work/tasks/*/RESULT.yaml
+      - agent-work/tasks/*/REPORT.md
+      - agent-work/tasks/*/evidence/**
+      - screenings/**
   approval-authority:
     allowed_actions:
       - approve_protected_action
     owned_paths:
-      - agent-work/*/*/APPROVAL.yaml
+      - agent-work/tasks/*/APPROVAL.yaml
 
 shared_serialized_paths:
   - HANDOFF.md
@@ -54,18 +55,25 @@ action_catalog:
   write_result: local-write
   write_report: local-write
   write_evidence: local-write
-  commit_facts_repository: task-authorization-required
-  push_facts_repository: user-confirmation-required
-  fetch_official_upstream: user-confirmation-required
-  upstream_write: user-confirmation-required
-  push_upstream_branch: user-confirmation-required
-  create_issue: user-confirmation-required
-  comment_issue: user-confirmation-required
-  assign_issue: user-confirmation-required
-  add_labels: user-confirmation-required
-  create_pull_request: user-confirmation-required
+  commit_facts_repository: standing-or-task-authorization-required
+  push_facts_repository: standing-or-task-authorization-required
+  modify_registry: always-user-confirmation-required
+  initialize_formal_issue: always-user-confirmation-required
+  fetch_official_upstream: always-user-confirmation-required
+  modify_upstream_code: always-user-confirmation-required
+  upstream_write: always-user-confirmation-required
+  push_upstream_branch: always-user-confirmation-required
+  create_issue: always-user-confirmation-required
+  comment_issue: always-user-confirmation-required
+  assign_issue: always-user-confirmation-required
+  add_labels: always-user-confirmation-required
+  create_pull_request: always-user-confirmation-required
 
 default_prohibited_actions:
+  - modify_registry
+  - initialize_formal_issue
+  - fetch_official_upstream
+  - modify_upstream_code
   - upstream_write
   - push_upstream_branch
   - create_issue
@@ -75,8 +83,12 @@ default_prohibited_actions:
   - create_pull_request
 
 approval_required_actions:
+  - commit_facts_repository
   - push_facts_repository
+  - modify_registry
+  - initialize_formal_issue
   - fetch_official_upstream
+  - modify_upstream_code
   - upstream_write
   - push_upstream_branch
   - create_issue
@@ -85,9 +97,44 @@ approval_required_actions:
   - add_labels
   - create_pull_request
 
+standing_authorizable_actions:
+  - commit_facts_repository
+  - push_facts_repository
+
+always_user_confirmation_actions:
+  - modify_registry
+  - initialize_formal_issue
+  - fetch_official_upstream
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+
+standing_authorization:
+  repository: Yanansn/zhaiyezi
+  branch: main
+  file_location: decisions/authorizations/*.yaml
+  actor_path_allowlist:
+    chat:
+      - agent-work/tasks/*/REQUEST.yaml
+      - agent-work/tasks/*/REVIEW.yaml
+      - decisions/**
+    codex:
+      - agent-work/tasks/*/RESULT.yaml
+      - agent-work/tasks/*/REPORT.md
+      - agent-work/tasks/*/evidence/**
+      - screenings/**
+
 rules:
   default: deny
   missing_action: prohibited
-  approval_is_task_scoped: true
-  approval_is_action_scoped: true
+  task_approval_is_task_scoped: true
+  standing_authorization_is_repository_scoped: true
+  standing_authorization_is_branch_scoped: true
+  standing_authorization_is_actor_action_path_scoped: true
+  template_is_not_authorization: true
   publication_requires_live_identity_verification: true

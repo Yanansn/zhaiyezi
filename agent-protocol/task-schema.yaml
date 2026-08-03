@@ -1,4 +1,6 @@
-schema_version: 1
+schema_version: 2
+
+task_directory: agent-work/tasks/<task-id>
 
 request:
   filename: REQUEST.yaml
@@ -18,20 +20,12 @@ request:
     - prohibited_actions
     - expected_outputs
     - completion
-  field_types:
-    task_id: string
-    task_type: enum
-    created_by: enum
-    assigned_agent: enum
-    repository: string
-    issue: [string, 'null']
-    status: enum
-    input_refs: list
-    goal: string
-    allowed_actions: list
-    prohibited_actions: list
-    expected_outputs: list
-    completion: mapping
+  optional_fields:
+    - created_at
+    - priority
+  constraints:
+    status: ready
+    immutable_after_execution_starts: true
 
 result:
   filename: RESULT.yaml
@@ -47,6 +41,9 @@ result:
     - actions_not_performed
     - validation
     - limitations
+  optional_fields:
+    - revision
+    - supersedes_review
 
 review:
   filename: REVIEW.yaml
@@ -57,6 +54,7 @@ review:
     - created_by
     - status
     - result_ref
+    - result_revision
     - decision
     - findings
     - next_actions
@@ -72,6 +70,24 @@ approval:
     - actions
     - scope
 
+standing_authorization:
+  kind: standing-authorization
+  actual_location: decisions/authorizations/<authorization-id>.yaml
+  template_location: agent-protocol/examples/standing-authorization.yaml
+  required_fields:
+    - schema_version
+    - kind
+    - authorization_id
+    - approved_by
+    - status
+    - repository
+    - branch
+    - effective_from
+    - expires_at
+    - grants
+    - always_requires_new_approval
+    - revocation
+
 enums:
   task_type:
     - example
@@ -86,21 +102,35 @@ enums:
     - publication
     - review
     - documentation-contract-update
-  created_by: [chat, user]
+  created_by: [chat]
   assigned_agent: [chat, codex]
-  task_status: [ready, active, blocked, review, completed, failed]
-  result_status: [active, blocked, review, failed]
-  review_status: [active, blocked, completed, failed]
+  request_status: [ready]
+  result_status: [active, review, blocked, failed]
+  review_status: [completed, changes-requested, rejected]
   review_decision: [approved, changes-requested, rejected]
   approval_status: [approved, revoked]
+  standing_authorization_status: [approved, revoked]
+  priority: [low, normal, high, urgent]
+
+artifact_state_derivation:
+  request_ready_without_result: ready
+  result_active: active
+  result_review: awaiting-review
+  result_blocked: blocked
+  result_failed: failed
+  review_approved_completed: completed
+  review_changes_requested: changes-requested
+  review_rejected: rejected
+  newer_result_after_changes_requested: derive-from-newer-result
 
 completion_contract:
   required_fields: [criteria, validation, handoff]
   completed_requires_approved_review: true
-  protected_actions_require_approval: true
+  protected_actions_require_task_or_valid_standing_authorization: true
 
 compatibility:
   coordination_status_is_not_screening_classification: true
   coordination_status_is_not_issue_status: true
+  queue_completed_is_not_contribution_completed: true
   evidence_completed_is_not_available: true
   evidence_completed_is_not_admission: true

@@ -1,51 +1,30 @@
 # Agent roles
 
-## Chat Agent
+## Chat (`decision-agent`)
 
-- Role ID: `decision-agent`
-- Actor ID: `chat`
-
-Responsibilities:
-
-- read evidence and execution reports;
-- perform Deep Audit and contribution decisions under the Screening contract;
-- create bounded tasks, reviews, decisions, and approval requests;
-- preserve the distinction between evidence, judgment, and user authorization.
-
-Owned paths:
+Chat owns:
 
 - `decisions/**`
-- `agent-work/*/*/REQUEST.yaml`
-- `agent-work/*/*/REVIEW.yaml`
+- `agent-work/tasks/*/REQUEST.yaml`
+- `agent-work/tasks/*/REVIEW.yaml`
 
-Chat must not modify upstream code, automatically create a PR, automatically claim an Issue, publish on the user's behalf, or bypass user approval.
+Chat creates bounded requests and reviews Codex results. It does not edit `RESULT.yaml`, manufacture execution evidence, publish as the user, or turn evidence into an Admission decision without the existing Screening gate.
 
-## Codex Agent
+## Codex (`execution-agent`)
 
-- Role ID: `execution-agent`
-- Actor ID: `codex`
+Codex owns:
 
-Responsibilities:
+- `agent-work/tasks/*/RESULT.yaml`
+- `agent-work/tasks/*/REPORT.md`
+- `agent-work/tasks/*/evidence/**`
+- `screenings/**`
 
-- execute repository tasks within their recorded scope;
-- perform authorized code analysis, Evidence Collection, Code Map, implementation, and testing stages;
-- write execution results, reports, evidence, and validation records;
-- return material gaps and blockers instead of manufacturing a decision.
+Codex executes the recorded stage, reports validation and limitations, and returns gaps instead of inventing a decision. It does not edit Chat-owned artifacts or independently classify a candidate, admit an Issue, or publish upstream.
 
-Owned paths:
+## User (`approval-authority`)
 
-- `agent-work/*/*/RESULT.yaml`
-- `agent-work/*/*/REPORT.md`
-- `agent-work/*/*/evidence/**`
-
-Codex must not independently call an Issue available, choose the contribution direction, mutate Chat-owned decisions, create an upstream PR, publish an Issue comment, or bypass `APPROVAL.yaml` and live user confirmation.
-
-## User
-
-- Actor ID: `user`
-- Owns `agent-work/*/*/APPROVAL.yaml` semantically, even when Codex records the user's exact approval after explicit instruction.
-- Is the final authority for protected repository and GitHub actions.
+The user semantically owns `agent-work/tasks/*/APPROVAL.yaml` and is the final authority for protected Git and GitHub actions. Codex may record only the user's exact current instruction.
 
 ## Shared file
 
-`HANDOFF.md` is shared and serialized. Only one task may modify it at a time, and the modifying task must name it in `expected_outputs`. It must never be used as a substitute for task-specific `REQUEST.yaml`, `RESULT.yaml`, or `REVIEW.yaml`.
+`HANDOFF.md` is shared and serialized. A task modifying it must name it in `expected_outputs`, and concurrent writers must stop. It is not a substitute for task artifacts.

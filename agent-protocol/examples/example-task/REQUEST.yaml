@@ -1,20 +1,25 @@
 schema_version: 1
-task_id: example-repository-agnostic-task
+task_id: example-task
 task_type: example
 created_by: chat
 assigned_agent: codex
 repository: example/example
 issue: null
 status: ready
+created_at: "2026-08-03T00:00:00Z"
+priority: normal
 input_refs:
   - AGENTS.md
   - agent-protocol/README.md
-goal: Demonstrate the same task envelope for LMCache, vLLM, Kubernetes, and other GitHub repositories without creating or modifying a real Issue.
+goal: Demonstrate the repository-agnostic task contract without creating or modifying a real Issue.
 allowed_actions:
   - read_repository
   - write_result
   - write_report
 prohibited_actions:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
   - upstream_write
   - create_issue
   - comment_issue
@@ -23,12 +28,14 @@ prohibited_actions:
   - create_pull_request
   - push_facts_repository
 expected_outputs:
-  - agent-work/active/example-task/RESULT.yaml
-  - agent-work/active/example-task/REPORT.md
+  - agent-work/tasks/example-task/RESULT.yaml
+  - agent-work/tasks/example-task/REPORT.md
 completion:
   criteria:
     - The example request passes the Agent Protocol validator.
+    - The example does not appear in the real task queue.
     - No external repository or GitHub object is changed.
   validation:
     - python3 scripts/validate_agent_protocol.py
-  handoff: Chat reviews the generated result through REVIEW.yaml.
+    - python3 scripts/agent_queue.py list
+  handoff: Chat reviews a real task result through REVIEW.yaml.

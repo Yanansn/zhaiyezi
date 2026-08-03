@@ -1,19 +1,48 @@
-schema_version: 1
+schema_version: 2
 
-task_queue:
-  statuses: [ready, active, blocked, review, completed, failed]
+queue_artifact_state:
+  states:
+    - ready
+    - active
+    - awaiting-review
+    - changes-requested
+    - blocked
+    - failed
+    - rejected
+    - completed
+  derivation:
+    ready:
+      rule: REQUEST.status is ready and RESULT.yaml is absent.
+    active:
+      rule: The newest RESULT.status is active.
+    awaiting-review:
+      rule: The newest RESULT.status is review and no Review covers that result revision.
+    changes-requested:
+      rule: REVIEW.decision and REVIEW.status are changes-requested for the current result revision.
+    blocked:
+      rule: The newest RESULT.status is blocked and limitations contains a blocker.
+    failed:
+      rule: The newest RESULT.status is failed.
+    rejected:
+      rule: REVIEW.decision and REVIEW.status are rejected for the current result revision.
+    completed:
+      rule: REVIEW.decision is approved and REVIEW.status is completed for the current result revision.
   transitions:
-    ready: [active, blocked, failed]
-    active: [review, blocked, failed]
-    blocked: [ready, active, failed]
-    review: [active, blocked, completed, failed]
-    completed: []
+    ready: [active, awaiting-review, blocked, failed]
+    active: [awaiting-review, blocked, failed]
+    awaiting-review: [changes-requested, rejected, completed]
+    changes-requested: [active, awaiting-review, blocked, failed]
+    blocked: [active, failed]
     failed: []
-  directory_states:
-    inbox: [ready]
-    active: [active, review]
-    blocked: [blocked]
-    completed: [completed]
+    rejected: []
+    completed: []
+  rules:
+    fixed_task_directory: true
+    directory_moves_prohibited: true
+    rejected_tasks_are_retained: true
+    changes_requested_review_is_immutable: true
+    new_result_revision_may_supersede_changes_requested_review: true
+    queue_completed_is_not_contribution_completed: true
 
 contribution_coordination:
   states:
@@ -49,13 +78,13 @@ contribution_coordination:
       rule: Use the existing Screening classification and Candidate Admission Gate contract.
     admission_pending_to_implementation_ready:
       owner: user
-      rule: Gate passage and each required repository mutation authorization must be recorded separately.
+      rule: Gate passage and repository mutations require independent authorization.
     implementation_ready_to_implementing:
       owner: chat
       rule: A bounded implementation REQUEST.yaml is required.
     pr_ready_to_completed:
       owner: chat
-      rule: If a real PR is in scope, existing submitted/reviewing/terminal Issue statuses remain authoritative.
+      rule: Existing submitted, reviewing, and terminal Issue statuses remain authoritative for real PRs.
 
 forbidden_shortcuts:
   - [evidence_completed, admission_pending]
