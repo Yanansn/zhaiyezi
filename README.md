@@ -23,7 +23,7 @@ Chat REQUEST.yaml
 → user APPROVAL.yaml（仅受保护动作需要）
 ```
 
-真实任务固定保存在 `agent-work/tasks/<task-id>/`，目录不移动；队列状态由上述 Artifact 推导。Chat 是 `decision-agent`，负责 Deep Audit、贡献决策、任务和 Review；Codex 是 `execution-agent`，负责 Evidence Collection、代码分析、实现、测试和执行报告。队列协议是现有 Screening 与 Harvest 的外层协调机制，不会把 Evidence 自动升级为 Admission。
+真实任务固定保存在 `agent-work/tasks/<task-id>/`，目录不移动；队列状态由上述 Artifact 推导。Chat 是 `decision-agent`，负责 Deep Audit、贡献决策、任务和 Review；Codex 是 `execution-agent`，负责 Evidence Collection、代码分析、实现、测试和执行报告。Artifact 使用 `decision_author` 保存语义作者、用 `materialized_by` 保存仓库落盘者：Chat 无 Contents write 权限时，Codex 可在当前明确用户指令和受限授权下忠实落盘 Chat 已形成的 REQUEST/REVIEW，但不能改变其范围、权限、状态或结论。队列协议是现有 Screening 与 Harvest 的外层协调机制，不会把 Evidence 自动升级为 Admission。
 
 ```bash
 python3 scripts/validate_agent_protocol.py
@@ -33,7 +33,7 @@ python3 scripts/agent_queue.py next --agent codex
 python3 scripts/agent_queue.py show --task <task-id>
 ```
 
-示例位于 `agent-protocol/examples/`，单独校验且不会进入真实队列。用户可选择在 `decisions/authorizations/` 建立限于 `Yanansn/zhaiyezi`、`main`、actor/action/path 的 standing authorization，使 facts repository 的 Commit/Push 无需逐项授权；示例模板本身不构成授权，没有真实有效文件时仍 default deny。Registry、正式 Issue 初始化、上游 fetch/code/write/branch Push 以及 Issue、评论、认领、标签、PR 等公开动作永远需要单独批准。
+示例位于 `agent-protocol/examples/`，单独校验且不会进入真实队列。用户可选择在 `decisions/authorizations/` 建立限于 `Yanansn/zhaiyezi`、`main`、actor/action/path 的 standing authorization，使 facts repository 的 Commit/Push 和受限 Chat Artifact materialization 无需逐项授权；示例模板本身不构成授权，没有真实有效文件时仍 default deny。User approval 的落盘、Registry、正式 Issue 初始化、上游 fetch/code/write/branch Push 以及 Issue、评论、认领、标签、PR 等公开动作永远需要单独批准。
 
 候选筛选、Issue 研究与贡献链路：
 

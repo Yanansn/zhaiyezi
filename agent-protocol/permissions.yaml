@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 
 actors:
   chat:
@@ -29,6 +29,8 @@ roles:
       - write_result
       - write_report
       - write_evidence
+      - materialize_chat_artifact
+      - materialize_user_artifact
     owned_paths:
       - agent-work/tasks/*/RESULT.yaml
       - agent-work/tasks/*/REPORT.md
@@ -55,6 +57,8 @@ action_catalog:
   write_result: local-write
   write_report: local-write
   write_evidence: local-write
+  materialize_chat_artifact: standing-or-task-authorization-required
+  materialize_user_artifact: always-user-confirmation-required
   commit_facts_repository: standing-or-task-authorization-required
   push_facts_repository: standing-or-task-authorization-required
   modify_registry: always-user-confirmation-required
@@ -70,6 +74,7 @@ action_catalog:
   create_pull_request: always-user-confirmation-required
 
 default_prohibited_actions:
+  - materialize_user_artifact
   - modify_registry
   - initialize_formal_issue
   - fetch_official_upstream
@@ -83,6 +88,8 @@ default_prohibited_actions:
   - create_pull_request
 
 approval_required_actions:
+  - materialize_chat_artifact
+  - materialize_user_artifact
   - commit_facts_repository
   - push_facts_repository
   - modify_registry
@@ -100,8 +107,10 @@ approval_required_actions:
 standing_authorizable_actions:
   - commit_facts_repository
   - push_facts_repository
+  - materialize_chat_artifact
 
 always_user_confirmation_actions:
+  - materialize_user_artifact
   - modify_registry
   - initialize_formal_issue
   - fetch_official_upstream
@@ -124,10 +133,44 @@ standing_authorization:
       - agent-work/tasks/*/REVIEW.yaml
       - decisions/**
     codex:
+      - agent-work/tasks/*/REQUEST.yaml
+      - agent-work/tasks/*/REVIEW.yaml
       - agent-work/tasks/*/RESULT.yaml
       - agent-work/tasks/*/REPORT.md
       - agent-work/tasks/*/evidence/**
       - screenings/**
+      - decisions/**
+
+materialization:
+  semantic_ownership_transfers: false
+  codex:
+    materialize_chat_artifact:
+      authority: user-instruction
+      scope: bounded
+      paths:
+        - agent-work/tasks/*/REQUEST.yaml
+        - agent-work/tasks/*/REVIEW.yaml
+        - decisions/**
+      excluded_paths:
+        - decisions/authorizations/**
+    materialize_user_artifact:
+      authority: explicit-user-approval
+      scope: bounded
+      paths:
+        - agent-work/tasks/*/APPROVAL.yaml
+        - decisions/authorizations/*.yaml
+  never_materializable_actions:
+    - modify_registry
+    - initialize_formal_issue
+    - fetch_official_upstream
+    - modify_upstream_code
+    - upstream_write
+    - push_upstream_branch
+    - create_issue
+    - comment_issue
+    - assign_issue
+    - add_labels
+    - create_pull_request
 
 rules:
   default: deny
@@ -137,4 +180,6 @@ rules:
   standing_authorization_is_branch_scoped: true
   standing_authorization_is_actor_action_path_scoped: true
   template_is_not_authorization: true
+  materialization_requires_provenance: true
+  materialization_does_not_grant_decision_authority: true
   publication_requires_live_identity_verification: true

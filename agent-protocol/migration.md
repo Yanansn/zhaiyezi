@@ -14,3 +14,5 @@ For each legacy task:
 If the destination exists, task IDs disagree, both locations contain different versions of the same artifact, or provenance is unclear, stop and resolve the conflict manually. The validator reports any legacy directory that still contains `REQUEST.yaml`; it never migrates or deletes data automatically.
 
 Examples now live under `agent-protocol/examples/` and never participate in queue selection.
+
+Protocol v3 adds mandatory provenance to new REQUEST, RESULT, REVIEW, and APPROVAL artifacts. Historical artifacts without `decision_author` or `materialized_by` produce a clear validation error; they are never silently rewritten. A delegated artifact also requires `materialization.authority`, bounded scope, and a non-empty source summary. The real task queue was empty when v3 was introduced, so no live task required migration.

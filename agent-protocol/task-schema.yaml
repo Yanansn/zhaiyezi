@@ -1,4 +1,4 @@
-schema_version: 2
+schema_version: 3
 
 task_directory: agent-work/tasks/<task-id>
 
@@ -10,6 +10,8 @@ request:
     - task_id
     - task_type
     - created_by
+    - decision_author
+    - materialized_by
     - assigned_agent
     - repository
     - issue
@@ -23,6 +25,7 @@ request:
   optional_fields:
     - created_at
     - priority
+    - materialization
   constraints:
     status: ready
     immutable_after_execution_starts: true
@@ -34,6 +37,8 @@ result:
     - schema_version
     - task_id
     - created_by
+    - decision_author
+    - materialized_by
     - status
     - request_ref
     - outputs
@@ -52,12 +57,16 @@ review:
     - schema_version
     - task_id
     - created_by
+    - decision_author
+    - materialized_by
     - status
     - result_ref
     - result_revision
     - decision
     - findings
     - next_actions
+  optional_fields:
+    - materialization
 
 approval:
   filename: APPROVAL.yaml
@@ -66,9 +75,13 @@ approval:
     - schema_version
     - task_id
     - approved_by
+    - decision_author
+    - materialized_by
     - status
     - actions
     - scope
+  optional_fields:
+    - materialization
 
 standing_authorization:
   kind: standing-authorization
@@ -79,6 +92,8 @@ standing_authorization:
     - kind
     - authorization_id
     - approved_by
+    - decision_author
+    - materialized_by
     - status
     - repository
     - branch
@@ -87,6 +102,17 @@ standing_authorization:
     - grants
     - always_requires_new_approval
     - revocation
+  optional_fields:
+    - materialization
+
+materialization_contract:
+  condition: materialized_by differs from decision_author
+  required_fields:
+    - authority
+    - scope
+    - source_summary
+  authority: [user-instruction]
+  scope: [bounded]
 
 enums:
   task_type:
@@ -102,7 +128,9 @@ enums:
     - publication
     - review
     - documentation-contract-update
-  created_by: [chat]
+  created_by: [chat, codex, user]
+  decision_author: [chat, codex, user]
+  materialized_by: [chat, codex, user]
   assigned_agent: [chat, codex]
   request_status: [ready]
   result_status: [active, review, blocked, failed]
@@ -134,3 +162,5 @@ compatibility:
   queue_completed_is_not_contribution_completed: true
   evidence_completed_is_not_available: true
   evidence_completed_is_not_admission: true
+  semantic_ownership_is_not_materialization: true
+  delegated_materialization_does_not_expand_permissions: true

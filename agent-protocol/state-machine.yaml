@@ -43,6 +43,8 @@ queue_artifact_state:
     changes_requested_review_is_immutable: true
     new_result_revision_may_supersede_changes_requested_review: true
     queue_completed_is_not_contribution_completed: true
+    materialization_does_not_change_state: true
+    materialization_does_not_transfer_decision_ownership: true
 
 contribution_coordination:
   states:

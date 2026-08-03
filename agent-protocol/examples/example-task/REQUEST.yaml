@@ -2,6 +2,8 @@ schema_version: 1
 task_id: example-task
 task_type: example
 created_by: chat
+decision_author: chat
+materialized_by: chat
 assigned_agent: codex
 repository: example/example
 issue: null

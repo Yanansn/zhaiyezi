@@ -19,7 +19,11 @@ Only an approved Chat Review can produce queue `completed`. A result cannot decl
 
 ## Artifact handshake
 
-Chat writes an immutable `REQUEST.yaml`. Codex writes `RESULT.yaml`, `REPORT.md`, and requested evidence. Chat reviews the exact `RESULT.revision` in `REVIEW.yaml`. Protected actions must be authorized before execution, not retroactively during Review.
+Chat authors an immutable `REQUEST.yaml`. Codex authors `RESULT.yaml`, `REPORT.md`, and requested evidence. Chat reviews the exact `RESULT.revision` in `REVIEW.yaml`. Protected actions must be authorized before execution, not retroactively during Review.
+
+Repository materialization is separate from that semantic authorship: when Chat cannot write the repository, Codex may serialize a complete Chat decision under explicit user instruction. Delegated artifacts retain `decision_author: chat`, identify `materialized_by: codex`, and record the bounded source. Codex must stop on ambiguity and cannot execute a delegated REQUEST until it is persisted and validates.
+
+User approval follows the same provenance rule but a stricter gate: Codex can materialize only a complete current user approval, and standing authorization cannot manufacture or pre-authorize `materialize_user_artifact`.
 
 ## Contribution compatibility
 

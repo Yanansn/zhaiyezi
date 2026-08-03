@@ -22,9 +22,13 @@ Codex 不负责无边界的候选筛选、长篇教学或重复讨论已经确�
 1. 启动时读取 `agent-protocol/`，运行 `python3 scripts/validate_agent_protocol.py`，并遵守其中的角色所有权和权限规则。
 2. 只执行分配给自己的、结构有效的 `REQUEST.yaml`；`REQUEST.yaml` 必须引用本阶段适用的 Brief 或包含同等边界信息。
 3. 不跳过任务状态转换，也不把协调层状态当作筛选分类、Admission 或正式 Issue 状态。
-4. 不根据聊天上下文扩大或执行仓库中未记录的任务。聊天可以提醒 Agent 读取任务，但不能替代任务文件。
+4. 不根据聊天上下文扩大或执行仓库中未记录的任务。当前用户指令可以授权 Codex 忠实落盘一份已完整确定的 Chat Artifact，但只有落盘并通过校验的 REQUEST 才能成为可执行任务。
 5. 以仓库中已提交并 Push 的状态作为跨 Agent 共享事实；本地未 Push 状态只属于当前执行环境。
-6. 通过各自拥有的文件协作：Chat 写 `REQUEST.yaml`/`REVIEW.yaml`/`decisions/`，Codex 写 `RESULT.yaml`/`REPORT.md`/`evidence/`，用户批准写入 `APPROVAL.yaml`；任何 Agent 都不得通过移动任务目录改变他人文件路径。
+6. 区分语义所有权与仓库落盘：Chat 决定 `REQUEST.yaml`/`REVIEW.yaml`/普通 decisions 的内容，Codex 决定 `RESULT.yaml`/`REPORT.md`/`evidence/` 的内容，用户决定 `APPROVAL.yaml` 与 standing authorization 的内容；任何 Agent 都不得通过移动任务目录改变他人文件路径。
+
+当 Chat 缺少仓库写权限时，Codex 可在用户当前明确指令下，把 Chat 已完整确定的 REQUEST、REVIEW 或 decision 结构化落盘。此时必须记录 `decision_author: chat`、`materialized_by: codex` 及 bounded `materialization` 来源；Codex 不获得决策所有权，不得补充推断、改变范围、结论、权限或状态。内容有歧义时必须停止。
+
+Codex 只有在用户当前指令给出完整批准范围时，才可代为落盘 User-authored APPROVAL 或 standing authorization，并保留 `decision_author: user`。Standing authorization 不能授权 `materialize_user_artifact`，更不能产生或扩大用户批准。
 
 Codex 启动顺序：
 
@@ -33,7 +37,7 @@ Codex 启动顺序：
 3. 读取 `AGENTS.md`、`HANDOFF.md`、`agent-protocol/`、对应 Brief 与 Skill。
 4. 运行 `python3 scripts/validate_agent_protocol.py`。
 5. 运行 `python3 scripts/agent_queue.py next --agent codex`。
-6. 一次只执行返回的一个 `ready` 任务，只写 Codex-owned Artifacts。
+6. 一次只执行返回的一个 `ready` 任务。Codex 自主创作只限 Codex-authored Artifacts；代为落盘 Chat/User Artifact 时必须满足 provenance 与 materialization Gate。
 7. 仅依据当前任务 Approval 或精确匹配的有效 standing authorization 决定是否 Commit/Push facts repository。
 8. facts-repository standing authorization 永远不能授权上游动作或公开动作。
 
@@ -41,10 +45,10 @@ Chat 启动顺序：
 
 1. 读取远端 `main`，不把 Codex 本地状态当成共享事实。
 2. 验证协议，并列出 `awaiting-review`、`blocked` 与分配给 Chat 的任务。
-3. 读取 `RESULT.yaml`、`REPORT.md` 和 evidence，写 Chat-owned `REVIEW.yaml`，需要时创建下一份 `REQUEST.yaml`。
+3. 读取 `RESULT.yaml`、`REPORT.md` 和 evidence，形成 Chat-authored `REVIEW.yaml`，需要时形成下一份 `REQUEST.yaml`；无法直接写仓库时，把完整、无歧义内容交由 Codex 落盘。
 4. 只有存在当前任务 Approval 或精确匹配的有效 standing authorization 时，才 Commit/Push Chat-owned Artifacts。
 
-Standing authorization 是用户可选机制；只有 `decisions/authorizations/*.yaml` 中真实、有效、未撤销且 repository/branch/actor/action/path 全部匹配的文件才生效。`agent-protocol/examples/` 中的模板不构成授权；没有真实授权时保持 default deny。Registry、正式 Issue 初始化、上游 fetch/code/write/branch Push 和所有 GitHub 公开动作始终需要新的用户确认。
+Standing authorization 是用户可选机制；只有 `decisions/authorizations/*.yaml` 中真实、有效、未撤销且 repository/branch/actor/action/path 全部匹配的文件才生效。它可以允许 Codex 落盘 Chat-authored Artifact，但不会转移语义所有权，也不能允许 Codex 产生 User approval。`agent-protocol/examples/` 中的模板不构成授权；没有真实授权时保持 default deny。Registry、正式 Issue 初始化、上游 fetch/code/write/branch Push 和所有 GitHub 公开动作始终需要新的用户确认。
 
 任务来源优先级：
 

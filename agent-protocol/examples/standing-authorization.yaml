@@ -3,6 +3,8 @@ kind: standing-authorization
 template_only: true
 authorization_id: example-facts-repository-sync
 approved_by: user
+decision_author: user
+materialized_by: user
 status: approved
 repository: Yanansn/zhaiyezi
 branch: main
@@ -22,13 +24,18 @@ grants:
     actions:
       - commit_facts_repository
       - push_facts_repository
+      - materialize_chat_artifact
     paths:
+      - agent-work/tasks/*/REQUEST.yaml
+      - agent-work/tasks/*/REVIEW.yaml
       - agent-work/tasks/*/RESULT.yaml
       - agent-work/tasks/*/REPORT.md
       - agent-work/tasks/*/evidence/**
       - screenings/**
+      - decisions/**
 
 always_requires_new_approval:
+  - materialize_user_artifact
   - modify_registry
   - initialize_formal_issue
   - fetch_official_upstream

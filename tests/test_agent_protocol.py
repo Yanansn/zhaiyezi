@@ -30,6 +30,8 @@ def request(task_id: str = "test-task", **updates: object) -> dict:
         "task_id": task_id,
         "task_type": "example",
         "created_by": "chat",
+        "decision_author": "chat",
+        "materialized_by": "chat",
         "assigned_agent": "codex",
         "repository": "example/example",
         "issue": None,
@@ -59,6 +61,8 @@ def result(task_id: str = "test-task", **updates: object) -> dict:
         "schema_version": 1,
         "task_id": task_id,
         "created_by": "codex",
+        "decision_author": "codex",
+        "materialized_by": "codex",
         "status": "active",
         "revision": 1,
         "request_ref": "REQUEST.yaml",
@@ -77,6 +81,8 @@ def review(task_id: str = "test-task", **updates: object) -> dict:
         "schema_version": 1,
         "task_id": task_id,
         "created_by": "chat",
+        "decision_author": "chat",
+        "materialized_by": "chat",
         "status": "completed",
         "result_ref": "RESULT.yaml",
         "result_revision": 1,
@@ -140,6 +146,14 @@ class AgentProtocolTests(unittest.TestCase):
         value.update(updates)
         return value
 
+    @staticmethod
+    def delegated_materialization(summary: str = "User supplied the complete artifact.") -> dict:
+        return {
+            "authority": "user-instruction",
+            "scope": "bounded",
+            "source_summary": summary,
+        }
+
     def test_protocol_example_is_not_in_queue_next(self) -> None:
         records, errors = agent_queue.load_queue(self.root)
         self.assertEqual([], errors)
@@ -193,6 +207,12 @@ class AgentProtocolTests(unittest.TestCase):
         self.assertEqual([], errors)
         self.assertEqual("awaiting-review", record.status)
 
+    def test_result_requires_codex_provenance(self) -> None:
+        _, errors = self.inspect(
+            self.write_task(request(), result(decision_author="chat"))
+        )
+        self.assertTrue(any("decision_author: must be codex" in error for error in errors))
+
     def test_approved_review_derives_completed(self) -> None:
         record, errors = self.inspect(
             self.write_task(request(), result(status="review"), review())
@@ -232,6 +252,85 @@ class AgentProtocolTests(unittest.TestCase):
             self.permissions,
         )
         self.assertTrue(any("owned by chat" in error for error in errors))
+
+    def test_chat_authored_chat_materialized_request_is_valid(self) -> None:
+        _, errors = self.inspect(self.write_task(request()))
+        self.assertEqual([], errors)
+
+    def test_chat_authored_codex_materialized_request_is_valid(self) -> None:
+        request_data = request(
+            materialized_by="codex",
+            materialization=self.delegated_materialization(),
+        )
+        task = self.write_task(request_data)
+        _, errors = validator.inspect_task_directory(
+            task,
+            self.schema,
+            self.permissions,
+            [self.standing_authorization()],
+            now=NOW,
+        )
+        self.assertEqual([], errors)
+
+    def test_codex_cannot_be_request_decision_author(self) -> None:
+        _, errors = self.inspect(
+            self.write_task(request(decision_author="codex"))
+        )
+        self.assertTrue(any("decision_author: must be chat" in error for error in errors))
+
+    def test_codex_materialized_request_requires_provenance(self) -> None:
+        task = self.write_task(request(materialized_by="codex"))
+        _, errors = validator.inspect_task_directory(
+            task,
+            self.schema,
+            self.permissions,
+            [self.standing_authorization()],
+            now=NOW,
+        )
+        self.assertTrue(any("materialization: required" in error for error in errors))
+
+    def test_legacy_request_without_provenance_has_migration_errors(self) -> None:
+        request_data = request()
+        request_data.pop("decision_author")
+        request_data.pop("materialized_by")
+        _, errors = self.inspect(self.write_task(request_data))
+        self.assertTrue(any("missing required field decision_author" in error for error in errors))
+        self.assertTrue(any("missing required field materialized_by" in error for error in errors))
+
+    def test_materializer_must_be_a_legal_actor(self) -> None:
+        _, errors = self.inspect(
+            self.write_task(request(materialized_by="github-connector"))
+        )
+        self.assertTrue(any("materialized_by: must be one of" in error for error in errors))
+
+    def test_codex_materialized_request_cannot_expand_protected_actions(self) -> None:
+        request_data = request(
+            materialized_by="codex",
+            materialization=self.delegated_materialization(),
+            allowed_actions=["create_pull_request"],
+            prohibited_actions=[],
+        )
+        task = self.write_task(request_data)
+        _, errors = validator.inspect_task_directory(
+            task,
+            self.schema,
+            self.permissions,
+            [self.standing_authorization()],
+            now=NOW,
+        )
+        self.assertTrue(any("create_pull_request requires" in error for error in errors))
+
+    def test_codex_can_structurally_materialize_chat_path_only_with_action(self) -> None:
+        path = "agent-work/tasks/test-task/REQUEST.yaml"
+        allowed = validator.validate_change_set(
+            [{"actor": "codex", "action": "materialize_chat_artifact", "path": path}],
+            self.permissions,
+        )
+        denied = validator.validate_change_set(
+            [{"actor": "codex", "path": path}], self.permissions
+        )
+        self.assertEqual([], allowed)
+        self.assertTrue(any("owned by chat" in error for error in denied))
 
     def test_valid_standing_authorization_allows_facts_push(self) -> None:
         authorization = self.standing_authorization()
@@ -273,6 +372,8 @@ class AgentProtocolTests(unittest.TestCase):
             "schema_version": 1,
             "task_id": "test-task",
             "approved_by": "user",
+            "decision_author": "user",
+            "materialized_by": "user",
             "status": "approved",
             "actions": ["create_pull_request"],
             "scope": "Only this task and this PR creation.",
@@ -281,12 +382,138 @@ class AgentProtocolTests(unittest.TestCase):
         _, errors = self.inspect(task)
         self.assertEqual([], errors)
 
+    def test_chat_review_may_be_materialized_by_codex(self) -> None:
+        review_data = review(
+            materialized_by="codex",
+            materialization=self.delegated_materialization(
+                "User instructed Codex to record Chat's approved Review."
+            ),
+        )
+        task = self.write_task(request(), result(status="review"), review_data)
+        record, errors = validator.inspect_task_directory(
+            task,
+            self.schema,
+            self.permissions,
+            [self.standing_authorization()],
+            now=NOW,
+        )
+        self.assertEqual([], errors)
+        self.assertEqual("completed", record.status)
+
+    def test_codex_cannot_be_review_decision_author(self) -> None:
+        review_data = review(decision_author="codex")
+        _, errors = self.inspect(
+            self.write_task(request(), result(status="review"), review_data)
+        )
+        self.assertTrue(any("decision_author: must be chat" in error for error in errors))
+
+    def test_codex_materialized_review_cannot_modify_request_permissions(self) -> None:
+        review_data = review(
+            materialized_by="codex",
+            materialization=self.delegated_materialization(),
+            allowed_actions=["create_pull_request"],
+        )
+        task = self.write_task(request(), result(status="review"), review_data)
+        _, errors = validator.inspect_task_directory(
+            task,
+            self.schema,
+            self.permissions,
+            [self.standing_authorization()],
+            now=NOW,
+        )
+        self.assertTrue(any("cannot modify REQUEST permissions" in error for error in errors))
+
+    def test_user_approval_may_be_materialized_by_codex(self) -> None:
+        request_data = request(
+            allowed_actions=["create_pull_request"], prohibited_actions=[]
+        )
+        approval = {
+            "schema_version": 1,
+            "task_id": "test-task",
+            "approved_by": "user",
+            "decision_author": "user",
+            "materialized_by": "codex",
+            "materialization": self.delegated_materialization(
+                "User explicitly approved this task's single PR creation action."
+            ),
+            "status": "approved",
+            "actions": ["create_pull_request"],
+            "scope": "Only this task and this PR creation.",
+        }
+        _, errors = self.inspect(
+            self.write_task(request_data, approval_data=approval)
+        )
+        self.assertEqual([], errors)
+
+    def test_codex_cannot_be_approval_decision_author(self) -> None:
+        approval = {
+            "schema_version": 1,
+            "task_id": "test-task",
+            "approved_by": "user",
+            "decision_author": "codex",
+            "materialized_by": "codex",
+            "status": "approved",
+            "actions": [],
+            "scope": "No actions.",
+        }
+        _, errors = self.inspect(
+            self.write_task(request(), approval_data=approval)
+        )
+        self.assertTrue(any("decision_author: must be user" in error for error in errors))
+
     def test_standing_authorization_rejects_path_mismatch(self) -> None:
         authorization = self.standing_authorization()
         self.assertFalse(
             validator.standing_authorizes(
                 authorization, "codex", "push_facts_repository",
                 ["registry/issues.yaml"], "Yanansn/zhaiyezi", "main", now=NOW,
+            )
+        )
+
+    def test_standing_authorization_materializes_only_bounded_chat_paths(self) -> None:
+        authorization = self.standing_authorization()
+        self.assertTrue(
+            validator.standing_authorizes(
+                authorization,
+                "codex",
+                "materialize_chat_artifact",
+                ["agent-work/tasks/test-task/REQUEST.yaml"],
+                "Yanansn/zhaiyezi",
+                "main",
+                now=NOW,
+            )
+        )
+        self.assertFalse(
+            validator.standing_authorizes(
+                authorization,
+                "codex",
+                "materialize_chat_artifact",
+                ["registry/issues.yaml"],
+                "Yanansn/zhaiyezi",
+                "main",
+                now=NOW,
+            )
+        )
+        self.assertFalse(
+            validator.standing_authorizes(
+                authorization,
+                "codex",
+                "materialize_user_artifact",
+                ["agent-work/tasks/test-task/APPROVAL.yaml"],
+                "Yanansn/zhaiyezi",
+                "main",
+                now=NOW,
+            )
+        )
+        self.assertFalse(
+            validator.standing_authorizes(
+                authorization,
+                "codex",
+                "materialize_chat_artifact",
+                ["decisions/authorizations/new-approval.yaml"],
+                "Yanansn/zhaiyezi",
+                "main",
+                now=NOW,
             )
         )
 

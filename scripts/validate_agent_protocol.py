@@ -43,6 +43,7 @@ REVIEW_STATES = {
     ("changes-requested", "changes-requested"): "changes-requested",
     ("rejected", "rejected"): "rejected",
 }
+CHAT_MATERIALIZATION_DENIED_PATHS = ("decisions/authorizations/**",)
 
 
 def path_matches(path: str, pattern: str) -> bool:
@@ -128,10 +129,10 @@ def validate_protocol_documents(
     state_machine: dict[str, Any],
     errors: list[str],
 ) -> None:
-    if schema.get("schema_version") != 2:
-        errors.append("agent-protocol/task-schema.yaml: schema_version must be 2")
-    if permissions.get("schema_version") != 1:
-        errors.append("agent-protocol/permissions.yaml: schema_version must be 1")
+    if schema.get("schema_version") != 3:
+        errors.append("agent-protocol/task-schema.yaml: schema_version must be 3")
+    if permissions.get("schema_version") != 2:
+        errors.append("agent-protocol/permissions.yaml: schema_version must be 2")
     if state_machine.get("schema_version") != 2:
         errors.append("agent-protocol/state-machine.yaml: schema_version must be 2")
     if schema.get("task_directory") != "agent-work/tasks/<task-id>":
@@ -156,6 +157,7 @@ def validate_protocol_documents(
     standing = set(permissions.get("standing_authorizable_actions", []))
     always = set(permissions.get("always_user_confirmation_actions", []))
     required_always = {
+        "materialize_user_artifact",
         "modify_registry", "initialize_formal_issue", "fetch_official_upstream",
         "modify_upstream_code", "upstream_write", "push_upstream_branch",
         "create_issue", "comment_issue", "assign_issue", "add_labels",
@@ -164,10 +166,14 @@ def validate_protocol_documents(
     if not isinstance(catalog, dict):
         errors.append("agent-protocol/permissions.yaml.action_catalog: must be a mapping")
         catalog = {}
-    if standing != {"commit_facts_repository", "push_facts_repository"}:
+    if standing != {
+        "commit_facts_repository",
+        "push_facts_repository",
+        "materialize_chat_artifact",
+    }:
         errors.append(
             "agent-protocol/permissions.yaml.standing_authorizable_actions: "
-            "only facts Commit and Push are allowed"
+            "must contain only facts Commit/Push and Chat artifact materialization"
         )
     if not required_always.issubset(always):
         errors.append(
@@ -181,6 +187,75 @@ def validate_protocol_documents(
         errors.append(
             "agent-protocol/permissions.yaml: unknown protected actions: "
             + ", ".join(sorted(unknown))
+        )
+    materialization = permissions.get("materialization", {}).get("codex", {})
+    chat_rule = materialization.get("materialize_chat_artifact", {})
+    required_chat_paths = {
+        "agent-work/tasks/*/REQUEST.yaml",
+        "agent-work/tasks/*/REVIEW.yaml",
+        "decisions/**",
+    }
+    if not required_chat_paths.issubset(set(chat_rule.get("paths", []))):
+        errors.append(
+            "agent-protocol/permissions.yaml.materialization: missing bounded Chat paths"
+        )
+    if "decisions/authorizations/**" not in chat_rule.get("excluded_paths", []):
+        errors.append(
+            "agent-protocol/permissions.yaml.materialization: user authorizations "
+            "must be excluded from Chat materialization"
+        )
+
+
+def validate_provenance(
+    value: dict[str, Any],
+    expected_author: str,
+    allowed_materializers: set[str],
+    schema: dict[str, Any],
+    location: str,
+    errors: list[str],
+) -> None:
+    if value.get("decision_author") != expected_author:
+        errors.append(
+            f"{location}.decision_author: must be {expected_author}"
+        )
+    materializer = value.get("materialized_by")
+    if materializer not in allowed_materializers:
+        errors.append(
+            f"{location}.materialized_by: must be one of "
+            + ", ".join(sorted(allowed_materializers))
+        )
+        return
+
+    materialization = value.get("materialization")
+    if materializer == expected_author:
+        if materialization is not None:
+            errors.append(
+                f"{location}.materialization: must be absent when author materializes directly"
+            )
+        return
+
+    if not isinstance(materialization, dict):
+        errors.append(
+            f"{location}.materialization: required for delegated materialization"
+        )
+        return
+    contract = schema.get("materialization_contract", {})
+    require_fields(
+        materialization,
+        contract.get("required_fields", []),
+        f"{location}.materialization",
+        errors,
+    )
+    if materialization.get("authority") not in contract.get("authority", []):
+        errors.append(
+            f"{location}.materialization.authority: must be user-instruction"
+        )
+    if materialization.get("scope") not in contract.get("scope", []):
+        errors.append(f"{location}.materialization.scope: must be bounded")
+    summary = materialization.get("source_summary")
+    if not isinstance(summary, str) or not summary.strip():
+        errors.append(
+            f"{location}.materialization.source_summary: must be a non-empty string"
         )
 
 
@@ -204,6 +279,9 @@ def validate_request(
         errors.append(f"{location}.task_type: unknown value {request.get('task_type')!r}")
     if request.get("created_by") != "chat":
         errors.append(f"{location}.created_by: REQUEST.yaml owner must be chat")
+    validate_provenance(
+        request, "chat", {"chat", "codex"}, schema, location, errors
+    )
     if request.get("assigned_agent") not in enums.get("assigned_agent", []):
         errors.append(f"{location}.assigned_agent: invalid Agent")
     if request.get("status") != "ready":
@@ -275,6 +353,9 @@ def validate_result(
         errors.append(f"{location}.task_id: must match REQUEST.yaml")
     if result.get("created_by") != "codex":
         errors.append(f"{location}.created_by: RESULT.yaml owner must be codex")
+    validate_provenance(
+        result, "codex", {"codex"}, schema, location, errors
+    )
     if result.get("status") not in schema.get("enums", {}).get("result_status", []):
         errors.append(f"{location}.status: invalid result status")
     revision = result.get("revision", 1)
@@ -308,6 +389,16 @@ def validate_review(
         errors.append(f"{location}.task_id: must match REQUEST.yaml")
     if review.get("created_by") != "chat":
         errors.append(f"{location}.created_by: REVIEW.yaml owner must be chat")
+    validate_provenance(
+        review, "chat", {"chat", "codex"}, schema, location, errors
+    )
+    for forbidden_field in (
+        "allowed_actions", "prohibited_actions", "expected_outputs", "permissions"
+    ):
+        if forbidden_field in review:
+            errors.append(
+                f"{location}.{forbidden_field}: REVIEW.yaml cannot modify REQUEST permissions"
+            )
     status = review.get("status")
     decision = review.get("decision")
     if status not in schema.get("enums", {}).get("review_status", []):
@@ -343,6 +434,9 @@ def validate_approval(
         errors.append(f"{location}.task_id: must match REQUEST.yaml")
     if approval.get("approved_by") != "user":
         errors.append(f"{location}.approved_by: APPROVAL.yaml owner must be user")
+    validate_provenance(
+        approval, "user", {"user", "codex"}, schema, location, errors
+    )
     if approval.get("status") not in schema.get("enums", {}).get(
         "approval_status", []
     ):
@@ -413,6 +507,9 @@ def validate_standing_authorization(
         errors.append(f"{location}.authorization_id: invalid identifier")
     if authorization.get("approved_by") != "user":
         errors.append(f"{location}.approved_by: must be user")
+    validate_provenance(
+        authorization, "user", {"user", "codex"}, schema, location, errors
+    )
     status = authorization.get("status")
     if status not in schema.get("enums", {}).get(
         "standing_authorization_status", []
@@ -519,6 +616,12 @@ def standing_authorizes(
     now: datetime | None = None,
 ) -> bool:
     current = now or datetime.now(timezone.utc)
+    if action == "materialize_chat_artifact" and any(
+        path_matches(path, pattern)
+        for path in paths
+        for pattern in CHAT_MATERIALIZATION_DENIED_PATHS
+    ):
+        return False
     if authorization.get("template_only") is True:
         return False
     if authorization.get("status") != "approved":
@@ -689,6 +792,29 @@ def inspect_task_directory(
             )
 
     authorizations = standing_authorizations or []
+    delegated_chat_artifacts = [(request, "REQUEST.yaml")]
+    if review is not None:
+        delegated_chat_artifacts.append((review, "REVIEW.yaml"))
+    for artifact, filename in delegated_chat_artifacts:
+        if artifact.get("materialized_by") != "codex":
+            continue
+        artifact_path = f"agent-work/tasks/{task.name}/{filename}"
+        if not any(
+            standing_authorizes(
+                authorization,
+                "codex",
+                "materialize_chat_artifact",
+                [artifact_path],
+                repository,
+                branch,
+                now=now,
+            )
+            for authorization in authorizations
+        ):
+            errors.append(
+                f"{task / filename}.materialized_by: Codex materialization requires "
+                "a valid standing authorization for this Chat-owned path"
+            )
     for action in sorted(allowed & set(permissions.get("approval_required_actions", []))):
         if not task_action_authorized(
             action,
@@ -824,8 +950,34 @@ def owners_for_path(path: str, permissions: dict[str, Any]) -> set[str]:
     return owners
 
 
+def delegated_materialization_path_allowed(
+    actor: str,
+    action: str | None,
+    path: str,
+    permissions: dict[str, Any],
+) -> bool:
+    if actor != "codex" or not action:
+        return False
+    rule = (
+        permissions.get("materialization", {})
+        .get("codex", {})
+        .get(action, {})
+    )
+    allowed = any(path_matches(path, pattern) for pattern in rule.get("paths", []))
+    excluded = any(
+        path_matches(path, pattern) for pattern in rule.get("excluded_paths", [])
+    )
+    return allowed and not excluded
+
+
 def validate_change_set(
-    changes: list[dict[str, str]], permissions: dict[str, Any]
+    changes: list[dict[str, str]],
+    permissions: dict[str, Any],
+    standing_authorizations: list[dict[str, Any]] | None = None,
+    *,
+    repository: str = "Yanansn/zhaiyezi",
+    branch: str = "main",
+    now: datetime | None = None,
 ) -> list[str]:
     errors: list[str] = []
     by_path: dict[str, set[str]] = {}
@@ -833,10 +985,34 @@ def validate_change_set(
     for change in changes:
         actor = change.get("actor", "")
         path = change.get("path", "").lstrip("./")
+        action = change.get("action")
         by_path.setdefault(path, set()).add(actor)
         owners = owners_for_path(path, permissions)
         is_shared = any(path_matches(path, pattern) for pattern in shared)
-        if owners and actor not in owners:
+        delegated = delegated_materialization_path_allowed(
+            actor, action, path, permissions
+        )
+        if (
+            delegated
+            and action == "materialize_chat_artifact"
+            and standing_authorizations is not None
+            and not any(
+                standing_authorizes(
+                    authorization,
+                    actor,
+                    action,
+                    [path],
+                    repository,
+                    branch,
+                    now=now,
+                )
+                for authorization in standing_authorizations
+            )
+        ):
+            errors.append(
+                f"actor {actor!r} cannot materialize {path!r}; no valid standing authorization"
+            )
+        if owners and actor not in owners and not delegated:
             errors.append(
                 f"actor {actor!r} cannot modify {path!r}; owned by "
                 + ", ".join(sorted(owners))
@@ -919,11 +1095,23 @@ def validate(root: Path, *, now: datetime | None = None) -> list[str]:
 
 
 def parse_change(value: str, errors: list[str]) -> dict[str, str] | None:
-    actor, separator, path = value.partition(":")
-    if not separator or not actor or not path:
-        errors.append(f"invalid --change value {value!r}; use ACTOR:PATH")
+    parts = value.split(":", 2)
+    if len(parts) == 2:
+        actor, path = parts
+        action = None
+    elif len(parts) == 3:
+        actor, action, path = parts
+    else:
+        actor, action, path = "", None, ""
+    if not actor or not path or (len(parts) == 3 and not action):
+        errors.append(
+            f"invalid --change value {value!r}; use ACTOR:PATH or ACTOR:ACTION:PATH"
+        )
         return None
-    return {"actor": actor, "path": path}
+    change = {"actor": actor, "path": path}
+    if action:
+        change["action"] = action
+    return change
 
 
 def main() -> int:
@@ -932,7 +1120,7 @@ def main() -> int:
         "root", nargs="?", type=Path, default=Path(__file__).resolve().parents[1]
     )
     parser.add_argument(
-        "--change", action="append", default=[], metavar="ACTOR:PATH"
+        "--change", action="append", default=[], metavar="ACTOR[:ACTION]:PATH"
     )
     parser.add_argument(
         "--authorization", type=Path, help="validate one standing authorization file"
@@ -951,9 +1139,20 @@ def main() -> int:
             )
         )
     changes = [parse_change(value, errors) for value in args.change]
-    errors.extend(
-        validate_change_set([change for change in changes if change], permissions)
-    )
+    if args.change:
+        authorizations = load_standing_authorizations(
+            root, schema, permissions, errors
+        )
+        repository, branch = repository_state(root)
+        errors.extend(
+            validate_change_set(
+                [change for change in changes if change],
+                permissions,
+                authorizations,
+                repository=repository,
+                branch=branch,
+            )
+        )
     for error in errors:
         print(f"ERROR {error}", file=sys.stderr)
     if errors:
