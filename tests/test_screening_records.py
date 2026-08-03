@@ -202,6 +202,10 @@ class ScreeningRecordTests(unittest.TestCase):
         candidate = deep_candidate("implicit-owner")
         self.assertEqual([], self.validate_data(results(excluded=[candidate])))
 
+    def test_v2_legacy_kubernetes_classification_remains_readable(self) -> None:
+        candidate = deep_candidate("not-a-kubernetes-bug")
+        self.assertEqual([], self.validate_data(results(excluded=[candidate])))
+
     def test_quick_filter_missing_minimum_evidence_fails(self) -> None:
         candidate = quick_candidate()
         del candidate["evidence"]["assignees_checked"]

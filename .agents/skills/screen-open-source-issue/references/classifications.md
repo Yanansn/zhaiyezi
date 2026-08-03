@@ -12,10 +12,10 @@
 | `competing-open-prs` | Multiple active implementations compete or overlap. | No | After maintainers choose or all implementations end |
 | `already-implemented` | Verified merged change implements the request on the relevant current base, though Issue state/linkage may lag. | No | Only if evidence suggests incomplete coverage/regression |
 | `already-fixed` | Current target branch behavior is verified fixed without remaining requested work. | No | If a reproducible regression appears |
-| `blocked-by-design` | Required API, compatibility, UX, or SIG decision is unresolved. | No | After authoritative direction resolves the choice |
+| `blocked-by-design` | Required API, compatibility, UX, or project ownership/design decision is unresolved. | No | After authoritative direction resolves the choice |
 | `infrastructure` | Work fundamentally depends on CI/cloud/scale/hardware operations outside the requested contributor scope. | No | If owners provide an accessible bounded path |
 | `third-party` | Root cause or required fix belongs to an external project/vendor. | No | If upstream responsibility is later established |
-| `not-a-kubernetes-bug` | For Kubernetes scans, evidence shows the reported behavior is not a Kubernetes defect. | No | If new reproduction changes attribution |
+| `not-an-upstream-bug` | Evidence attributes the reported behavior outside the target upstream repository, such as a third-party integration, deployment, or downstream project. | No | If new reproduction changes attribution |
 | `insufficient-evidence` | A mandatory fact, search, linked item, or current-base conclusion cannot be obtained. | No | Complete the missing audit |
 | `watchlist` | Not currently safe to pursue, but an identified event may make it eligible (stale ownership, unresolved PR/review, emerging scope). | No | At the recorded trigger/date |
 | `do-not-pursue` | Evidence shows poor fit, excessive risk, duplication, rejection, or no reasonable contribution path. | No | Normally no; state an exceptional trigger if any |
@@ -62,5 +62,9 @@ Interpret these in context: distinguish brief interest from active investigation
 - `low`: material evidence is incomplete, stale, inaccessible, or contradictory. It cannot pass the Gate.
 
 Confidence cannot be `high` when comment pagination or Timeline is incomplete; GitHub search, Development, Project, or a relevant PR is inaccessible; core symbol/current-base search is incomplete; or design/ownership remains uncertain.
+
+## Schema migration
+
+RESULTS schema v3 replaces `not-a-kubernetes-bug` with `not-an-upstream-bug`. The validator continues to accept the old value only in schema-v2 records so persisted history remains readable. New and migrated records must use schema v3 and the generic value; do not silently rewrite historical evidence.
 
 Bucket rules and the persisted Admission Gate state are defined once in [output-schema.md](output-schema.md).

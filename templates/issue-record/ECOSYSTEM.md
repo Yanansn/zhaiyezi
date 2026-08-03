@@ -38,7 +38,7 @@ Record related Issues and PRs, historical or reverted changes, and analogous fix
 
 ## 6. CI
 
-Record relevant TestGrid, Prow and downstream CI evidence, including links and limitations.
+Record relevant project CI and downstream CI evidence, including links, protected-environment boundaries, and limitations. Apply ecosystem-specific Profile checks when selected.
 
 ## 7. Maintainer Position
 

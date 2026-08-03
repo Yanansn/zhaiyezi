@@ -23,7 +23,7 @@ Search distinctive combinations of:
 - core title terms;
 - exact error messages, test names, and log fragments;
 - core function, struct, variable, and file names;
-- component, subsystem, SIG, or ownership names.
+- component, subsystem, subproject, or ownership names.
 
 Open every high-relevance result. Verify its actual scope and current state before classifying it. Generic keyword overlap is not proof of the same defect.
 

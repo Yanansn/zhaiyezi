@@ -18,6 +18,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--scan-id", required=True, help="bounded scan identifier")
     parser.add_argument("--candidate-limit", required=True, type=int)
     parser.add_argument(
+        "--stage",
+        choices=("issue-screening", "issue-evidence-collection"),
+        default="issue-screening",
+        help="record mode; evidence collection stores raw evidence without classifications",
+    )
+    parser.add_argument(
         "--screenings-root",
         type=Path,
         default=Path(__file__).resolve().parents[1] / "screenings",
@@ -57,10 +63,20 @@ def main() -> int:
         for template in sorted(template_root.iterdir()):
             if not template.is_file():
                 continue
+            if args.stage == "issue-evidence-collection" and template.name == "RESULTS.yaml":
+                continue
             content = template.read_text(encoding="utf-8")
+            if args.stage == "issue-evidence-collection" and template.name == "REPORT.md":
+                content = (repository_root / "templates" / "evidence" / "REPORT.md").read_text(
+                    encoding="utf-8"
+                )
+            if args.stage == "issue-evidence-collection" and template.name == "SCOPE.yaml":
+                content = content.replace("stage: issue-screening", "stage: issue-evidence-collection")
             for marker, value in replacements.items():
                 content = content.replace(marker, value)
             (destination / template.name).write_text(content, encoding="utf-8")
+        if args.stage == "issue-evidence-collection":
+            (destination / "evidence").mkdir()
     except Exception:
         for generated in destination.iterdir():
             generated.unlink()

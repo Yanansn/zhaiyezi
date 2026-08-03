@@ -31,7 +31,7 @@ Required sections:
 ## 9. Current Ecosystem Summary
 ```
 
-The analysis must cover label, project, milestone, assignee and state changes; mention/reference/cross-reference events; linked Issues, branches and PRs; downstream projects and workarounds; related, historical or reverted work; TestGrid, Prow and downstream CI; expressed maintainer positions; and unresolved questions. Classify each linked item as a real upstream implementation, downstream workaround, related evidence, historical work or reference-only event. If Development is empty, state `No linked implementation.`. Record access limitations rather than guessing unavailable metadata.
+The analysis must cover label, project, milestone, assignee and state changes; mention/reference/cross-reference events; linked Issues, branches and PRs; downstream projects and workarounds; related, historical or reverted work; project CI and downstream CI; expressed maintainer positions; and unresolved questions. Apply selected ecosystem Profiles for project-specific CI systems. Classify each linked item as a real upstream implementation, downstream workaround, related evidence, historical work or reference-only event. If Development is empty, state `No linked implementation.`. Record access limitations rather than guessing unavailable metadata.
 
 `ECOSYSTEM.md` is continuous knowledge. `COMMENT-DRAFT.md`, PR descriptions and other public Drafts are snapshots governed by the Public Communication Contract. New ecosystem facts update `ECOSYSTEM.md`; they do not silently mutate a reviewed or published public artifact.
 

@@ -1,0 +1,58 @@
+schema_version: 1
+profiles:
+  language: [python, cpp]
+  ecosystem: [llm-inference]
+  repository: lmcache
+  live_instructions_verified: true
+  live_overrides: []
+branches:
+  github_default_branch: main
+  contribution_target_branch: dev
+  issue_affected_branch: dev
+  latest_release_branch: null
+  evidence: [live-contribution-rules]
+discovery:
+  primary_languages: [python, cpp]
+repository_scope:
+  primary: {repository: LMCache/LMCache, issue: LMCache/LMCache#123}
+  related: [vllm-project/vllm]
+  expected_change_repositories: [LMCache/LMCache]
+  excluded_change_repositories: [vllm-project/vllm]
+  scope_status: single-repository
+  working_repositories:
+    - {repository: LMCache/LMCache, remote: null, base: dev, branch: null, commit: abc123, worktree: clean, push_authorized: false}
+feasibility:
+  languages: [python, cpp]
+  estimated_surface: {files: 3, subsystems: [cache-key]}
+  runtime_dependencies: [pytorch]
+  hardware:
+    cpu_only_reproduction: true
+    gpu_required_for_full_validation: true
+    multi_gpu_required: false
+  external_services: []
+  model_requirements: []
+  local_execution: {possible: true, highest_level: cpu-unit}
+  ci_dependency: {required: true}
+  design_dependency: {blocked: false}
+  codex_assessment: {implementation: feasible, verification: limited, overall: limited}
+verification_matrix:
+  static: {required: true, status: passed, evidence: ruff-passed, reason: null}
+  cpu_unit: {required: true, status: passed, evidence: pytest-passed, reason: null}
+  cpu_integration: {required: false, status: not-applicable, evidence: null, reason: null}
+  gpu_single: {required: true, status: not-run, evidence: null, reason: no-compatible-gpu}
+  gpu_multi: {required: false, status: not-applicable, evidence: null, reason: null}
+  model_e2e: {required: false, status: not-applicable, evidence: null, reason: null, models: []}
+  benchmark: {required: false, status: not-planned, evidence: null, reason: null}
+  upstream_ci: {required: true, status: ci-only, evidence: null, reason: protected-environment}
+environment:
+  os: linux
+  architecture: x86_64
+  python: "3.12"
+  compiler: null
+  pytorch: null
+  cuda: null
+  rocm: null
+  gpu: null
+  driver: null
+  vllm: null
+  base_commit: abc123

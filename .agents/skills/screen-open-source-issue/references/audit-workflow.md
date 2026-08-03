@@ -2,6 +2,8 @@
 
 This is the normative stage order. Save concise facts and URLs in `RESULTS.yaml` and user-facing conclusions in `REPORT.md`. A hard exclusion may stop expensive later checks, but only candidates completing every stage may be `available`.
 
+This order applies only to explicitly authorized complete `issue-screening`. `issue-evidence-collection` may gather the raw inputs for metadata, comments, Timeline/Development, searches, ownership signals, and related items, but stops before judgment: it does not run classification or Admission stages and stores no `RESULTS.yaml`.
+
 ## Stage 1 — Candidate Discovery
 
 - Input: repository, bounded scope, include/exclude labels, scan time.
@@ -23,7 +25,7 @@ Quick Filter does not read the complete discussion or assign `screening_classifi
 ## Stage 3 — Issue Metadata Audit
 
 - Input: deep-audit candidate.
-- Checks: full body, author, state, labels, assignees, milestone, project visibility, timestamps, component/SIG.
+- Checks: full body, author, state, labels, assignees, milestone, project visibility, timestamps, component/subproject ownership structure.
 - Conclusions: continue, occupied, blocked, or insufficient evidence.
 - Stop: authoritative metadata establishes a hard blocker.
 - Evidence: audited time, metadata summary, unavailable fields.
@@ -63,7 +65,7 @@ Quick Filter does not read the complete discussion or assign `screening_classifi
 ## Stage 8 — Function/File/Symbol Search
 
 - Input: body/comments and, when needed, current upstream source.
-- Checks: search core functions, structs, variables, files, tests, components, and SIG terms; verify symbols exist on the current base.
+- Checks: search core functions, structs, variables, files, tests, components, and project ownership terms; verify symbols exist on the current base.
 - Conclusions: bounded/unbounded surface, third-party/infrastructure, or insufficient evidence.
 - Stop: required source access or symbol search unavailable.
 - Evidence: searched symbols/paths, current base/time, limitations.
@@ -87,7 +89,7 @@ Quick Filter does not read the complete discussion or assign `screening_classifi
 ## Stage 11 — Design and Scope Audit
 
 - Input: Issue contract, maintainer discussion, APIs and linked design work.
-- Checks: problem clarity, desired behavior, non-goals, compatibility, required SIG/design decision, conflicting directions.
+- Checks: problem clarity, desired behavior, non-goals, compatibility, required maintainer/design decision, conflicting directions.
 - Conclusions: clear enough, blocked-by-design, watchlist, or insufficient-evidence.
 - Stop: solution choice depends on an unresolved design decision.
 - Evidence: decision statements, remaining ambiguity, authority and date.

@@ -82,6 +82,21 @@ def main() -> None:
     status = match.group(1)
     if not re.search(r'^issue:\s*"[^/]+/[^#]+#[0-9]+"\s*$', status_text, re.MULTILINE):
         raise SystemExit("STATUS.yaml has an invalid or missing issue identifier")
+    project = args.record / "PROJECT.yaml"
+    if not project.exists():
+        print(
+            "warning: legacy record has no PROJECT.yaml; add it before a new "
+            "Project Discovery or implementation stage"
+        )
+    else:
+        project_text = project.read_text(encoding="utf-8")
+        for marker in (
+            "schema_version: 1", "profiles:", "branches:", "github_default_branch:",
+            "contribution_target_branch:", "repository_scope:", "feasibility:",
+            "verification_matrix:", "environment:",
+        ):
+            if marker not in project_text:
+                raise SystemExit(f"PROJECT.yaml is missing {marker}")
     knowledge = args.record / "KNOWLEDGE.md"
     if not knowledge.exists():
         if status in TERMINAL_STATUSES:

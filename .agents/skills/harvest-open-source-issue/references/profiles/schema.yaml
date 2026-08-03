@@ -1,0 +1,34 @@
+schema_version: 1
+profile_contract:
+  required:
+    - schema_version
+    - kind
+    - name
+    - match
+    - checks
+    - limitations
+  kind_values:
+    - language
+    - ecosystem
+    - repository
+  match:
+    description: Stable selectors such as languages, ecosystems, or exact repositories.
+  checks:
+    description: Discovery questions whose answers must come from the live repository.
+  limitations:
+    description: Assumptions the profile explicitly cannot establish.
+  precedence:
+    - common-workflow
+    - language-profile
+    - ecosystem-profile
+    - repository-profile
+    - repository-live-instructions
+  live_sources:
+    - AGENTS.md
+    - CONTRIBUTING.md
+    - README
+    - pyproject.toml
+    - build-files
+    - CI
+    - issue-and-pr-templates
+    - maintainer-comments

@@ -1,6 +1,6 @@
 # 摘叶子
 
-以真实开源 Issue 为入口，由普通 Chat 负责教学与方案整理、本地 Codex 负责阶段化工程执行，并把过程沉淀为可查询的学习记录。
+以真实开源 Issue 为入口的 repository-agnostic 开源贡献工作流：由普通 Chat 负责教学与方案整理、本地 Codex 负责阶段化工程执行，并把过程沉淀为可查询的学习记录。Kubernetes 只是一个 ecosystem Profile，不是系统默认假设；同一契约可用于 Python、C++、CUDA、Rust 与 AI 推理基础设施仓库。
 
 ## 工作原则
 
@@ -15,25 +15,17 @@
 候选筛选、Issue 研究与贡献链路：
 
 ```text
-Issue Screening
+Repository Onboarding
+→ Candidate Discovery
+→ Evidence Collection
+→ Deep Audit
 → Candidate Admission Gate
-→ Issue Intake
-→ Issue Ecosystem Analysis
-→ Knowledge
-→ Inventory (when applicable)
+→ Project Discovery
 → Code Map
-→ Root Cause Analysis
-→ Draft Comment
-→ Technical Review
-→ User Approval
-→ Identity Verification
-→ Publish
-→ Maintainer Feedback
-→ Discussion Re-analysis (when material discussion changes)
-→ Awaiting Scope Confirmation (when the boundary remains incomplete)
-→ Confirmed Implementation Boundary Gate
-→ Plan
+→ Root Cause
+→ Confirmed Implementation Boundary
 → Implementation
+→ Layered Verification
 → PR
 ```
 
@@ -45,7 +37,11 @@ Issue Screening
 
 默认采用“Chat 调查，Codex 记录”：Chat 完成 Candidate Discovery、Quick Filter、Deep Audit、Classification 和 Screening Recommendation，并把候选、分类、confidence、recommendation、证据摘要、limitations 与 Gate 建议整理成 `Screening Result Brief`。Codex 把该 Brief 视为事实输入，负责初始化 screening record、填写 `SCOPE.yaml`、`RESULTS.yaml`、`REPORT.md`、运行 validator、按需更新 `HANDOFF.md`，以及在单独授权后执行 Git 操作。
 
-默认情况下，Codex 不重新读取 Issue、调查 GitHub、搜索 PR、判断 Owner 或重复 Deep Audit；筛选调查结果只保留一份。只有用户明确要求 Codex 执行完整 Issue Screening 时，Codex 才运行完整筛选。`Code Verification Brief` 只授权核验指定代码事实，不等于 Issue Screening，也不得扩展成完整筛选。Issue 通过 Candidate Admission Gate 并进入 `harvest-open-source-issue` 后，Codex 才开始正式 Code Map、Root Cause、Implementation、Testing 和 PR 工作。
+默认情况下，Codex 不重新读取 Issue、调查 GitHub、搜索 PR、判断 Owner 或重复 Deep Audit；筛选调查结果只保留一份。只有用户明确要求 Codex 执行完整 Issue Screening 时，Codex 才运行完整筛选。`issue-evidence-collection` 只收集正文、完整评论、Timeline/Development、搜索结果、关联项和未经最终判断的 ownership signals，不产生分类、`available`、Admission、registry 或正式 Issue 目录。`Code Verification Brief` 只授权核验指定代码事实。Issue 通过 Candidate Admission Gate 并进入 `harvest-open-source-issue` 后，Codex 才开始正式工程阶段。
+
+RESULTS 新记录使用 schema v3，结构化保存 ownership、semantic/explicit related items、feasibility、verification matrix、environment 与跨仓库 scope；既有 v2 记录仍可验证。正式 Issue 的 `PROJECT.yaml` 保存 Profile 选择、实时覆盖、分支模型、项目发现、范围与分层验证。
+
+Profile 优先级是：common workflow → language → ecosystem → repository → repository live instructions。仓库中的 `AGENTS.md`、`CONTRIBUTING.md`、README、构建文件、CI、Issue/PR 模板和维护者实时说明始终优先。Profile 目录见 [profiles](.agents/skills/harvest-open-source-issue/references/profiles/README.md)。
 
 ### GitHub 候选发现脚本
 
@@ -90,6 +86,8 @@ python3 scripts/discover_github_issues.py \
 - `insufficient_evidence`：Timeline、评论、搜索或 PR 核验存在失败、截断或访问限制。
 
 输出是候选发现证据，不是 `screening_classification`，也不代表 Candidate Admission Gate 已通过。脚本为每个 Issue 执行一次编号 PR 搜索，并另外读取 Timeline、评论及命中的对象；输出中的分资源 `rate_limit` 和 `limitations` 应在后续 Deep Audit 中保留和复核。
+
+更严格地说，`related_pr_found` 只表示发现了 PR 证据；`no_known_related_pr` 只表示未发现已知的结构化或显式编号 PR 证据；`insufficient_evidence` 不得进入可认领判断。语义 PR、隐式 Owner 和当前贡献分支是否已修复由 Deep Audit 处理，候选发现脚本不会扩展成完整审计。
 
 `ECOSYSTEM.md` 是每个 Issue 必须维护的一级事实文档，覆盖 Timeline、Development、下游、关联工作、CI 和维护者立场。它是持续研究记录：新评论、新 PR、新 Timeline Event、下游 workaround 或 CI 线索出现时都要更新。可能影响判断的新讨论必须先完成再分析；建议和探索性意见不能直接触发编码，只有确认实现边界后才可进入 Plan。`COMMENT-DRAFT.md` 则是一次公开沟通的冻结 Snapshot，发布后不会为了吸收新生态信息而改写。
 

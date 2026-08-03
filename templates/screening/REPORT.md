@@ -9,6 +9,7 @@
 - Repository: `{{REPOSITORY}}`
 - Scan ID: `{{SCAN_ID}}`
 - Candidate limit: {{CANDIDATE_LIMIT}}
+- Results schema: v3
 - Execution time: not-started
 
 ## Inclusion and exclusion rules

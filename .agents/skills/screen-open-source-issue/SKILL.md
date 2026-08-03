@@ -7,7 +7,7 @@ description: Record Chat-produced candidate screening results by default, or rig
 
 By default, use this Skill to record a bounded `Screening Result Brief` produced by Chat. Chat performs candidate discovery, Quick Filter, Deep Audit, classification, and recommendation; Codex treats that result as factual input and does not repeat the GitHub investigation. Codex initializes and updates the lightweight screening record, runs the validator, updates handoff facts when needed, and performs Git operations only when separately authorized.
 
-Codex performs the complete screening investigation only when the user explicitly requests Codex to do so. A `Code Verification Brief` is a separate narrow mode that authorizes only the listed source-code facts; it never authorizes a repeat of the entire Screening.
+Codex performs the complete screening investigation only when the user explicitly requests Codex to do so. `issue-evidence-collection` is a separate bounded mode that collects raw Issue, discussion, relationship, search, and ownership-signal evidence without assigning a classification. A `Code Verification Brief` authorizes only listed source-code facts; neither narrow mode authorizes a complete Screening.
 
 This Skill does not implement fixes, initialize formal Issue records without approval, or publish comments, assignments, labels, branches, commits, pushes, or PRs.
 
@@ -66,6 +66,12 @@ Reject an absent or unbounded Brief. Confirm the facts-repository branch, HEAD, 
 
 Verify only the enumerated code facts and return source paths, baseline, commands, results, and limitations. Do not inspect the complete Issue ecosystem, search for ownership or competing PRs, assign a screening classification, or make a Gate recommendation unless the Brief separately and explicitly authorizes complete Screening.
 
+### Exception: issue-evidence-collection
+
+Require a bounded Issue list, scan ID, output location, evidence sources, and access/approval boundary. Collect the full Issue body, all comments with pagination completeness, visible Timeline and Development relations, explicit-number PR evidence, raw title/symptom/symbol search results, unjudged ownership signals, related items, and limitations under `evidence/<issue-number>.yaml`.
+
+This mode must not emit `RESULTS.yaml`, `screening_classification`, confidence, `available`, admission, registry changes, formal Issue directories, assignment, comments, or publication. A later Chat or explicitly authorized complete Screening may interpret the evidence, but the collection step itself does not.
+
 ## Full investigation workflow (explicit authorization only)
 
 1. Create the scan scope and lightweight record using `scripts/init_screening_record.py` when authorized.
@@ -99,6 +105,8 @@ Quick Filter record
 ```
 
 Stage 2 may emit `quick_filtered_out` only for explicit, low-cost, reproducible rules. Anything requiring full comments, PR search, ownership judgment, or design analysis enters Deep Audit. Stage 13 assigns classification and confidence to Deep Audit candidates. Stage 14 updates only the `admission` mapping of an `available` candidate. The authoritative schema is [output-schema.md](references/output-schema.md).
+
+Candidate Discovery remains a low-cost locator. Its `related_pr_found` means PR evidence was found; `no_known_related_pr` means no known structured or explicit-number PR evidence was found; `insufficient_evidence` cannot enter an availability decision. Semantic PRs, implicit owners, and current-base fixes remain Deep Audit work.
 
 ## Boundary with the contribution lifecycle
 

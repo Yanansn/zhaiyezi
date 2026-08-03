@@ -1,0 +1,14 @@
+schema_version: 1
+kind: ecosystem
+name: kubernetes
+match:
+  ecosystems: [kubernetes]
+checks:
+  - Discover SIG, working-group, subproject, component, and path ownership from live labels and OWNERS files.
+  - Discover triage conventions such as needs-triage, triage/accepted, help wanted, and command-driven routing.
+  - Inspect Prow job definitions, TestGrid visibility, Tide or merge automation, protected clusters, and downstream CI when relevant.
+  - Distinguish the Prow scheduling cluster from the cluster or workload under test.
+  - Record which validation is repository-local and which requires project CI or cluster owners.
+limitations:
+  - SIG routing or no assignee does not prove availability or implementation ownership.
+  - Job names, Prow cluster names, and TestGrid entries do not prove runtime capability.

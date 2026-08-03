@@ -71,7 +71,7 @@ remote 名称只是提示，Codex 必须从实际 Git 配置和仓库地址确�
 - Development links to verify:
 - Downstream projects and workarounds to verify:
 - Related work to verify:
-- CI sources to verify: TestGrid / Prow / downstream CI
+- CI sources to verify: project CI / protected infrastructure / downstream CI
 - Maintainer positions and open questions to refresh:
 - New discussion since last verification:
 - Discussion re-analysis required: yes / no

@@ -1,0 +1,38 @@
+schema_version: 1
+kind: ecosystem
+name: llm-inference
+match:
+  ecosystems: [llm-inference, ai-inference-infrastructure]
+checks:
+  compatibility_dimensions:
+    - python
+    - pytorch
+    - cuda
+    - rocm
+    - gpu-architecture
+    - driver
+    - vllm
+    - model
+    - tensor-parallel-size
+    - distributed-runtime
+  risks:
+    - silent-wrong-result
+    - cache-identity-collision
+    - shape-or-layout-mismatch
+    - cpu-or-gpu-memory-leak
+    - async-or-concurrency-race
+    - performance-regression
+    - model-specific-behavior
+    - cross-repository-integration
+  verification_layers:
+    - static
+    - cpu-unit
+    - cpu-integration
+    - gpu-single
+    - gpu-multi
+    - model-e2e
+    - benchmark
+    - upstream-ci
+limitations:
+  - Code implementation does not imply GPU, model, distributed, or performance verification.
+  - A passing CPU test cannot be generalized to accelerator layouts or concurrency.

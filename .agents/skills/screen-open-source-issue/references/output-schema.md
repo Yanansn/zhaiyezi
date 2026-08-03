@@ -1,29 +1,27 @@
 # Screening output schema
 
-This is the authoritative schema for persisted screening results. Other screening documents reference it rather than restating the complete data model.
+This is the authoritative persisted screening contract. A bounded scan uses `SCOPE.yaml`, `RESULTS.yaml`, and `REPORT.md`; evidence-only mode uses `SCOPE.yaml`, `REPORT.md`, and one or more `evidence/<issue-number>.yaml` files, with no `RESULTS.yaml`.
 
-Store one bounded scan under:
+## Versions and migration
+
+- `SCOPE.yaml` remains version 1 and may set `stage: issue-screening` or `stage: issue-evidence-collection`. Missing `stage` means legacy `issue-screening`.
+- New `RESULTS.yaml` records use schema version 3.
+- The validator keeps schema-v2 records readable. Only v2 accepts legacy `not-a-kubernetes-bug`; v3 uses `not-an-upstream-bug`.
+- Migration is explicit: change the version and classification, then add all v3 ownership, related-item, feasibility, verification, environment, and repository-scope fields. Never silently rewrite historical records.
+
+## Screening directory and funnel
 
 ```text
-screenings/<owner>-<repository>/<YYYY-MM-DD>-<scan-id>/
+screenings/<owner>-<repository>/<scan-id>/
 ├── SCOPE.yaml
 ├── RESULTS.yaml
 └── REPORT.md
 ```
 
-Use `templates/screening/` through `scripts/init_screening_record.py`. Do not create full `issues/` directories for filtered, excluded, or watchlisted candidates.
-
-## SCOPE.yaml
-
-`SCOPE.yaml` remains schema version 1. It records repository, scan ID/times, candidate limit, sort/state, include/exclude labels and categories, technical preferences, search capabilities, and limitations. Unknown capabilities must be false or recorded as limitations.
-
-## RESULTS.yaml schema version 2
-
 ```yaml
-schema_version: 2
+schema_version: 3
 scan_id: scan-id
 repository: owner/repository
-
 summary:
   discovered: 0
   quick_filtered_out: 0
@@ -32,129 +30,143 @@ summary:
   available: 0
   watchlist: 0
   excluded_after_audit: 0
-
 quick_filtered_out: []
 available: []
 watchlist: []
 excluded_after_audit: []
 ```
 
-Schema version 2 persists only completed scans; an enqueued-but-not-audited intermediate state is unsupported. The exact funnel equations are:
+Completed scans obey:
 
 ```text
 discovered = quick_filtered_out + deep_audit_queue
 deep_audit_queue = deeply_audited
 deeply_audited = available + watchlist + excluded_after_audit
-discovered = quick_filtered_out + available + watchlist + excluded_after_audit
 ```
 
-Every summary bucket count must equal its list length. The validator rejects legacy `quick_filtered` and `excluded` names.
+Quick Filter records retain the v2 shape and are limited to explicit metadata rules: `excluded-label`, `closed-or-terminal`, `duplicate-in-scan`, `out-of-scope-category`, `language-mismatch`, or `explicit-scope-mismatch`. They require checked Issue metadata, labels, and assignees and forbid classification, confidence, and admission.
 
-## Quick Filter record
+## RESULTS v3 Deep Audit
 
-`quick_filtered_out` contains Stage 2 exclusions based only on explicit, low-cost, reproducible metadata rules:
+The common v2 fields remain: Issue identity, URL/title, classification/confidence, assignees, labels, audit time, sixteen boolean evidence checks, reason, limitations, recommendation, and optional/required admission according to bucket. V3 adds the following required structures.
+
+### Ownership
 
 ```yaml
-- issue: "owner/repo#123"
-  url: https://example.invalid/issue/123
-  title: Example
-  filtered_at: "2026-07-20T00:00:00Z"
-  rule: excluded-label
-  reason: "Matches an explicitly excluded label."
-  metadata:
-    state: open
-    labels: []
-    assignees: []
-  evidence:
-    issue_metadata_checked: true
-    labels_checked: true
-    assignees_checked: true
-  limitations: []
+ownership:
+  status: no-known-owner
+  confidence: high
+  signals:
+    - actor: contributor
+      actor_role: community-contributor
+      type: comment
+      strength: active-investigation
+      active: true
+      summary: "Reported active investigation."
+      url: https://example.invalid/comment
+      observed_at: "2026-08-03T00:00:00Z"
+  inactivity:
+    days_since_last_progress: 3
+  release_signal: null
 ```
 
-Allowed rules:
+Statuses are `no-known-owner`, `implicit-owner`, `explicit-owner`, `abandoned`, or `unknown`. Strength is one of `weak-interest`, `conditional-interest`, `active-investigation`, `implementation-in-progress`, `implementation-ready`, or `explicit-abandonment`. Preserve the actual statement: wanting work, investigating, reproducing, finding root cause, having a local fix, promising a PR, and abandoning work are not equivalent. No assignee never proves no owner.
+
+### Related items and semantic implementation evidence
+
+```yaml
+related_items:
+  - type: pull-request
+    repository: owner/repository
+    number: 456
+    url: https://example.invalid/pull/456
+    state: open
+    relationship: semantic-implementation
+    explicit_issue_reference: false
+    overlap:
+      level: high
+      files: [src/cache.py]
+      behavior: "Changes the failing cache identity path."
+    blocks_contribution: true
+    verified_at: "2026-08-03T00:00:00Z"
+```
+
+Relationships are `explicit-implementation`, `semantic-implementation`, `partial-overlap`, `competing-implementation`, `historical-attempt`, `source-change`, `regression-source`, `downstream-workaround`, `reference-only`, or `unrelated`. A historical item may be non-blocking; a blocking item prevents Gate passage. Candidate Discovery's `no_known_related_pr` still means only that it found no known structured or explicit-number PR evidence—it never means `available`.
+
+### Feasibility, verification, and environment
+
+```yaml
+feasibility:
+  languages: [python, cpp]
+  estimated_surface: {files: 3, subsystems: [cache-key]}
+  runtime_dependencies: [pytorch]
+  hardware:
+    cpu_only_reproduction: true
+    gpu_required_for_full_validation: true
+    multi_gpu_required: false
+  external_services: []
+  model_requirements: []
+  local_execution: {possible: true, highest_level: cpu-unit}
+  ci_dependency: {required: true}
+  design_dependency: {blocked: false}
+  codex_assessment: {implementation: feasible, verification: limited, overall: limited}
+
+verification_matrix:
+  static: {required: true, status: passed, evidence: "ruff passed", reason: null}
+  cpu_unit: {required: true, status: passed, evidence: "pytest test_cache.py", reason: null}
+  cpu_integration: {required: false, status: not-applicable, evidence: null, reason: null}
+  gpu_single: {required: true, status: not-run, evidence: null, reason: no-compatible-gpu}
+  gpu_multi: {required: false, status: not-applicable, evidence: null, reason: null}
+  model_e2e: {required: false, status: not-applicable, evidence: null, models: [], reason: null}
+  benchmark: {required: false, status: not-planned, evidence: null, reason: null}
+  upstream_ci: {required: true, status: ci-only, evidence: null, reason: protected-environment}
+
+environment:
+  os: linux
+  architecture: x86_64
+  python: "3.12"
+  compiler: null
+  pytorch: null
+  cuda: null
+  rocm: null
+  gpu: null
+  driver: null
+  vllm: null
+  base_commit: abc123
+```
+
+Verification statuses are `not-planned`, `not-applicable`, `pending`, `passed`, `failed`, `blocked`, `not-run`, and `ci-only`. Passed requires evidence; failed/blocked/not-run/ci-only require a reason; a required layer cannot be not-applicable. Null environment values are valid when unknown and must not be guessed. Implementation completion does not imply GPU, model, distributed, benchmark, or project-CI completion.
+
+### Repository scope
+
+```yaml
+repository_scope:
+  primary: {repository: LMCache/LMCache, issue: "LMCache/LMCache#123"}
+  related: [vllm-project/vllm]
+  expected_change_repositories: [LMCache/LMCache]
+  excluded_change_repositories: [vllm-project/vllm]
+  scope_status: single-repository
+  working_repositories:
+    - {repository: LMCache/LMCache, remote: null, base: dev, branch: null, commit: null, worktree: not-verified, push_authorized: false}
+```
+
+Allowed scope statuses are `single-repository`, `multi-repository-confirmed`, and `scope-expansion-required`. Expected changes outside the primary repository require confirmed multi-repository scope or a pause for expansion. A candidate cannot pass admission while expansion is required. Related repositories are read-only unless separately authorized; each working repository keeps independent Git and Push evidence.
+
+## Admission
+
+Available candidates retain the v2 admission mapping: Gate status, evidence refresh, user decision, medium-confidence limitation acceptance, three independent authorization booleans, admission time, and notes. `passed` requires `available`, high/accepted-medium confidence, refreshed evidence, `user_decision: continue`, no blocking related item, and no pending repository scope expansion. Gate passage never grants registry, Issue initialization, Commit, Push, or publication permission.
+
+## Evidence-only schema v1
 
 ```text
-excluded-label
-closed-or-terminal
-duplicate-in-scan
-out-of-scope-category
-language-mismatch
-explicit-scope-mismatch
+screenings/<owner>-<repository>/<scan-id>/
+├── SCOPE.yaml                 # stage: issue-evidence-collection
+├── REPORT.md
+└── evidence/<issue-number>.yaml
 ```
 
-The three minimum evidence values must be boolean `true`. Quick Filter records must not contain `screening_classification`, `screening_confidence`, or `admission`. If exclusion needs complete comments, PR search, ownership judgment, or design analysis, it belongs in Deep Audit.
+Copy `templates/evidence/ISSUE-EVIDENCE.yaml`. Record complete body, paginated comments, visible Timeline and Development items, explicit-number/title-symptom/symbol search results, extracted ownership signals, structured related items, and limitations. Evidence files use `schema_version: 1` and `stage: issue-evidence-collection`. They forbid classification, confidence, admission, and `available`; the directory forbids `RESULTS.yaml`.
 
-## Deep Audit record
+## Report
 
-The `available`, `watchlist`, and `excluded_after_audit` buckets use the common fields below:
-
-```yaml
-- issue:
-  url:
-  title:
-  screening_classification:
-  screening_confidence:
-  assignees: []
-  labels: []
-  audited_at:
-  evidence:
-    issue_body_checked:
-    labels_checked:
-    assignees_checked:
-    all_comments_checked:
-    development_checked:
-    issue_number_search_checked:
-    fixes_search_checked:
-    related_search_checked:
-    closes_search_checked:
-    refs_search_checked:
-    title_keyword_search_checked:
-    symbol_search_checked:
-    linked_prs_checked:
-    ownership_checked:
-    design_checked:
-    complexity_checked:
-  related_items: []
-  reason:
-  limitations: []
-  recommended_next_action:
-```
-
-All sixteen evidence keys must exist and be boolean. `available` requires classification `available`, confidence `high` or `medium`, all evidence `true`, non-empty audit time/reason/next action, and an `admission` mapping. Classification alone never means Gate passed.
-
-`watchlist` permits only `watchlist` or `insufficient-evidence` and additionally requires a non-empty `recheck_trigger`.
-
-`excluded_after_audit` permits every defined classification except `available`, `watchlist`, and `insufficient-evidence`.
-
-## Admission record
-
-Every available candidate includes:
-
-```yaml
-admission:
-  gate_status: not-evaluated
-  evidence_refreshed_at: null
-  user_decision: pending
-  medium_confidence_limitations_accepted: false
-  accepted_limitations: []
-  registry_mutation_authorized: false
-  issue_initialization_authorized: false
-  contribution_brief_authorized: false
-  admitted_at: null
-  notes: null
-```
-
-Allowed `gate_status` values are `not-evaluated`, `awaiting-user-decision`, `passed`, `failed`, and `stale-recheck-required`. Allowed `user_decision` values are `pending`, `continue`, and `decline`.
-
-`passed` requires `user_decision: continue`, non-empty `evidence_refreshed_at` and `admitted_at`, and an available classification. Medium-confidence candidates additionally require `medium_confidence_limitations_accepted: true` and a non-empty `accepted_limitations` list. High-confidence candidates need no accepted limitation.
-
-`user_decision: decline` cannot accompany `passed`. Registry mutation, formal Issue initialization, and contribution-Brief authorization are independent booleans; Gate passage never changes or implies them. Non-available candidates need no admission record and can never carry `gate_status: passed`.
-
-## REPORT.md
-
-Lead with the outcome. Include scope/rules/time, the schema-v2 funnel, Quick Filter exclusions, available candidates, watchlist, exclusions after audit, Admission Gate state, search/access limitations, and next step. If none passed Deep Audit, state:
-
-> 本轮没有通过完整审计的可认领 Issue。
-
-Never lower the audit standard to produce an available result.
+Lead with outcome, bounded scope, funnel or evidence completeness, limitations, Gate state when applicable, and the next authorized step. Never lower audit quality to manufacture an available candidate.

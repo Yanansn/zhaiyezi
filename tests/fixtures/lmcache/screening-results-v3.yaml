@@ -1,0 +1,111 @@
+schema_version: 3
+scan_id: lmcache-v3
+repository: LMCache/LMCache
+summary:
+  discovered: 1
+  quick_filtered_out: 0
+  deep_audit_queue: 1
+  deeply_audited: 1
+  available: 0
+  watchlist: 0
+  excluded_after_audit: 1
+quick_filtered_out: []
+available: []
+watchlist: []
+excluded_after_audit:
+  - issue: LMCache/LMCache#123
+    url: https://github.com/LMCache/LMCache/issues/123
+    title: Cache identity example
+    screening_classification: implicit-owner
+    screening_confidence: high
+    assignees: []
+    labels: [bug]
+    audited_at: "2026-08-03T00:00:00Z"
+    evidence:
+      issue_body_checked: true
+      labels_checked: true
+      assignees_checked: true
+      all_comments_checked: true
+      development_checked: true
+      issue_number_search_checked: true
+      fixes_search_checked: true
+      related_search_checked: true
+      closes_search_checked: true
+      refs_search_checked: true
+      title_keyword_search_checked: true
+      symbol_search_checked: true
+      linked_prs_checked: true
+      ownership_checked: true
+      design_checked: true
+      complexity_checked: true
+    ownership:
+      status: implicit-owner
+      confidence: high
+      signals:
+        - actor: contributor
+          actor_role: community-contributor
+          type: issue-comment
+          strength: implementation-in-progress
+          active: true
+          summary: Contributor reports an active local implementation.
+          url: https://github.com/LMCache/LMCache/issues/123#issuecomment-1
+          observed_at: "2026-08-03T00:00:00Z"
+      inactivity: {days_since_last_progress: 1}
+      release_signal: null
+    related_items:
+      - type: pull-request
+        repository: LMCache/LMCache
+        number: 99
+        url: https://github.com/LMCache/LMCache/pull/99
+        state: closed
+        relationship: historical-attempt
+        explicit_issue_reference: false
+        overlap: {level: low, files: [], behavior: Earlier approach only.}
+        blocks_contribution: false
+        verified_at: "2026-08-03T00:00:00Z"
+    feasibility:
+      languages: [python, cpp]
+      estimated_surface: {files: 3, subsystems: [cache-key]}
+      runtime_dependencies: [pytorch]
+      hardware:
+        cpu_only_reproduction: true
+        gpu_required_for_full_validation: true
+        multi_gpu_required: false
+      external_services: []
+      model_requirements: []
+      local_execution: {possible: true, highest_level: cpu-unit}
+      ci_dependency: {required: true}
+      design_dependency: {blocked: false}
+      codex_assessment: {implementation: feasible, verification: limited, overall: limited}
+    verification_matrix:
+      static: {required: true, status: passed, evidence: ruff passed, reason: null}
+      cpu_unit: {required: true, status: passed, evidence: pytest passed, reason: null}
+      cpu_integration: {required: false, status: not-applicable, evidence: null, reason: null}
+      gpu_single: {required: true, status: not-run, evidence: null, reason: no-compatible-gpu}
+      gpu_multi: {required: false, status: not-applicable, evidence: null, reason: null}
+      model_e2e: {required: false, status: not-applicable, evidence: null, reason: null, models: []}
+      benchmark: {required: false, status: not-planned, evidence: null, reason: null}
+      upstream_ci: {required: true, status: ci-only, evidence: null, reason: protected-environment}
+    environment:
+      os: linux
+      architecture: x86_64
+      python: "3.12"
+      compiler: null
+      pytorch: null
+      cuda: null
+      rocm: null
+      gpu: null
+      driver: null
+      vllm: null
+      base_commit: abc123
+    repository_scope:
+      primary: {repository: LMCache/LMCache, issue: LMCache/LMCache#123}
+      related: [vllm-project/vllm]
+      expected_change_repositories: [LMCache/LMCache]
+      excluded_change_repositories: [vllm-project/vllm]
+      scope_status: single-repository
+      working_repositories:
+        - {repository: LMCache/LMCache, remote: null, base: dev, branch: null, commit: abc123, worktree: not-verified, push_authorized: false}
+    reason: An active implicit owner blocks admission.
+    limitations: [GPU E2E was not run.]
+    recommended_next_action: Recheck ownership if the contributor abandons the work.

@@ -76,6 +76,73 @@ next_actions:
   - verify live issue state
 '''
     (target / "STATUS.yaml").write_text(status, encoding="utf-8")
+    project = f'''schema_version: 1
+profiles:
+  language: []
+  ecosystem: []
+  repository: null
+  live_instructions_verified: false
+  live_overrides: []
+branches:
+  github_default_branch: null
+  contribution_target_branch: null
+  issue_affected_branch: null
+  latest_release_branch: null
+  evidence: []
+discovery: {{}}
+repository_scope:
+  primary:
+    repository: {yaml_value(repo)}
+    issue: {yaml_value(args.issue)}
+  related: []
+  expected_change_repositories: [{yaml_value(repo)}]
+  excluded_change_repositories: []
+  scope_status: single-repository
+  working_repositories:
+    - repository: {yaml_value(repo)}
+      remote: null
+      base: {yaml_value(args.base_branch)}
+      branch: {yaml_value(args.working_branch)}
+      commit: null
+      worktree: not-verified
+      push_authorized: false
+feasibility:
+  languages: []
+  estimated_surface: {{files: null, subsystems: []}}
+  runtime_dependencies: []
+  hardware:
+    cpu_only_reproduction: null
+    gpu_required_for_full_validation: null
+    multi_gpu_required: null
+  external_services: []
+  model_requirements: []
+  local_execution: {{possible: null, highest_level: null}}
+  ci_dependency: {{required: null}}
+  design_dependency: {{blocked: null}}
+  codex_assessment: {{implementation: null, verification: null, overall: null}}
+verification_matrix:
+  static: {{required: false, status: not-planned, evidence: null, reason: null}}
+  cpu_unit: {{required: false, status: not-planned, evidence: null, reason: null}}
+  cpu_integration: {{required: false, status: not-planned, evidence: null, reason: null}}
+  gpu_single: {{required: false, status: not-planned, evidence: null, reason: null}}
+  gpu_multi: {{required: false, status: not-planned, evidence: null, reason: null}}
+  model_e2e: {{required: false, status: not-planned, evidence: null, reason: null, models: []}}
+  benchmark: {{required: false, status: not-planned, evidence: null, reason: null}}
+  upstream_ci: {{required: false, status: not-planned, evidence: null, reason: null}}
+environment:
+  os: null
+  architecture: null
+  python: null
+  compiler: null
+  pytorch: null
+  cuda: null
+  rocm: null
+  gpu: null
+  driver: null
+  vllm: null
+  base_commit: null
+'''
+    (target / "PROJECT.yaml").write_text(project, encoding="utf-8")
     for filename, content in DOCUMENTS.items():
         (target / filename).write_text(content, encoding="utf-8")
     (target / "JOURNAL.md").write_text(

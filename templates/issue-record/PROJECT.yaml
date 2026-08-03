@@ -1,0 +1,96 @@
+schema_version: 1
+profiles:
+  language: []
+  ecosystem: []
+  repository: null
+  live_instructions_verified: false
+  live_overrides: []
+
+branches:
+  github_default_branch: null
+  contribution_target_branch: null
+  issue_affected_branch: null
+  latest_release_branch: null
+  evidence: []
+
+discovery:
+  primary_languages: []
+  build_systems: []
+  format_commands: []
+  lint_commands: []
+  test_commands: []
+  generated_code_boundaries: []
+  local_tests: []
+  ci_only_tests: []
+  cla_or_dco: null
+  issue_ownership_convention: null
+  pr_base_branch: null
+  release_note_requirements: null
+  hardware_requirements: []
+  compatibility_matrix: []
+  external_services: []
+
+repository_scope:
+  primary:
+    repository: "{{OWNER}}/{{REPO}}"
+    issue: "{{ISSUE}}"
+  related: []
+  expected_change_repositories:
+    - "{{OWNER}}/{{REPO}}"
+  excluded_change_repositories: []
+  scope_status: single-repository
+  working_repositories:
+    - repository: "{{OWNER}}/{{REPO}}"
+      remote: null
+      base: null
+      branch: null
+      commit: null
+      worktree: not-verified
+      push_authorized: false
+
+feasibility:
+  languages: []
+  estimated_surface:
+    files: null
+    subsystems: []
+  runtime_dependencies: []
+  hardware:
+    cpu_only_reproduction: null
+    gpu_required_for_full_validation: null
+    multi_gpu_required: null
+  external_services: []
+  model_requirements: []
+  local_execution:
+    possible: null
+    highest_level: null
+  ci_dependency:
+    required: null
+  design_dependency:
+    blocked: null
+  codex_assessment:
+    implementation: null
+    verification: null
+    overall: null
+
+verification_matrix:
+  static: {required: false, status: not-planned, evidence: null, reason: null}
+  cpu_unit: {required: false, status: not-planned, evidence: null, reason: null}
+  cpu_integration: {required: false, status: not-planned, evidence: null, reason: null}
+  gpu_single: {required: false, status: not-planned, evidence: null, reason: null}
+  gpu_multi: {required: false, status: not-planned, evidence: null, reason: null}
+  model_e2e: {required: false, status: not-planned, evidence: null, reason: null, models: []}
+  benchmark: {required: false, status: not-planned, evidence: null, reason: null}
+  upstream_ci: {required: false, status: not-planned, evidence: null, reason: null}
+
+environment:
+  os: null
+  architecture: null
+  python: null
+  compiler: null
+  pytorch: null
+  cuda: null
+  rocm: null
+  gpu: null
+  driver: null
+  vllm: null
+  base_commit: null

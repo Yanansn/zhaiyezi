@@ -1,0 +1,16 @@
+schema_version: 1
+kind: language
+name: python
+match:
+  languages: [python]
+checks:
+  - Discover supported Python versions from live metadata and CI.
+  - Inspect pyproject.toml, setup.cfg, and setup.py without assuming which is authoritative.
+  - Discover environment workflow such as uv, pip, poetry, tox, nox, or repository scripts.
+  - Discover pytest scope, markers, optional dependencies, and targeted-test commands.
+  - Discover ruff, mypy, pre-commit, formatter, and generated-file requirements.
+  - Check for native extensions and their compiler, library, CPU, and GPU boundaries.
+  - Prefer targeted tests before broader suites, then record what remains CI-only.
+limitations:
+  - Python projects do not share one install, lint, type-check, or test command.
+  - Import success does not establish optional-backend or native-extension behavior.

@@ -7,6 +7,15 @@ import argparse
 import re
 import sys
 from pathlib import Path
+try:
+    import yaml
+except ImportError as error:  # pragma: no cover - environment failure
+    raise SystemExit("PyYAML is required to validate issue records") from error
+
+try:
+    from scripts import validate_screening_record as structured_validator
+except ImportError:  # direct execution from scripts/
+    import validate_screening_record as structured_validator
 
 
 REQUIRED_FILES = {
@@ -56,6 +65,49 @@ DISCUSSION_FIELDS = (
     "Remaining uncertainty",
     "Next decision gate",
 )
+def validate_project(path: Path) -> list[str]:
+    errors: list[str] = []
+    try:
+        project = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, yaml.YAMLError) as error:
+        return [f"PROJECT.yaml cannot be parsed: {error}"]
+    if not isinstance(project, dict):
+        return ["PROJECT.yaml must contain a YAML mapping"]
+    if project.get("schema_version") != 1:
+        errors.append("PROJECT.yaml schema_version must be 1")
+    profiles = project.get("profiles")
+    if not isinstance(profiles, dict):
+        errors.append("PROJECT.yaml profiles must be a mapping")
+    elif not isinstance(profiles.get("live_instructions_verified"), bool):
+        errors.append("PROJECT.yaml profiles.live_instructions_verified must be boolean")
+    branches = project.get("branches")
+    if not isinstance(branches, dict):
+        errors.append("PROJECT.yaml branches must be a mapping")
+    else:
+        for key in (
+            "github_default_branch", "contribution_target_branch",
+            "issue_affected_branch", "latest_release_branch", "evidence",
+        ):
+            if key not in branches:
+                errors.append(f"PROJECT.yaml branches requires {key}")
+        if not isinstance(branches.get("evidence"), list):
+            errors.append("PROJECT.yaml branches.evidence must be a list")
+    discovery = project.get("discovery")
+    if not isinstance(discovery, dict):
+        errors.append("PROJECT.yaml discovery must be a mapping")
+    structured_validator.validate_repository_scope(
+        project.get("repository_scope"), "PROJECT.yaml.repository_scope", errors
+    )
+    structured_validator.validate_feasibility(
+        project.get("feasibility"), "PROJECT.yaml.feasibility", errors
+    )
+    structured_validator.validate_verification_matrix(
+        project.get("verification_matrix"), "PROJECT.yaml.verification_matrix", errors
+    )
+    structured_validator.validate_environment(
+        project.get("environment"), "PROJECT.yaml.environment", errors
+    )
+    return errors
 
 
 def yaml_scalar(text: str, key: str) -> str | None:
@@ -122,6 +174,14 @@ def validate(record: Path) -> tuple[list[str], list[str]]:
         errors.append("STATUS.yaml has no top-level issue")
     if status not in KNOWN_STATUSES:
         errors.append(f"STATUS.yaml has unknown status: {status!r}")
+
+    project_path = record / "PROJECT.yaml"
+    if project_path.exists():
+        errors.extend(validate_project(project_path))
+    else:
+        warnings.append(
+            "legacy record has no PROJECT.yaml; add it before a new Project Discovery or implementation stage"
+        )
 
     communication = {
         key: yaml_bool_in_section(status_text, "public_communication", key)

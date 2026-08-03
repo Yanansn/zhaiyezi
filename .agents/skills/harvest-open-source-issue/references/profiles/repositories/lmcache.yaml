@@ -1,0 +1,17 @@
+schema_version: 1
+kind: repository
+name: lmcache
+match:
+  repositories: [LMCache/LMCache]
+checks:
+  - Discover GitHub default branch and actual contribution target branch independently; dev is a lead, not a guaranteed current fact.
+  - Treat the repository as potentially mixed Python and C++ and inspect native build boundaries.
+  - Re-verify DCO and Signed-off-by requirements from live contribution rules.
+  - Re-verify ruff, pytest, pre-commit, public API type hints, and docstring rules.
+  - Re-verify community rules such as one Issue per PR and the required PR base branch.
+  - Map relevant subsystem leads such as cache key, vLLM connector, MP server, storage backend, local disk, distributed L2 adapter, observability, blending, layerwise, multimodal, and native connector.
+  - Check integrations with vLLM, Dynamo, Mooncake, Redis, PyTorch, CUDA, and ROCm only when relevant.
+  - Record unavailable GPU, multi-GPU, target model, real storage backend, CUDA, or ROCm environments as verification limits.
+limitations:
+  - These are stable discovery leads, not facts about the current Issue or repository state.
+  - Every command, branch, policy, subsystem boundary, and compatibility claim requires live Project Discovery evidence.

@@ -14,3 +14,18 @@ These are documentation fixtures, not instructions to query GitHub automatically
 | `kubernetes/kubernetes#140606` | `author-implementation` | The Issue author reports an implementation and tests are ready. | Respect an author's unsubmitted implementation rather than racing to a PR. |
 
 When using a case, record which input fact, expected classification, and protected rule were exercised. If a future live audit changes the classification, add a dated note; do not rewrite the historical premise.
+
+## Repository-agnostic schema cases
+
+| Case | Expected result | Rule protected |
+| --- | --- | --- |
+| LMCache Issue has no assignee but a commenter is implementing | `implicit-owner` or stronger occupied classification | No assignee is not no owner; strength distinguishes interest from implementation. |
+| No explicit Issue number but a semantically overlapping PR exists | Structured `semantic-implementation` related item | Explicit-number discovery is not semantic Deep Audit. |
+| CPU unit tests pass while GPU E2E is not run | Valid matrix with separate evidence and limitation | Lower verification layers do not imply accelerator completion. |
+| GitHub default is `main`, contribution target is `dev` | Both branch fields retained | Default branch is not automatically the PR base. |
+| Single-repository Brief discovers a required second-repository change | `scope-expansion-required`; admission cannot pass | Read-only related scope does not grant modification authority. |
+| Reproduction attributes the behavior to a third-party project | `not-an-upstream-bug` | Generic attribution replaces Kubernetes-only language. |
+| Historical closed PR does not overlap the current implementation | `historical-attempt`, `blocks_contribution: false` | History informs but does not automatically block. |
+| Competing open PR covers the behavior | `competing-implementation`, `blocks_contribution: true`; Gate cannot pass | Active competition blocks admission. |
+| Evidence collection contains complete raw evidence | Valid only without classification, admission, or RESULTS.yaml | Collection and judgment remain separate. |
+| LMCache Profile suggests `dev`, live rules say another branch | Live contribution target wins and override is recorded | Static Profiles never override live repository instructions. |

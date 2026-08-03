@@ -1,0 +1,15 @@
+schema_version: 1
+kind: language
+name: cpp
+match:
+  languages: [cpp, cxx]
+checks:
+  - Discover CMake, setuptools extension, ninja, make, or repository-specific build entry points.
+  - Record compiler and standard-library versions and supported C++ language/ABI constraints.
+  - Discover clang-format, clang-tidy, sanitizers, and generated-file rules.
+  - Verify required headers, libraries, link modes, and native-extension build paths.
+  - Separate CPU-only, CUDA, ROCm, and other accelerator build boundaries.
+  - Record packaging and Python-binding implications when the project is mixed-language.
+limitations:
+  - A successful compile does not complete runtime, accelerator, ABI, or integration verification.
+  - Local headers and libraries may differ from project CI and release environments.

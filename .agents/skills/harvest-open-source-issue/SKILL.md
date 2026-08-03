@@ -42,11 +42,13 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
    - Fast-forward a local base only when the worktree is clean, the local base has no unique commits, the histories have not diverged, `--ff-only` can succeed, and the brief explicitly permits it. Record the base Commit before and after.
    - Stop on dirty state, unique local base commits, divergence, unknown commits, remote mismatch, an unknown default branch, fetch failure, or any need for merge Commit, rebase, reset, or discarded work.
    - Read `AGENTS.md`, `CONTRIBUTING.md`, issue/PR templates, build files, test guidance, and relevant ownership files.
+   - Apply matching language, ecosystem, and repository checklists from [profiles/README.md](references/profiles/README.md), then let live repository instructions override every static Profile assumption.
+   - Record GitHub default, contribution target, Issue-affected, and current release branches separately; the default branch is not necessarily the PR base.
    - Record language, build system, test framework, CI, contribution rules, CLA/DCO requirements, and community conventions.
    - Read [project-discovery.md](references/project-discovery.md).
 2. **Analyze the Issue ecosystem (mandatory)**
    - Create or refresh `ECOSYSTEM.md` before Knowledge, code mapping, planning or implementation. This stage is mandatory for every active Issue.
-   - Inspect label, project, milestone, assignee and state changes; mentions, references, cross-references, linked Issues and linked PRs; the Development section; downstream projects and workarounds; related or historical work; TestGrid, Prow and downstream CI; maintainer positions; and open questions.
+   - Inspect label, project, milestone, assignee and state changes; mentions, references, cross-references, linked Issues and linked PRs; the Development section; downstream projects and workarounds; related or historical work; project CI and downstream CI; maintainer positions; and open questions.
    - Classify every linked item as an upstream implementation, downstream workaround, related evidence, historical work or reference-only event. A cross-reference is not proof of an implementation PR.
    - Treat `ECOSYSTEM.md` as continuous research. Refresh it when a new comment, PR, Timeline event, downstream change, workaround or CI signal appears. Treat public Drafts as frozen snapshots; do not rewrite a reviewed or published Draft merely to absorb new ecosystem facts.
    - When new discussion may affect the problem, assumptions, scope, risk, acceptance, or community viability, set `discussion-reanalysis`, pause planning or implementation, and follow the authoritative discussion re-analysis contract in `AGENTS.md`.
@@ -83,7 +85,7 @@ Treat Codex as the engineering execution agent for an issue that ordinary Chat h
    - Perform Commit, Push, PR, comment, or review actions only when the brief or a later user message explicitly authorizes each external boundary.
 8. **Re-analyze updated community discussion (mandatory trigger)**
    - Read the full current discussion, not only the newest comment; identify the new evidence in context.
-   - Establish the commenter's project- and path-relevant role using ownership, SIG/subproject responsibility, review history and current duties when necessary. Do not treat identity as a substitute for technical evidence.
+   - Establish the commenter's project- and path-relevant role using ownership, component/subproject responsibility, review history and current duties when necessary. Do not treat identity as a substitute for technical evidence.
    - Classify discussion evidence as Proposal/Suggestion, Preference, Clarification, Emerging Consensus, or Maintainer Direction. Exploratory wording is not a final decision. Assess Confirmed Implementation Boundary separately as the decision Gate defined in `AGENTS.md`, not as a comment type.
    - Recheck the problem definition, technical assumptions, scope, non-goals, conflicting views, risks, acceptance criteria and validity of prior research. Preserve the previous assumption and evidence-to-conclusion change in `ECOSYSTEM.md`.
    - Choose continued investigation, clarification, waiting, planning, pause or abandonment. Coding remains prohibited until the gate in `AGENTS.md` passes.
@@ -110,6 +112,7 @@ Never use a generic `git pull` for base synchronization. Prefer an authorized `g
 Use one directory per issue under `issues/<owner>-<repo>-<number>/`. Maintain:
 
 - `STATUS.yaml`: machine-readable current state, blockers, next actions, facts repository, official upstream/base, user Fork/working branch, PR, and last verification time.
+- `PROJECT.yaml`: selected Profiles, live overrides, branch model, Project Discovery, repository scope, feasibility, verification matrix, and environment. It is required for new records and optional for legacy records until their next discovery/implementation stage.
 - `ISSUE.md`: source facts and structured requirement summary.
 - `ECOSYSTEM.md`: mandatory first-class, continuously refreshed facts about Timeline, Development, downstream impact and workarounds, related work, CI, maintainer positions, discussion re-analysis history, open questions, and the current ecosystem summary.
 - `KNOWLEDGE.md`: optional-in-content background, terms, mental models, distinctions and exceptions needed by a new reader; the file is part of new records but may remain minimal when no domain explanation is needed.

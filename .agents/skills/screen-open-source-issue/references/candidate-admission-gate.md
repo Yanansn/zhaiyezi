@@ -11,9 +11,11 @@ All must be true:
 1. The complete fourteen-stage audit and all mandatory searches are recorded.
 2. Classification is `available`; confidence is `high`, or is `medium` with the user's explicit acceptance of named limitations.
 3. Volatile ownership, Issue/PR state, discussion, searches, and current-base facts were refreshed and `evidence_refreshed_at` records when.
-4. No known owner, implementation conflict, current fix, blocking design ambiguity, third-party attribution, or inaccessible infrastructure dependency remains.
-5. The problem and feasible independent contribution boundary are sufficiently clear.
-6. `user_decision` is `continue`, and `admitted_at` records the Gate decision time.
+4. Structured ownership has no active implicit or explicit owner, and no related item has `blocks_contribution: true`.
+5. Repository scope is `single-repository` or `multi-repository-confirmed`; `scope-expansion-required` cannot enter the Gate.
+6. No known owner, implementation conflict, current fix, blocking design ambiguity, third-party attribution, or inaccessible infrastructure dependency remains.
+7. The problem and feasible independent contribution boundary are sufficiently clear.
+8. `user_decision` is `continue`, and `admitted_at` records the Gate decision time.
 
 When evidence changes or becomes stale, use `stale-recheck-required`; refresh and re-evaluate rather than retaining `passed` by assumption. A declined candidate cannot pass.
 

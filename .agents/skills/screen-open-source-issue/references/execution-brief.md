@@ -1,6 +1,6 @@
 # Screening collaboration Briefs
 
-This contract defines three distinct inputs. The default is a Chat-produced `Screening Result Brief` that Codex records without repeating the investigation. A complete Codex Screening requires explicit user authorization. A `Code Verification Brief` authorizes only enumerated source-code checks. All are distinct from the contribution-stage Brief used by `harvest-open-source-issue`.
+This contract defines four distinct inputs. The default is a Chat-produced `Screening Result Brief` that Codex records without repeating the investigation. A complete Codex Screening requires explicit user authorization. `issue-evidence-collection` collects evidence without classifying it. A `Code Verification Brief` authorizes only enumerated source-code checks. All are distinct from the contribution-stage Brief used by `harvest-open-source-issue`.
 
 ## Default: Screening Result Brief
 
@@ -102,6 +102,37 @@ approval:
 
 Missing approval fields mean `prohibited`. `create_screening_records` permits only the lightweight scan directory. It does not authorize registry changes, formal Issue initialization, Commit, Push, assignment, comment, label changes, or PR work.
 
+## Exception: Issue Evidence Collection Brief
+
+```yaml
+brief_type: issue-evidence-collection
+stage: issue-evidence-collection
+repository: owner/repository
+scan_id: YYYY-MM-DD-evidence
+issues:
+  - 123
+required_sources:
+  issue_body: true
+  all_comments: true
+  timeline_and_development: true
+  explicit_issue_number_prs: true
+  title_symptom_search: true
+  symbol_search: true
+output_location: screenings/<owner>-<repository>/<scan-id>/evidence
+approval:
+  create_screening_records: allowed
+  assign_classification: prohibited
+  evaluate_admission: prohibited
+  modify_registry: prohibited
+  initialize_issue_record: prohibited
+  publish_public_comment: prohibited
+  assign_issue: prohibited
+  commit_facts_repository: prohibited
+  push_facts_repository: prohibited
+```
+
+Store one schema-v1 evidence file per Issue. Preserve raw search results, relationship evidence, pagination completeness, extracted-but-unjudged ownership signals, and limitations. Do not create `RESULTS.yaml`; evidence collection never emits `available` or any final classification.
+
 ## Exception: Code Verification Brief
 
 ```yaml
@@ -145,6 +176,6 @@ Stop and report before mutation when the Brief is absent/unbounded, repository b
 
 ## Return contract
 
-For Screening Result recording or complete Screening, report schema-v2 funnel counts (`quick_filtered_out` separately from all Deep Audit buckets), classifications/confidence/limitations, persisted admission state, files changed, validation outcomes, and Git state. For Code Verification, report only the requested code facts, baseline, commands, results, and limitations. Always state which of Commit, Push, registry mutation, formal Issue initialization, and public actions were or were not performed.
+For Screening Result recording or complete Screening, report schema-v3 funnel counts (`quick_filtered_out` separately from all Deep Audit buckets), classifications/confidence/limitations, persisted admission state, files changed, validation outcomes, and Git state. For evidence collection, report collected sources, completeness, limitations, output files, and explicitly state that no classification or admission was produced. For Code Verification, report only the requested code facts, baseline, commands, results, and limitations. Always state which of Commit, Push, registry mutation, formal Issue initialization, and public actions were or were not performed.
 
 Quick Filter records never carry screening classification/confidence or admission data. Candidate Admission Gate evaluation updates the independent `admission` mapping and never authorizes registry mutation, Issue initialization, or contribution-Brief creation by implication. Use [output-schema.md](output-schema.md) as the authoritative data contract.

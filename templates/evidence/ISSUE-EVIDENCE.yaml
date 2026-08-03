@@ -1,0 +1,33 @@
+schema_version: 1
+stage: issue-evidence-collection
+repository: owner/repository
+issue: "owner/repository#123"
+url: https://github.com/owner/repository/issues/123
+title: "Issue title"
+collected_at: null
+
+body:
+  complete: false
+  text: null
+
+comments:
+  pagination_complete: false
+  items: []
+
+timeline:
+  complete: false
+  items: []
+
+development:
+  complete: false
+  items: []
+
+searches:
+  explicit_issue_number: []
+  title_symptom: []
+  symbols: []
+
+# Signals are extracted, not judged into a final ownership status in this mode.
+ownership_signals: []
+related_items: []
+limitations: []

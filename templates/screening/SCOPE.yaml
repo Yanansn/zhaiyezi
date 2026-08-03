@@ -1,4 +1,5 @@
 schema_version: 1
+stage: issue-screening
 
 repository: "{{REPOSITORY}}"
 
