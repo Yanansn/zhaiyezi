@@ -1,0 +1,39 @@
+schema_version: 1
+repositories:
+  LMCache/LMCache:
+    type: target
+    upstream:
+      url: https://github.com/LMCache/LMCache
+    fork:
+      enabled: true
+      url: "git@github.com:<user>/LMCache.git"
+    local:
+      discovery:
+        enabled: true
+    contribution:
+      enabled: true
+    language:
+      - python
+    git_identity:
+      name: bzsuni
+      email: bingzhe.sun@daocloud.io
+      signing:
+        required: false
+  kubernetes/kubernetes:
+    type: target
+    upstream:
+      url: https://github.com/kubernetes/kubernetes
+    fork:
+      enabled: true
+    local:
+      discovery:
+        enabled: true
+    contribution:
+      enabled: true
+    language:
+      - go
+    git_identity:
+      name: bzsuni
+      email: bingzhe.sun@daocloud.io
+      signing:
+        required: false

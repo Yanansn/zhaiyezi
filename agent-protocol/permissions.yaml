@@ -22,8 +22,10 @@ roles:
   execution-agent:
     allowed_actions:
       - read_repository
+      - repository_read
       - collect_evidence
       - analyze_code
+      - repository_modify
       - modify_facts_repository
       - run_tests
       - write_result
@@ -47,6 +49,8 @@ shared_serialized_paths:
 
 action_catalog:
   read_repository: local-read
+  repository_read: target-repository-read
+  repository_modify: target-repository-write
   create_task: local-write
   create_review: local-write
   create_decision: local-write
@@ -88,6 +92,7 @@ default_prohibited_actions:
   - create_pull_request
 
 approval_required_actions:
+  - repository_modify
   - materialize_chat_artifact
   - materialize_user_artifact
   - commit_facts_repository

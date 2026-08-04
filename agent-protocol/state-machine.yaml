@@ -51,6 +51,7 @@ contribution_coordination:
     - discovered
     - evidence_requested
     - evidence_completed
+    - target_repository_binding
     - awaiting_review
     - deep_audit
     - admission_pending
@@ -62,7 +63,8 @@ contribution_coordination:
   transitions:
     discovered: [evidence_requested]
     evidence_requested: [evidence_completed]
-    evidence_completed: [deep_audit]
+    evidence_completed: [target_repository_binding]
+    target_repository_binding: [deep_audit]
     deep_audit: [awaiting_review]
     awaiting_review: [admission_pending]
     admission_pending: [implementation_ready]
@@ -72,9 +74,9 @@ contribution_coordination:
     pr_ready: [completed]
     completed: []
   gates:
-    evidence_completed_to_deep_audit:
+    target_repository_binding_to_deep_audit:
       owner: chat
-      rule: Completed evidence is the bounded input for Deep Audit; Deep Audit must produce a result before Review.
+      rule: A target repository must be bound before Deep Audit; binding does not authorize upstream writes.
     awaiting_review_to_admission_pending:
       owner: chat
       rule: Deep Audit must be reviewed before using the existing Screening classification and Candidate Admission Gate contract.
@@ -92,6 +94,8 @@ forbidden_shortcuts:
   - [evidence_completed, awaiting_review]
   - [evidence_completed, admission_pending]
   - [evidence_completed, implementation_ready]
+  - [evidence_completed, deep_audit]
+  - [target_repository_binding, awaiting_review]
   - [deep_audit, admission_pending]
   - [deep_audit, implementation_ready]
   - [awaiting_review, implementation_ready]

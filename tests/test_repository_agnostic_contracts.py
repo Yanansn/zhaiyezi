@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,7 +9,9 @@ from pathlib import Path
 import yaml
 
 from scripts import validate_issue_record as issue_validator
+from scripts import repository_discovery
 from scripts import validate_screening_record as screening_validator
+from scripts import validate_agent_protocol as protocol_validator
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -237,6 +240,79 @@ class ProfileAndIssueRecordTests(unittest.TestCase):
             path.write_text(yaml.safe_dump(project, sort_keys=False), encoding="utf-8")
             errors = issue_validator.validate_project(path)
         self.assertTrue(any("cannot be required and not-applicable" in error for error in errors))
+
+
+class TargetRepositoryManagementTests(unittest.TestCase):
+    def test_registry_yaml_parses_without_absolute_paths(self) -> None:
+        registry, discovery = repository_discovery.load_documents()
+        self.assertEqual(1, registry["schema_version"])
+        self.assertIn("LMCache/LMCache", registry["repositories"])
+        self.assertEqual(1, discovery["schema_version"])
+        self.assertEqual([], protocol_validator.validate_repository_registry(ROOT))
+
+    def test_repository_discovery_matches_upstream_and_fork_remotes(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            home = Path(temporary)
+            repository = home / "projects" / "LMCache"
+            repository.mkdir(parents=True)
+            subprocess.run(["git", "-C", str(repository), "init", "-q"], check=True)
+            subprocess.run(
+                ["git", "-C", str(repository), "remote", "add", "upstream", "https://github.com/LMCache/LMCache.git"],
+                check=True,
+            )
+            subprocess.run(
+                ["git", "-C", str(repository), "remote", "add", "origin", "git@github.com:bzsuni/LMCache.git"],
+                check=True,
+            )
+            registry = {
+                "repositories": {
+                    "LMCache/LMCache": {
+                        "upstream": {"url": "https://github.com/LMCache/LMCache"}
+                    }
+                }
+            }
+            discovery = {"scan_roots": ["projects"]}
+            results = repository_discovery.discover(registry, discovery, home=home)
+            self.assertEqual(1, len(results))
+            self.assertEqual("LMCache/LMCache", results[0]["repository"])
+            self.assertEqual("git@github.com:bzsuni/LMCache.git", results[0]["fork"])
+            self.assertEqual(str(repository), results[0]["local_path"])
+
+    def test_git_identity_mismatch_is_detected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repository = Path(temporary)
+            subprocess.run(["git", "-C", str(repository), "init", "-q"], check=True)
+            subprocess.run(
+                ["git", "-C", str(repository), "config", "user.name", "someone-else"],
+                check=True,
+            )
+            subprocess.run(
+                ["git", "-C", str(repository), "config", "user.email", "other@example.com"],
+                check=True,
+            )
+            self.assertFalse(
+                repository_discovery.identity_matches(
+                    repository,
+                    {"name": "bzsuni", "email": "bingzhe.sun@daocloud.io"},
+                )
+            )
+
+    def test_registry_absolute_path_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            repositories = root / "repositories"
+            repositories.mkdir()
+            registry = copy.deepcopy(repository_discovery.load_documents()[0])
+            registry["repositories"]["LMCache/LMCache"]["local"]["path"] = "/home/sun/py/LMCache"
+            (repositories / "registry.yaml").write_text(
+                yaml.safe_dump(registry, sort_keys=False), encoding="utf-8"
+            )
+            (repositories / "discovery.yaml").write_text(
+                yaml.safe_dump(repository_discovery.load_documents()[1], sort_keys=False),
+                encoding="utf-8",
+            )
+            errors = protocol_validator.validate_repository_registry(root)
+            self.assertTrue(any("absolute path" in error for error in errors))
 
 
 if __name__ == "__main__":

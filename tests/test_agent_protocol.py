@@ -602,6 +602,18 @@ class AgentProtocolTests(unittest.TestCase):
         self.assertNotIn(
             "available", self.state_machine["contribution_coordination"]["states"]
         )
+        self.assertEqual(
+            ["forbidden transition: evidence_completed -> deep_audit"],
+            validator.validate_transition(
+                self.state_machine, "evidence_completed", "deep_audit"
+            ),
+        )
+        self.assertEqual(
+            [],
+            validator.validate_transition(
+                self.state_machine, "evidence_completed", "target_repository_binding"
+            ),
+        )
 
     def test_deep_audit_task_schema_is_first_class(self) -> None:
         self.assertIn("deep-audit", self.schema["enums"]["task_type"])
@@ -621,6 +633,10 @@ class AgentProtocolTests(unittest.TestCase):
             evidence_refs=[
                 "agent-work/tasks/lmcache-4132-evidence/RESULT.yaml",
             ],
+            target_repository={
+                "name": "LMCache/LMCache",
+                "phase": "deep-audit",
+            },
             allowed_actions=[
                 "read_repository",
                 "analyze_code",
@@ -640,6 +656,17 @@ class AgentProtocolTests(unittest.TestCase):
         )
         _, errors = self.inspect(self.write_task(task_request))
         self.assertTrue(any("evidence_refs" in error for error in errors))
+
+    def test_deep_audit_requires_target_repository(self) -> None:
+        task_request = request(
+            task_id="deep-audit-no-target",
+            task_type="deep-audit",
+            repository="LMCache/LMCache",
+            issue="LMCache/LMCache#4132",
+            evidence_refs=["agent-work/tasks/lmcache-4132-evidence/RESULT.yaml"],
+        )
+        _, errors = self.inspect(self.write_task(task_request))
+        self.assertTrue(any("target_repository" in error for error in errors))
 
     def test_deep_audit_cannot_transition_directly_to_implementation(self) -> None:
         self.assertEqual(
@@ -667,6 +694,57 @@ class AgentProtocolTests(unittest.TestCase):
         )
         _, errors = self.inspect(self.write_task(task_request))
         self.assertTrue(any("deep-audit cannot allow" in error for error in errors))
+
+    def test_implementation_requires_fork_and_local_discovery(self) -> None:
+        task_request = request(
+            task_id="implementation-without-binding",
+            task_type="implementation",
+            repository="LMCache/LMCache",
+            issue="LMCache/LMCache#4132",
+        )
+        _, errors = self.inspect(self.write_task(task_request))
+        self.assertTrue(any("target_repository" in error for error in errors))
+
+        task_request["target_repository"] = {
+            "name": "LMCache/LMCache",
+            "phase": "implementation",
+            "fork": {"url": "git@github.com:user/LMCache.git"},
+            "local": {"path": "/tmp/lmcache", "discovery": False},
+        }
+        _, errors = self.inspect(self.write_task(task_request))
+        self.assertTrue(any("must be true" in error for error in errors))
+
+    def test_target_binding_does_not_authorize_upstream_write(self) -> None:
+        task_request = request(
+            task_id="bound-upstream-write",
+            task_type="deep-audit",
+            repository="LMCache/LMCache",
+            issue="LMCache/LMCache#4132",
+            evidence_refs=["agent-work/tasks/lmcache-4132-evidence/RESULT.yaml"],
+            target_repository={"name": "LMCache/LMCache", "phase": "deep-audit"},
+            allowed_actions=["upstream_write"],
+            prohibited_actions=[],
+        )
+        _, errors = self.inspect(self.write_task(task_request))
+        self.assertTrue(any("deep-audit cannot allow" in error for error in errors))
+
+    def test_repository_modify_requires_user_approval(self) -> None:
+        task_request = request(
+            task_id="repository-modify-without-approval",
+            task_type="implementation",
+            repository="LMCache/LMCache",
+            issue="LMCache/LMCache#4132",
+            target_repository={
+                "name": "LMCache/LMCache",
+                "phase": "implementation",
+                "fork": {"url": "git@github.com:user/LMCache.git"},
+                "local": {"path": "/tmp/lmcache", "discovery": True},
+            },
+            allowed_actions=["repository_modify"],
+            prohibited_actions=[],
+        )
+        _, errors = self.inspect(self.write_task(task_request))
+        self.assertTrue(any("repository_modify requires" in error for error in errors))
 
     def test_legacy_queue_task_has_clear_migration_error(self) -> None:
         legacy = self.root / "agent-work" / "inbox" / "legacy-task"

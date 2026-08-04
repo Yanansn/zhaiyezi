@@ -44,6 +44,14 @@ REVIEW_STATES = {
     ("rejected", "rejected"): "rejected",
 }
 CHAT_MATERIALIZATION_DENIED_PATHS = ("decisions/authorizations/**",)
+TARGET_REPOSITORY_PHASES = {"evidence", "deep-audit", "implementation"}
+UPSTREAM_ACTIONS = {
+    "fetch_official_upstream",
+    "modify_upstream_code",
+    "upstream_write",
+    "push_upstream_branch",
+    "create_pull_request",
+}
 
 
 def path_matches(path: str, pattern: str) -> bool:
@@ -73,6 +81,119 @@ def load_yaml(path: Path, errors: list[str]) -> dict[str, Any]:
         errors.append(f"{path}: must contain a YAML mapping")
         return {}
     return value
+
+
+def _absolute_path_strings(value: Any, location: str) -> list[str]:
+    found: list[str] = []
+    if isinstance(value, dict):
+        for key, child in value.items():
+            found.extend(_absolute_path_strings(child, f"{location}.{key}"))
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            found.extend(_absolute_path_strings(child, f"{location}[{index}]"))
+    elif isinstance(value, str) and value.startswith("/"):
+        found.append(f"{location}: absolute path is not allowed")
+    return found
+
+
+def validate_repository_registry(root: Path) -> list[str]:
+    errors: list[str] = []
+    repositories = root / "repositories"
+    registry_path = repositories / "registry.yaml"
+    discovery_path = repositories / "discovery.yaml"
+    registry = load_yaml(registry_path, errors)
+    discovery = load_yaml(discovery_path, errors)
+    if registry.get("schema_version") != 1:
+        errors.append(f"{registry_path}: schema_version must be 1")
+    entries = registry.get("repositories")
+    if not isinstance(entries, dict) or not entries:
+        errors.append(f"{registry_path}.repositories: must be a non-empty mapping")
+    else:
+        for name, entry in entries.items():
+            location = f"{registry_path}.repositories.{name}"
+            if not isinstance(name, str) or not REPOSITORY_RE.fullmatch(name):
+                errors.append(f"{location}: key must use owner/name")
+            if not isinstance(entry, dict):
+                errors.append(f"{location}: must be a mapping")
+                continue
+            if entry.get("type") != "target":
+                errors.append(f"{location}.type: must be target")
+            upstream = entry.get("upstream")
+            if not isinstance(upstream, dict) or not isinstance(upstream.get("url"), str):
+                errors.append(f"{location}.upstream.url: must be a URL string")
+            fork = entry.get("fork")
+            if not isinstance(fork, dict) or not isinstance(fork.get("enabled"), bool):
+                errors.append(f"{location}.fork.enabled: must be boolean")
+            local = entry.get("local", {}).get("discovery") if isinstance(entry.get("local"), dict) else None
+            if not isinstance(local, dict) or not isinstance(local.get("enabled"), bool):
+                errors.append(f"{location}.local.discovery.enabled: must be boolean")
+            contribution = entry.get("contribution")
+            if not isinstance(contribution, dict) or not isinstance(contribution.get("enabled"), bool):
+                errors.append(f"{location}.contribution.enabled: must be boolean")
+            identity = entry.get("git_identity")
+            if not isinstance(identity, dict):
+                errors.append(f"{location}.git_identity: must be a mapping")
+            else:
+                if not isinstance(identity.get("name"), str) or not identity.get("name", "").strip():
+                    errors.append(f"{location}.git_identity.name: must be non-empty")
+                if not isinstance(identity.get("email"), str) or "@" not in identity.get("email", ""):
+                    errors.append(f"{location}.git_identity.email: must be an email string")
+                signing = identity.get("signing")
+                if not isinstance(signing, dict) or not isinstance(signing.get("required"), bool):
+                    errors.append(f"{location}.git_identity.signing.required: must be boolean")
+    errors.extend(_absolute_path_strings(registry, str(registry_path)))
+    if discovery.get("schema_version") != 1:
+        errors.append(f"{discovery_path}: schema_version must be 1")
+    scan_roots = discovery.get("scan_roots")
+    if not isinstance(scan_roots, list) or not scan_roots or any(
+        not isinstance(item, str) or not item or item.startswith("/")
+        for item in scan_roots
+    ):
+        errors.append(f"{discovery_path}.scan_roots: must be non-empty relative paths")
+    return errors
+
+
+def validate_target_repository_binding(
+    request: dict[str, Any], schema: dict[str, Any], location: str, errors: list[str]
+) -> None:
+    task_type = request.get("task_type")
+    binding = request.get("target_repository")
+    if task_type == "deep-audit" and not isinstance(binding, dict):
+        errors.append(f"{location}.target_repository: deep-audit requires a binding")
+        return
+    if task_type == "implementation" and not isinstance(binding, dict):
+        errors.append(f"{location}.target_repository: implementation requires a binding")
+        return
+    if binding is None:
+        return
+    if not isinstance(binding, dict):
+        errors.append(f"{location}.target_repository: must be a mapping")
+        return
+    contract = schema.get("target_repository_contract", {})
+    for field in contract.get("required_fields", ["name", "phase"]):
+        if field not in binding:
+            errors.append(f"{location}.target_repository.{field}: required")
+    name = binding.get("name")
+    if not isinstance(name, str) or not REPOSITORY_RE.fullmatch(name):
+        errors.append(f"{location}.target_repository.name: must use owner/name")
+    elif name != request.get("repository"):
+        errors.append(f"{location}.target_repository.name: must match repository")
+    phase = binding.get("phase")
+    if phase not in TARGET_REPOSITORY_PHASES:
+        errors.append(f"{location}.target_repository.phase: invalid phase")
+    elif task_type == "deep-audit" and phase != "deep-audit":
+        errors.append(f"{location}.target_repository.phase: deep-audit requires deep-audit")
+    elif task_type == "implementation" and phase != "implementation":
+        errors.append(f"{location}.target_repository.phase: implementation requires implementation")
+    if task_type == "implementation":
+        fork = binding.get("fork")
+        local = binding.get("local")
+        if not isinstance(fork, dict) or not isinstance(fork.get("url"), str):
+            errors.append(f"{location}.target_repository.fork.url: implementation requires fork")
+        if not isinstance(local, dict) or not isinstance(local.get("path"), str):
+            errors.append(f"{location}.target_repository.local.path: implementation requires local discovery result")
+        if not isinstance(local, dict) or local.get("discovery") is not True:
+            errors.append(f"{location}.target_repository.local.discovery: must be true")
 
 
 def require_fields(
@@ -147,10 +268,14 @@ def validate_protocol_documents(
         errors.append("agent-protocol/state-machine.yaml: queue states are incomplete")
     coordination = state_machine.get("contribution_coordination", {})
     if coordination.get("transitions", {}).get("evidence_completed") != [
-        "deep_audit"
+        "target_repository_binding"
     ]:
         errors.append(
-            "agent-protocol/state-machine.yaml: evidence_completed must only enter deep_audit"
+            "agent-protocol/state-machine.yaml: evidence_completed must only enter target_repository_binding"
+        )
+    if coordination.get("transitions", {}).get("target_repository_binding") != ["deep_audit"]:
+        errors.append(
+            "agent-protocol/state-machine.yaml: target_repository_binding must only enter deep_audit"
         )
     if coordination.get("transitions", {}).get("deep_audit") != ["awaiting_review"]:
         errors.append(
@@ -170,6 +295,9 @@ def validate_protocol_documents(
         errors.append(
             "agent-protocol/task-schema.yaml: deep-audit must require evidence_refs"
         )
+    target_contract = schema.get("target_repository_contract", {})
+    if target_contract.get("phases") != ["evidence", "deep-audit", "implementation"]:
+        errors.append("agent-protocol/task-schema.yaml: target repository phases are invalid")
 
     catalog = permissions.get("action_catalog")
     standing = set(permissions.get("standing_authorizable_actions", []))
@@ -329,6 +457,7 @@ def validate_request(
             errors.append(
                 f"{location}.evidence_refs: every item must be a string"
             )
+    validate_target_repository_binding(request, schema, location, errors)
     if not isinstance(request.get("goal"), str) or not request.get("goal", "").strip():
         errors.append(f"{location}.goal: must be a non-empty string")
     completion = request.get("completion")
@@ -1113,6 +1242,7 @@ def repository_state(root: Path) -> tuple[str, str]:
 
 def validate(root: Path, *, now: datetime | None = None) -> list[str]:
     errors: list[str] = []
+    errors.extend(validate_repository_registry(root))
     schema, permissions, state_machine = protocol_documents(root, errors)
     validate_protocol_documents(schema, permissions, state_machine, errors)
     errors.extend(validate_examples(root, schema, permissions))

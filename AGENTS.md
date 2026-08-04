@@ -72,6 +72,7 @@ Evidence task 完成后进入 `deep_audit`，Deep Audit 完成后必须进入 Ch
 - `Code Verification Brief` 与 Issue Screening 是不同阶段。它只允许 Codex 验证列出的代码事实，例如当前基线是否已有修复、符号或测试是否存在、是否跨 package、是否可本地运行；不得扩展为 Issue/PR/Owner/设计边界的完整筛选。
 - `issue-evidence-collection` 只允许收集完整正文、分页评论、可见 Timeline/Development、显式编号与语义搜索原始结果、未经最终判断的 ownership signals 和 limitations。它不得分配 classification/confidence、判断 `available`、生成 `RESULTS.yaml`、修改 registry、建立正式 Issue 目录或执行公开动作。
 - `deep-audit` 是正式一等任务类型，只消费已完成的 evidence collection、关联 PR 信息和源码事实，输出 Deep Audit `RESULT.yaml`/`REPORT.md` 与 recommendation；必须等待 Chat Review，不代表 Admission、implementation authorization 或 upstream contribution。
+- Target Repository Management 通过 `repositories/registry.yaml`、`repositories/discovery.yaml` 和 `scripts/repository_discovery.py` 管理 upstream、fork、local discovery 与 Git identity；registry 不得保存绝对路径。Evidence 可不绑定目标仓库，Deep Audit 必须绑定，Implementation 还必须提供 fork 和 local discovery result。目标仓库绑定不授予 upstream write 或 PR 权限。
 - Issue 通过 Candidate Admission Gate 并正式进入 `harvest-open-source-issue` 后，Codex 才按贡献 Brief 开始 Code Map、Root Cause、Implementation、Testing 和 PR。
 
 - `.agents/skills/screen-open-source-issue/` 默认负责把 Chat 筛选结果写入轻量记录；仅在用户明确授权完整 Codex Screening 时，负责有界的候选发现、快速过滤、完整审计、关联实现与隐性 Owner 搜索、设计/基础设施阻塞判断、筛选分类和 Candidate Admission Gate。它不负责源码实现。
