@@ -23,6 +23,9 @@ evidence_refs:
   - agent-work/tasks/lmcache-4132-evidence/RESULT.yaml
   - agent-work/tasks/lmcache-4132-evidence/REPORT.md
   - agent-work/tasks/lmcache-4132-evidence/evidence/4132.yaml
+target_repository:
+  name: LMCache/LMCache
+  phase: deep-audit
 goal: Audit the completed evidence for LMCache/LMCache#4132, distinguish reported, source-confirmed, and runtime-confirmed behavior, adjudicate related implementation work, map the code path, assess feasibility and risks, and produce a screening recommendation without Candidate Admission or implementation authorization.
 allowed_actions:
   - read_repository

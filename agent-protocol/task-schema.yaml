@@ -26,6 +26,7 @@ request:
     - created_at
     - priority
     - materialization
+    - target_repository
   constraints:
     status: ready
     immutable_after_execution_starts: true
@@ -162,6 +163,20 @@ task_type_contracts:
       - admission
       - implementation authorization
       - upstream contribution
+  implementation:
+    required_request_fields:
+      - target_repository
+    required_target_repository_fields:
+      - name
+      - phase
+      - fork
+      - local
+
+target_repository_contract:
+  phases: [evidence, deep-audit, implementation]
+  required_fields: [name, phase]
+  implementation_required_fields: [fork, local]
+  local_discovery_field: discovery
 
 artifact_state_derivation:
   request_ready_without_result: ready

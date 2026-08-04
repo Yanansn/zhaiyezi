@@ -1,0 +1,14 @@
+schema_version: 1
+scan_roots:
+  - projects
+  - workspace
+  - src
+  - go/src
+  - code
+  - py
+repository_markers:
+  - .git
+remote_commands:
+  - git
+  - remote
+  - -v

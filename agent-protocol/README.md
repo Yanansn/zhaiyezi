@@ -16,6 +16,21 @@ produces a screening recommendation for Chat review. It requires non-empty
 `evidence_refs` and does not authorize Admission, implementation, upstream
 writes, or Pull Requests.
 
+## Target Repository Management
+
+`repositories/registry.yaml` stores target repository URLs, fork enablement,
+local discovery enablement, contribution enablement, language, and expected
+Git identity. It must not store absolute local paths. The discovery roots in
+`repositories/discovery.yaml` are home-relative and are resolved at runtime by
+`scripts/repository_discovery.py` from Git remotes.
+
+REQUESTs may include `target_repository` with a repository name and phase.
+Evidence may omit it; Deep Audit requires it; Implementation additionally
+requires fork and local discovery results. Binding a target repository never
+grants upstream write or Pull Request permission. `repository_read` is
+read-only target access; `repository_modify` requires the separate approval
+boundary for local fork changes.
+
 Task directories never move. Queue state is derived from the artifacts in that fixed directory. Files under `agent-protocol/examples/` are examples only and are never queue entries.
 
 ## Semantic ownership and materialization
