@@ -12,9 +12,11 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
+from threading import Lock
 from typing import Any, Callable, Iterable, Protocol
 
 
@@ -43,6 +45,11 @@ REFERENCE_EXPRESSIONS = (
     "Related-to #{number}",
     "Refs #{number}",
 )
+DEFAULT_WORKERS = 4
+MAX_WORKERS = 8
+# Authenticated GitHub Search API requests are limited to 30 per minute.  Leave
+# a little headroom for rounding and secondary limits when audit workers share it.
+SEARCH_REQUEST_INTERVAL_SECONDS = 2.1
 
 
 class GitHubError(RuntimeError):
@@ -96,6 +103,9 @@ class GitHubClient:
         self._opener = opener
         self._sleeper = sleeper
         self.rate_limit: dict[str, dict[str, str]] = {}
+        self._rate_limit_lock = Lock()
+        self._search_lock = Lock()
+        self._next_search_request_at = 0.0
 
     def get(self, path: str, params: dict[str, Any] | None = None) -> Any:
         data, _ = self._request(path, params)
@@ -135,6 +145,8 @@ class GitHubClient:
         )
 
         for attempt in range(self._max_retries + 1):
+            if path == "/search/issues":
+                self._wait_for_search_slot()
             try:
                 with self._opener(request, timeout=self._timeout) as response:
                     body = response.read().decode("utf-8")
@@ -170,16 +182,28 @@ class GitHubClient:
 
     def _record_rate_limit(self, headers: Any) -> None:
         resource = str(headers.get("X-RateLimit-Resource") or "unknown")
-        values = self.rate_limit.setdefault(resource, {})
-        for header, output_key in (
-            ("X-RateLimit-Limit", "limit"),
-            ("X-RateLimit-Remaining", "remaining"),
-            ("X-RateLimit-Reset", "reset"),
-            ("X-RateLimit-Resource", "resource"),
-        ):
-            value = headers.get(header)
-            if value is not None:
-                values[output_key] = str(value)
+        with self._rate_limit_lock:
+            values = self.rate_limit.setdefault(resource, {})
+            for header, output_key in (
+                ("X-RateLimit-Limit", "limit"),
+                ("X-RateLimit-Remaining", "remaining"),
+                ("X-RateLimit-Reset", "reset"),
+                ("X-RateLimit-Resource", "resource"),
+            ):
+                value = headers.get(header)
+                if value is not None:
+                    values[output_key] = str(value)
+
+    def _wait_for_search_slot(self) -> None:
+        """Reserve the next shared Search API slot before making a request."""
+        with self._search_lock:
+            now = time.monotonic()
+            delay = max(0.0, self._next_search_request_at - now)
+            self._next_search_request_at = (
+                max(now, self._next_search_request_at) + SEARCH_REQUEST_INTERVAL_SECONDS
+            )
+        if delay:
+            self._sleeper(delay)
 
 
 def _retry_delay(headers: Any, attempt: int) -> float:
@@ -495,9 +519,7 @@ def _search_sources(
 
 
 def _resolve_reference(
-    api: GitHubAPI,
-    reference: ItemReference,
-    sources: list[dict[str, str]],
+    api: GitHubAPI, reference: ItemReference
 ) -> dict[str, Any] | None:
     try:
         issue_like = api.get(
@@ -521,16 +543,45 @@ def _resolve_reference(
         "base": (pull.get("base") or {}).get("ref"),
         "head": (pull.get("head") or {}).get("ref"),
         "relationship": "unclassified",
-        "sources": sources,
     }
 
 
+class ReferenceResolver:
+    """Resolve each Issue/PR reference at most once per discovery run."""
+
+    def __init__(self, api: GitHubAPI) -> None:
+        self._api = api
+        self._lock = Lock()
+        self._results: dict[ItemReference, Future[dict[str, Any] | None]] = {}
+
+    def resolve(self, reference: ItemReference) -> dict[str, Any] | None:
+        with self._lock:
+            result = self._results.get(reference)
+            owner = result is None
+            if result is None:
+                result = Future()
+                self._results[reference] = result
+        if not owner:
+            return result.result()
+        try:
+            resolved = _resolve_reference(self._api, reference)
+        except BaseException as error:
+            result.set_exception(error)
+            raise
+        result.set_result(resolved)
+        return resolved
+
+
 def audit_issue(
-    api: GitHubAPI, repository: str, issue: dict[str, Any]
+    api: GitHubAPI,
+    repository: str,
+    issue: dict[str, Any],
+    resolver: ReferenceResolver | None = None,
 ) -> dict[str, Any]:
     number = int(issue["number"])
     limitations: list[str] = []
     sources: dict[ItemReference, list[dict[str, str]]] = {}
+    reference_resolver = resolver or ReferenceResolver(api)
 
     try:
         timeline = api.paginate(
@@ -562,14 +613,14 @@ def audit_issue(
     related_prs: list[dict[str, Any]] = []
     for reference in sorted(sources):
         try:
-            resolved = _resolve_reference(api, reference, sources[reference])
+            resolved = reference_resolver.resolve(reference)
         except GitHubAuthorizationError:
             raise
         except GitHubError as error:
             limitations.append(f"Could not verify {reference.key}: {error}")
             continue
         if resolved:
-            related_prs.append(resolved)
+            related_prs.append({**resolved, "sources": sources[reference]})
 
     if related_prs:
         status = "related_pr_found"
@@ -602,6 +653,7 @@ def run_discovery(
     include_labels: list[str],
     exclude_labels: list[str],
     progress: Callable[[str], None] | None = None,
+    workers: int = DEFAULT_WORKERS,
 ) -> dict[str, Any]:
     notify = progress or (lambda _: None)
     notify(f"Checking read access to {repository}...")
@@ -611,15 +663,41 @@ def run_discovery(
         api, repository, limit, include_labels, exclude_labels
     )
     notify(f"Found {len(issues)} candidates ({total_count} total query matches).")
-    results: list[dict[str, Any]] = []
-    for index, issue in enumerate(issues, start=1):
-        issue_name = f"{repository}#{issue['number']}"
-        notify(f"[{index}/{len(issues)}] Inspecting {issue_name}...")
-        result = audit_issue(api, repository, issue)
-        results.append(result)
-        notify(f"[{index}/{len(issues)}] {issue_name}: {result['related_pr_status']}")
+    resolver = ReferenceResolver(api)
+    results: list[dict[str, Any] | None] = [None] * len(issues)
+    if workers == 1:
+        for index, issue in enumerate(issues, start=1):
+            issue_name = f"{repository}#{issue['number']}"
+            notify(f"[{index}/{len(issues)}] Inspecting {issue_name}...")
+            result = audit_issue(api, repository, issue, resolver)
+            results[index - 1] = result
+            notify(f"[{index}/{len(issues)}] {issue_name}: {result['related_pr_status']}")
+    else:
+        notify(f"Auditing with {workers} bounded workers; Search API is globally paced.")
+        with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="issue-audit") as executor:
+            futures = {
+                executor.submit(audit_issue, api, repository, issue, resolver): (index, issue)
+                for index, issue in enumerate(issues, start=1)
+            }
+            try:
+                for future in as_completed(futures):
+                    index, issue = futures[future]
+                    result = future.result()
+                    results[index - 1] = result
+                    issue_name = f"{repository}#{issue['number']}"
+                    notify(
+                        f"[{index}/{len(issues)}] {issue_name}: "
+                        f"{result['related_pr_status']}"
+                    )
+            except BaseException:
+                for future in futures:
+                    future.cancel()
+                raise
+    completed_results = [result for result in results if result is not None]
     counts = {
-        status: sum(1 for issue in results if issue["related_pr_status"] == status)
+        status: sum(
+            1 for issue in completed_results if issue["related_pr_status"] == status
+        )
         for status in (
             "related_pr_found",
             "no_known_related_pr",
@@ -639,11 +717,11 @@ def run_discovery(
         },
         "summary": {
             "matched_total": total_count,
-            "inspected": len(results),
+            "inspected": len(completed_results),
             **counts,
         },
         "limitations": scan_limitations,
-        "issues": results,
+        "issues": completed_results,
     }
     rate_limit = getattr(api, "rate_limit", None)
     if rate_limit:
@@ -675,6 +753,15 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--timeout", type=float, default=20.0, help="request timeout seconds")
     parser.add_argument("--max-retries", type=int, default=2, help="bounded retry count")
     parser.add_argument(
+        "--workers",
+        type=int,
+        default=DEFAULT_WORKERS,
+        help=(
+            f"concurrent Issue audits ({1}-{MAX_WORKERS}; default: {DEFAULT_WORKERS}); "
+            "Search API requests remain globally paced"
+        ),
+    )
+    parser.add_argument(
         "--quiet", action="store_true", help="suppress progress messages on standard error"
     )
     return parser.parse_args(argv)
@@ -689,6 +776,8 @@ def _validate_args(args: argparse.Namespace) -> None:
         raise SystemExit("timeout must be positive")
     if not 0 <= args.max_retries <= 5:
         raise SystemExit("max-retries must be between 0 and 5")
+    if not 1 <= args.workers <= MAX_WORKERS:
+        raise SystemExit(f"workers must be between 1 and {MAX_WORKERS}")
     if args.output == "-" and args.chat_output == "-":
         raise SystemExit("JSON output and chat output cannot both use standard output")
     if any(not label.strip() for label in (*args.include_label, *args.exclude_label)):
@@ -799,6 +888,7 @@ def main(argv: list[str] | None = None) -> int:
             args.include_label,
             args.exclude_label,
             progress,
+            args.workers,
         )
         _write_output(output, args.output)
         if args.chat_output:
