@@ -3,6 +3,7 @@ from __future__ import annotations
 import io
 import json
 import tempfile
+import time
 import unittest
 import urllib.error
 import urllib.parse
@@ -307,6 +308,54 @@ class DiscoveryTests(unittest.TestCase):
         self.assertTrue(any("Checking read access" in message for message in messages))
         self.assertTrue(any("[1/1]" in message for message in messages))
 
+    def test_run_discovery_keeps_candidate_order_with_multiple_workers(self) -> None:
+        api = FakeAPI()
+        api.issue_search_pages[1] = {
+            "total_count": 3,
+            "incomplete_results": False,
+            "items": [issue(1), issue(2), issue(3)],
+        }
+
+        def audit_with_out_of_order_completion(
+            _api: Any,
+            repository: str,
+            value: dict[str, Any],
+            _resolver: Any,
+        ) -> dict[str, Any]:
+            number = int(value["number"])
+            time.sleep((4 - number) * 0.01)
+            return {
+                "issue": f"{repository}#{number}",
+                "related_pr_status": "no_known_related_pr",
+            }
+
+        with mock.patch.object(
+            discovery, "audit_issue", side_effect=audit_with_out_of_order_completion
+        ):
+            result = discovery.run_discovery(api, REPOSITORY, 3, [], [], workers=3)
+        self.assertEqual(
+            [f"{REPOSITORY}#1", f"{REPOSITORY}#2", f"{REPOSITORY}#3"],
+            [value["issue"] for value in result["issues"]],
+        )
+
+    def test_reference_resolver_deduplicates_pr_verification(self) -> None:
+        api = FakeAPI()
+        api.add_pr(REPOSITORY, 44)
+        resolver = discovery.ReferenceResolver(api)
+        reference = discovery.ItemReference("example", "project", 44)
+        self.assertIsNotNone(resolver.resolve(reference))
+        self.assertIsNotNone(resolver.resolve(reference))
+        verification_calls = [
+            call
+            for call in api.calls
+            if call[1]
+            in {
+                f"/repos/{REPOSITORY}/issues/44",
+                f"/repos/{REPOSITORY}/pulls/44",
+            }
+        ]
+        self.assertEqual(2, len(verification_calls))
+
     def test_repository_authorization_failure_stops_before_candidate_search(self) -> None:
         api = FakeAPI()
         api.auth_fail_get.add(f"/repos/{REPOSITORY}")
@@ -425,6 +474,13 @@ class DiscoveryTests(unittest.TestCase):
             ]
         )
         with self.assertRaisesRegex(SystemExit, "both included and excluded"):
+            discovery._validate_args(args)
+
+    def test_worker_limit_is_validated(self) -> None:
+        args = discovery.parse_args(
+            ["--repository", REPOSITORY, "--limit", "1", "--workers", "0"]
+        )
+        with self.assertRaisesRegex(SystemExit, "workers must be between"):
             discovery._validate_args(args)
 
     def test_json_and_chat_output_cannot_share_stdout(self) -> None:

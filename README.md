@@ -86,6 +86,8 @@ python3 scripts/discover_github_issues.py \
 
 `--include-label` 与 `--exclude-label` 均可重复。`--limit` 必填且范围为 1–1000，用于限制 API 请求规模；不指定 `--output` 时完整 JSON 写到标准输出。`--chat-output` 是可选的紧凑 Markdown，只列出 `no_known_related_pr` 候选及最小扫描上下文，适合直接交给 Chat 做后续 Deep Audit；完整 PR evidence 仍保存在 JSON 中。脚本只执行只读请求，不认领 Issue、不修改标签，也不发布评论。
 
+候选审计默认使用 4 个有界 worker，可通过 `--workers 1` 到 `--workers 8` 调整。普通 REST 请求可并行；所有 GitHub Search API 请求仍由共享客户端按约 2.1 秒的全局间隔执行，以避免 Search API 的 30 次/分钟限制和二级限流。扫描中相同的 PR 引用只核验一次，随后复用结果。若希望完全串行地排查 API 行为，使用 `--workers 1`。
+
 如果只想在终端得到紧凑版，同时把完整证据保存到文件：
 
 ```bash
