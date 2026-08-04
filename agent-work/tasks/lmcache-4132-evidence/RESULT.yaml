@@ -1,0 +1,49 @@
+schema_version: 1
+task_id: lmcache-4132-evidence
+created_by: codex
+decision_author: codex
+materialized_by: codex
+status: review
+revision: 1
+request_ref: REQUEST.yaml
+outputs:
+  - RESULT.yaml
+  - REPORT.md
+  - evidence/4132.yaml
+actions_performed:
+  - read_repository
+  - collect_evidence
+  - analyze_code
+  - modify_facts_repository
+  - run_tests
+  - write_result
+  - write_report
+  - write_evidence
+actions_not_performed:
+  - modify_upstream_code
+  - create_upstream_branch
+  - commit_upstream
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - modify_milestone
+  - create_pull_request
+  - initialize_formal_contribution_record
+  - evaluate_admission
+evidence_completed: true
+admission: not-evaluated
+classification: not-evaluated
+evidence_refs:
+  - agent-work/tasks/lmcache-4132-evidence/evidence/4132.yaml
+  - https://github.com/LMCache/LMCache/issues/4132
+  - https://github.com/LMCache/LMCache/pull/4157
+validation:
+  - "Evidence collection completed at 2026-08-04T08:51:04Z."
+  - "Issue comments: 0; Timeline events: 0; Development: empty observation."
+  - "Source baseline recorded as /home/sun/py/LMCache dev@f625b9733ad38c6b1bb3ba3d5083998ab5307ffb."
+limitations:
+  - no runtime reproduction
+  - no GPU validation
+  - no maintainer confirmation
+  - no LMCache source modification

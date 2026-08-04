@@ -1,0 +1,67 @@
+schema_version: 1
+task_id: lmcache-4132-evidence
+task_type: evidence-collection
+created_by: chat
+decision_author: chat
+materialized_by: codex
+materialization:
+  authority: user-instruction
+  scope: bounded
+  source_summary: Chat requested bounded evidence collection for LMCache/LMCache#4132.
+assigned_agent: codex
+repository: LMCache/LMCache
+issue: LMCache/LMCache#4132
+status: ready
+created_at: "2026-08-04T00:00:00Z"
+priority: normal
+input_refs:
+  - AGENTS.md
+  - HANDOFF.md
+  - agent-protocol/
+  - .agents/skills/screen-open-source-issue/
+goal: Collect raw Issue, discussion, relationship, search, and source-code evidence for LMCache/LMCache#4132 without interpretation, admission, or implementation work.
+allowed_actions:
+  - read_repository
+  - collect_evidence
+  - analyze_code
+  - modify_facts_repository
+  - run_tests
+  - write_result
+  - write_report
+  - write_evidence
+  - materialize_chat_artifact
+  - commit_facts_repository
+  - push_facts_repository
+prohibited_actions:
+  - materialize_user_artifact
+  - modify_registry
+  - initialize_formal_issue
+  - fetch_official_upstream
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+expected_outputs:
+  - agent-work/tasks/lmcache-4132-evidence/REQUEST.yaml
+  - agent-work/tasks/lmcache-4132-evidence/RESULT.yaml
+  - agent-work/tasks/lmcache-4132-evidence/REPORT.md
+  - agent-work/tasks/lmcache-4132-evidence/evidence/
+completion:
+  criteria:
+    - Issue, comments, Timeline, Development/closing PR observations, PR query results, source references, and raw related candidates are recorded.
+    - Evidence is factual and preserves empty observations without interpreting them as absence of PRs.
+    - RESULT.yaml derives to review with evidence_completed true and admission/classification not-evaluated.
+    - No LMCache source, branch, PR, issue, label, milestone, registry, or formal contribution record is modified.
+  validation:
+    - python3 scripts/validate_agent_protocol.py
+    - python3 scripts/agent_queue.py list
+    - python3 scripts/agent_queue.py next --agent codex
+    - python3 -m unittest tests.test_agent_protocol
+    - python3 -m unittest tests.test_repository_agnostic_contracts
+    - python3 -m unittest tests.test_screening_records
+    - git diff --check
+  handoff: Chat reviews the evidence result; the next permitted stage requires a new bounded instruction.
