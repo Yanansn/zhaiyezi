@@ -118,6 +118,7 @@ enums:
   task_type:
     - example
     - evidence-collection
+    - deep-audit
     - screening-record
     - code-verification
     - ecosystem-analysis
@@ -139,6 +140,28 @@ enums:
   approval_status: [approved, revoked]
   standing_authorization_status: [approved, revoked]
   priority: [low, normal, high, urgent]
+
+task_type_contracts:
+  deep-audit:
+    purpose: Analyze completed evidence and produce a contribution screening recommendation.
+    input:
+      - evidence collection result
+      - related PR information
+      - source facts
+    output:
+      - RESULT.yaml
+      - REPORT.md
+    required_request_fields:
+      - evidence_refs
+    prohibited_allowed_actions:
+      - modify_upstream_code
+      - upstream_write
+      - push_upstream_branch
+      - create_pull_request
+    does_not_authorize:
+      - admission
+      - implementation authorization
+      - upstream contribution
 
 artifact_state_derivation:
   request_ready_without_result: ready

@@ -603,6 +603,71 @@ class AgentProtocolTests(unittest.TestCase):
             "available", self.state_machine["contribution_coordination"]["states"]
         )
 
+    def test_deep_audit_task_schema_is_first_class(self) -> None:
+        self.assertIn("deep-audit", self.schema["enums"]["task_type"])
+        self.assertEqual(
+            ["evidence_refs"],
+            self.schema["task_type_contracts"]["deep-audit"][
+                "required_request_fields"
+            ],
+        )
+
+    def test_validator_accepts_deep_audit_with_evidence_refs(self) -> None:
+        task_request = request(
+            task_id="deep-audit-task",
+            task_type="deep-audit",
+            repository="LMCache/LMCache",
+            issue="LMCache/LMCache#4132",
+            evidence_refs=[
+                "agent-work/tasks/lmcache-4132-evidence/RESULT.yaml",
+            ],
+            allowed_actions=[
+                "read_repository",
+                "analyze_code",
+                "write_result",
+                "write_report",
+            ],
+        )
+        _, errors = self.inspect(self.write_task(task_request))
+        self.assertEqual([], errors)
+
+    def test_deep_audit_requires_evidence_refs(self) -> None:
+        task_request = request(
+            task_id="deep-audit-no-evidence",
+            task_type="deep-audit",
+            repository="LMCache/LMCache",
+            issue="LMCache/LMCache#4132",
+        )
+        _, errors = self.inspect(self.write_task(task_request))
+        self.assertTrue(any("evidence_refs" in error for error in errors))
+
+    def test_deep_audit_cannot_transition_directly_to_implementation(self) -> None:
+        self.assertEqual(
+            ["forbidden transition: deep_audit -> implementation_ready"],
+            validator.validate_transition(
+                self.state_machine, "deep_audit", "implementation_ready"
+            ),
+        )
+        self.assertEqual(
+            ["forbidden transition: deep_audit -> admission_pending"],
+            validator.validate_transition(
+                self.state_machine, "deep_audit", "admission_pending"
+            ),
+        )
+
+    def test_deep_audit_cannot_allow_upstream_permission(self) -> None:
+        task_request = request(
+            task_id="deep-audit-upstream",
+            task_type="deep-audit",
+            repository="LMCache/LMCache",
+            issue="LMCache/LMCache#4132",
+            evidence_refs=["agent-work/tasks/lmcache-4132-evidence/RESULT.yaml"],
+            allowed_actions=["upstream_write"],
+            prohibited_actions=[],
+        )
+        _, errors = self.inspect(self.write_task(task_request))
+        self.assertTrue(any("deep-audit cannot allow" in error for error in errors))
+
     def test_legacy_queue_task_has_clear_migration_error(self) -> None:
         legacy = self.root / "agent-work" / "inbox" / "legacy-task"
         legacy.mkdir(parents=True)
