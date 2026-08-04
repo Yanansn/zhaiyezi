@@ -1,0 +1,23 @@
+schema_version: 1
+repository: LMCache/LMCache
+local:
+  path: /home/sun/py/LMCache
+  branch: dev
+  head: f625b9733ad38c6b1bb3ba3d5083998ab5307ffb
+remotes:
+  upstream:
+    name: upstream
+    url: https://github.com/LMCache/LMCache.git
+    canonical: LMCache/LMCache
+    push_url: DISABLED
+  origin:
+    name: origin
+    url: git@github.com:bzsuni/LMCache.git
+    canonical: bzsuni/LMCache
+identity:
+  name: bzsuni
+  email: bingzhe.sun@daocloud.io
+working_tree:
+  clean: true
+binding_status: valid
+generated_at: '2026-08-04T11:13:27Z'
