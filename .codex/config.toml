@@ -1,0 +1,10 @@
+# Project-local default for VSCode Codex and Codex CLI when opened from zhaiyezi.
+# Use --profile terra / terra-high / sol / sol-low for implementation or final review phases.
+model = "gpt-5.6-luna"
+model_reasoning_effort = "medium"
+
+[agents]
+enabled = true
+default_subagent_model = "gpt-5.6-luna"
+default_subagent_reasoning_effort = "medium"
+max_concurrent_threads_per_session = 3

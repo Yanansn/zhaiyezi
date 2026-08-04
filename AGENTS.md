@@ -360,11 +360,39 @@ Codex 每个阶段完成后必须汇报：
 
 默认不使用子 Agent。只有简报明确允许，且任务可明显并行、边界清晰、收益足以覆盖额外用量时才启用；同一代码区域不得并行写入。
 
-## 模型用量
+允许使用子 Agent 时，子 Agent 默认只读，只做证据收集、代码搜索、日志归纳或交叉核验；返回必须是结构化结论、最小必要证据、未解决问题和建议下一步，不得把完整日志、完整文件或重复探索过程带回主线程。
 
-- 文件搜索、格式检查、简单测试和机械状态更新优先由用户选择较轻量的 Codex 模型执行。
-- 复杂根因分析、方案风险判断、CI 诊断和 Review 再使用更强模型。
-- Codex 不自行声称已切换模型；模型不可由当前会话选择时，保持任务边界紧凑并避免重复搜索。
+## 模型与 Token 策略
+
+目标是在保持贡献质量的前提下节省额度。默认按“Luna 读和整理，Terra 做和修，Sol 判和审”执行。
+
+### 默认模型
+
+- `zhaiyezi` facts repository 的 VSCode Codex / Codex CLI 默认使用 `gpt-5.6-luna` + `medium` reasoning。
+- 上游代码实现阶段默认使用 `gpt-5.6-terra` + `medium` reasoning。
+- 复杂测试失败、跨模块根因或 CI 诊断使用 `gpt-5.6-terra` + `high` reasoning。
+- `gpt-5.6-sol` 只用于高风险最终判断：公开评论、维护者方向解释、Confirmed Implementation Boundary、PR ready 审查、架构取舍或无法收敛的疑难问题。
+
+### 阶段选择
+
+- Issue 候选发现、Quick Filter、筛选记录落盘、Markdown/YAML 机械更新、validator 修复、状态恢复、测试日志摘要：Luna。
+- Deep Audit、Code Map、Root Cause、实现计划、常规代码修改、PR 草稿准备：Terra。
+- 公共社区内容最终审稿、是否进入实现、是否创建/更新 PR、方案是否符合维护者方向：Sol。
+
+### 使用限制
+
+- 不得用 Sol 做宽泛仓库扫描、格式化、简单测试、普通记录更新或重复读取历史上下文。
+- 不得为了“更稳”默认提升 reasoning；先收窄上下文和任务边界，再考虑提高模型或 reasoning。
+- 启动任务前先声明最小读取集合；优先读取 `HANDOFF.md`、目标 Issue 的 `STATUS.yaml`、当前阶段文档、当前 diff 和相关测试输出，不默认扫描整个仓库。
+- `zhaiyezi` 只保存事实和交接记录；真实上游代码修改应在上游 clone 中执行，并按 profile 选择 Terra 或 Sol。
+- 如果当前 VSCode Codex 会话无法自动切换模型，必须报告建议使用的 profile 或模型，并继续通过收窄上下文降低用量。
+
+### 推荐 profile
+
+- 默认记录/筛选：`luna` 或项目默认。
+- 实现阶段：`terra`。
+- 疑难实现或 CI 诊断：`terra-high`。
+- 最终高风险审查：`sol` 或 `sol-low`。
 
 ## 完成条件
 
