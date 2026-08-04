@@ -1,0 +1,73 @@
+schema_version: 1
+task_id: lmcache-target-repository-binding
+created_by: codex
+decision_author: codex
+materialized_by: codex
+status: review
+request_ref: agent-work/tasks/lmcache-target-repository-binding/REQUEST.yaml
+outputs:
+  - agent-work/tasks/lmcache-target-repository-binding/RESULT.yaml
+  - agent-work/tasks/lmcache-target-repository-binding/REPORT.md
+actions_performed:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - run_tests
+  - write_result
+  - write_report
+  - materialize_chat_artifact
+  - modify_registry
+actions_not_performed:
+  - Did not add or modify an upstream remote in the LMCache working repository because no upstream remote was present and the scope forbids modifying the target repository configuration.
+  - Did not modify LMCache source, branch history, or commits.
+  - Did not push or create any upstream branch, Issue, comment, label, or Pull Request.
+  - Did not authorize implementation, Admission, or upstream contribution.
+validation:
+  - "repository_discovery: passed after discovery hardening"
+  - "validate_agent_protocol: failed because existing standing authorization is limited to main while this task runs on the required feature branch"
+  - "test_agent_protocol: failed for the same pre-existing branch-scoped authorization records"
+  - "test_repository_agnostic_contracts: passed"
+  - "test_screening_records: passed"
+  - "git diff --check: passed"
+limitations:
+  - The local LMCache clone has only origin=bzsuni/LMCache and no upstream remote, so upstream fetch and local ahead/behind comparison were not available.
+  - No source runtime validation was requested or performed.
+  - GitHub metadata verifies fork ownership and parent but does not establish local clone provenance beyond matching origin URL.
+binding_status: incomplete
+target_repository:
+  name: LMCache/LMCache
+  local_path: /home/sun/py/LMCache
+  local_path_source: repository-discovery
+  branch: dev
+  head: f625b9733ad38c6b1bb3ba3d5083998ab5307ffb
+  working_tree_clean: true
+remotes:
+  upstream:
+    remote_name: upstream
+    url: null
+    canonical_repository: LMCache/LMCache
+  fork:
+    remote_name: origin
+    url: git@github.com:bzsuni/LMCache.git
+    canonical_repository: bzsuni/LMCache
+    verified_fork: true
+upstream_state:
+  default_branch: dev
+  head: 3b8093cf8860a39d05937af915adfb5db493a047
+  ahead: null
+  behind: null
+  fetched_at: 2026-08-04
+git_identity:
+  expected:
+    name: bzsuni
+    email: bingzhe.sun@daocloud.io
+  actual:
+    name: bzsuni
+    email: bingzhe.sun@daocloud.io
+  matches: true
+registry_update:
+  performed: true
+  path: repositories/registry.yaml
+  field: repositories.LMCache/LMCache.fork.url
+  reason: Replaced placeholder only after read-only verification that bzsuni/LMCache is a fork whose parent is LMCache/LMCache.
+implementation_ready: false

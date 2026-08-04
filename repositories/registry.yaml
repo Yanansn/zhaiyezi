@@ -6,7 +6,7 @@ repositories:
       url: https://github.com/LMCache/LMCache
     fork:
       enabled: true
-      url: "git@github.com:<user>/LMCache.git"
+      url: git@github.com:bzsuni/LMCache.git
     local:
       discovery:
         enabled: true

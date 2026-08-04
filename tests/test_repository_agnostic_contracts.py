@@ -275,8 +275,42 @@ class TargetRepositoryManagementTests(unittest.TestCase):
             results = repository_discovery.discover(registry, discovery, home=home)
             self.assertEqual(1, len(results))
             self.assertEqual("LMCache/LMCache", results[0]["repository"])
+            self.assertEqual("valid", results[0]["status"])
             self.assertEqual("git@github.com:bzsuni/LMCache.git", results[0]["fork"])
             self.assertEqual(str(repository), results[0]["local_path"])
+
+    def test_repository_discovery_does_not_select_basename_only_match(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            home = Path(temporary)
+            repository = home / "projects" / "LMCache"
+            repository.mkdir(parents=True)
+            subprocess.run(["git", "-C", str(repository), "init", "-q"], check=True)
+            subprocess.run(
+                ["git", "-C", str(repository), "remote", "add", "origin", "https://github.com/other/LMCache.git"],
+                check=True,
+            )
+            registry = {"repositories": {"LMCache/LMCache": {"upstream": {"url": "https://github.com/LMCache/LMCache"}}}}
+            results = repository_discovery.discover(registry, {"scan_roots": ["projects"]}, home=home)
+            self.assertEqual("not-found", results[0]["status"])
+            self.assertIsNone(results[0]["local_path"])
+            self.assertEqual("basename-only", results[0]["candidates"][0]["match"])
+
+    def test_repository_discovery_reports_multiple_exact_candidates(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            home = Path(temporary)
+            for name in ("one", "two"):
+                repository = home / "projects" / name
+                repository.mkdir(parents=True)
+                subprocess.run(["git", "-C", str(repository), "init", "-q"], check=True)
+                subprocess.run(
+                    ["git", "-C", str(repository), "remote", "add", "upstream", "https://github.com/LMCache/LMCache.git"],
+                    check=True,
+                )
+            registry = {"repositories": {"LMCache/LMCache": {"upstream": {"url": "https://github.com/LMCache/LMCache"}}}}
+            results = repository_discovery.discover(registry, {"scan_roots": ["projects"]}, home=home)
+            self.assertEqual("ambiguous", results[0]["status"])
+            self.assertIsNone(results[0]["local_path"])
+            self.assertEqual(2, len(results[0]["candidates"]))
 
     def test_git_identity_mismatch_is_detected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

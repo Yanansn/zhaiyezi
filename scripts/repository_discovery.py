@@ -98,7 +98,7 @@ def discover(
     discovery: dict[str, Any],
     *,
     home: Path | None = None,
-) -> list[dict[str, str | None]]:
+) -> list[dict[str, Any]]:
     home_path = home or Path.home()
     roots = [home_path / relative for relative in discovery.get("scan_roots", [])]
     local_repositories: list[tuple[Path, dict[str, str]]] = []
@@ -108,46 +108,74 @@ def discover(
         except (OSError, subprocess.CalledProcessError):
             continue
 
-    results: list[dict[str, str | None]] = []
+    results: list[dict[str, Any]] = []
     for repository, configuration in registry.get("repositories", {}).items():
         upstream_url = configuration.get("upstream", {}).get("url")
         upstream_name = canonical_remote(upstream_url or repository)
+        candidates: list[dict[str, Any]] = []
+        exact_candidates: list[tuple[Path, dict[str, str]]] = []
+        expected_name = repository.split("/", 1)[-1]
         for path, remotes in local_repositories:
-            matching = [
+            exact = [
                 (remote, url)
                 for remote, url in remotes.items()
                 if canonical_remote(url) == upstream_name
-                or canonical_remote(url).split("/", 1)[-1]
-                == repository.split("/", 1)[-1]
             ]
-            if not matching:
+            basename_match = any(
+                canonical_remote(url).split("/", 1)[-1] == expected_name
+                for url in remotes.values()
+            )
+            if not exact and not basename_match:
                 continue
+            candidates.append(
+                {
+                    "local_path": str(path),
+                    "match": "canonical" if exact else "basename-only",
+                    "remotes": dict(remotes),
+                }
+            )
+            if exact:
+                exact_candidates.append((path, remotes))
+
+        status = "valid" if len(exact_candidates) == 1 else "ambiguous" if exact_candidates else "not-found"
+        selected_path: Path | None = None
+        selected_remotes: dict[str, str] = {}
+        if len(exact_candidates) == 1:
+            selected_path, selected_remotes = exact_candidates[0]
+        fork = None
+        if selected_remotes:
             fork = next(
                 (
                     url
-                    for remote, url in matching
+                    for remote, url in selected_remotes.items()
                     if remote == "origin" and canonical_remote(url) != upstream_name
                 ),
                 None,
             )
-            results.append(
-                {
-                    "repository": repository,
-                    "upstream": upstream_url,
-                    "fork": fork,
-                    "local_path": str(path),
-                }
-            )
-            break
+        results.append(
+            {
+                "repository": repository,
+                "status": status,
+                "upstream": upstream_url,
+                "fork": fork,
+                "local_path": str(selected_path) if selected_path else None,
+                "candidates": candidates,
+            }
+        )
     return results
 
 
-def print_results(results: list[dict[str, str | None]]) -> None:
+def print_results(results: list[dict[str, Any]]) -> None:
     for result in results:
         print(result["repository"])
+        print(f"status:\n{result['status']}")
         print(f"upstream:\n{result['upstream']}")
         print(f"fork:\n{result['fork'] or ''}")
         print(f"local:\n{result['local_path']}")
+        if result["candidates"]:
+            print("candidates:")
+            for candidate in result["candidates"]:
+                print(f"- {candidate['match']}: {candidate['local_path']}")
 
 
 def main() -> int:
