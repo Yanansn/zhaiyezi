@@ -170,11 +170,35 @@ git merge --ff-only origin/main
 
 ## 启动 Codex
 
-在仓库根目录运行：
+VSCode Codex 插件和 Codex CLI 均读取 Codex 配置。`zhaiyezi` 已设置项目默认模型为 Luna，适合记录、筛选和状态恢复。涉及真实上游代码实现时，在对应上游 clone 中启动 Codex，并按阶段选择 profile。
+
+在 facts repository 进行日常记录、筛选和恢复：
 
 ```bash
+cd ~/projects/zhaiyezi
 codex
 ```
+
+在上游 clone 进行实现和测试：
+
+```bash
+cd /path/to/upstream/clone
+codex --profile terra
+```
+
+疑难测试失败或 CI 诊断：
+
+```bash
+codex --profile terra-high
+```
+
+公开内容、PR ready 或实现边界最终审查：
+
+```bash
+codex --profile sol
+```
+
+VSCode 插件中如果不能直接选择 profile，则使用模型选择器按同等规则选择：Luna 处理记录，Terra 处理实现，Sol 只做最终审查。
 
 第一次接管或开始新阶段时发送：
 
