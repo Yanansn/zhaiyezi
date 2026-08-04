@@ -10,7 +10,7 @@ This bounded task verifies the runtime target repository binding and does not mo
 
 The configured home-relative scan roots were inspected with `scripts/repository_discovery.py`. The LMCache candidate was discovered at `/home/sun/py/LMCache`. The discovery implementation now reports all basename candidates, prioritizes exact canonical upstream matches, refuses basename-only selection, and reports multiple exact matches as ambiguous.
 
-The selected local clone currently has no exact `LMCache/LMCache` remote because it has no `upstream` remote. Its basename-only candidate is therefore not treated as a complete canonical binding.
+The selected local clone now has an exact canonical `upstream` remote and is reported as a valid binding. The basename-only ambiguity guard remains in place for other candidates.
 
 # Selected Local Repository
 
@@ -24,10 +24,10 @@ The selected local clone currently has no exact `LMCache/LMCache` remote because
 
 - `origin` fetch/push URL: `git@github.com:bzsuni/LMCache.git`
 - Canonical origin repository: `bzsuni/LMCache`
-- `upstream` remote: absent
+- `upstream` fetch/push URL: `https://github.com/LMCache/LMCache.git`
 - Official repository URL: `https://github.com/LMCache/LMCache`
 
-The official repository default branch is `dev`. Public `git ls-remote` reported upstream `dev` HEAD `3b8093cf8860a39d05937af915adfb5db493a047`. The fork origin was fetched with prune; local `origin/dev` is present.
+The official repository default branch is `dev`. After `fetch --prune upstream` and `fetch --prune origin`, upstream `dev` is `3b8093cf8860a39d05937af915adfb5db493a047`. Local `dev` and `origin/dev` are both 0 commits ahead and 9 commits behind `upstream/dev`; their merge-base is local HEAD `f625b9733ad38c6b1bb3ba3d5083998ab5307ffb`.
 
 # Fork Verification
 
@@ -39,7 +39,7 @@ The local LMCache clone reports Git identity `bzsuni <bingzhe.sun@daocloud.io>`,
 
 # Upstream Synchronization State
 
-The official default branch is `dev`, not an assumed `main`. A local `upstream` remote was not present, so no `git fetch --prune upstream` or local ahead/behind comparison was performed. This is the principal reason the binding status is `incomplete` rather than `valid`.
+The official default branch is `dev`, not an assumed `main`. The upstream remote is configured and has been fetched. The local fork is behind the official `dev` by 9 commits and has no local commits ahead of it. No merge, rebase, checkout, reset, or source modification was performed.
 
 # Registry Change
 
@@ -51,7 +51,6 @@ No absolute local path was added to the registry.
 
 # Risks and Limitations
 
-- The local clone may be a fork checkout without an explicit official remote; baseline comparison remains incomplete.
 - No source files, runtime, GPU, or test behavior was validated.
 - Discovery can report a basename-only candidate for investigation, but it will not select that candidate as a canonical target.
 - Existing unrelated untracked files `candidates-chat.md` and `candidates.json` were preserved and excluded from this task.
@@ -59,11 +58,11 @@ No absolute local path was added to the registry.
 
 # Binding Decision
 
-`binding_status: incomplete`. The fork identity, local path, branch, HEAD, worktree, and Git identity are recorded, but the absence of an `upstream` remote prevents complete local canonical binding and baseline synchronization verification.
+`binding_status: valid`. The canonical upstream and verified fork remotes, local path, branch, HEAD, clean worktree, Git identity, default branch, and baseline comparison are recorded. The local `dev` branch is 9 commits behind upstream and requires a separately authorized synchronization decision before any implementation work.
 
 # Suggested Next Step
 
-Add or otherwise explicitly verify the official `LMCache/LMCache` remote in a separately authorized repository-read operation, then re-run binding verification. This task does not authorize implementation or upstream contribution.
+If the next stage requires current upstream code, obtain a separate synchronization decision before updating the local branch. This task does not authorize implementation or upstream contribution.
 
 # Boundary
 
