@@ -1,0 +1,147 @@
+schema_version: 1
+task_id: lmcache-4132-deep-audit
+created_by: codex
+decision_author: codex
+materialized_by: codex
+status: review
+revision: 1
+request_ref: REQUEST.yaml
+outputs:
+  - RESULT.yaml
+  - REPORT.md
+actions_performed:
+  - read_repository
+  - analyze_code
+  - run_tests
+  - write_result
+  - write_report
+actions_not_performed:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+  - candidate_admission
+  - implementation_authorization
+validation:
+  - "Issue #4132 and PR #4157 live metadata, body, files, reviews, comments, and relationships were inspected."
+  - "Source baseline inspected at /home/sun/py/LMCache dev@f625b9733ad38c6b1bb3ba3d5083998ab5307ffb."
+  - "No upstream source or public GitHub artifact was modified."
+classification_recommendation: needs-more-investigation
+confidence: medium
+evidence_refs:
+  - agent-work/tasks/lmcache-4132-evidence/RESULT.yaml
+  - agent-work/tasks/lmcache-4132-evidence/REPORT.md
+  - agent-work/tasks/lmcache-4132-evidence/evidence/4132.yaml
+related_items:
+  - item: LMCache/LMCache#4157
+    state: open
+    adjudication: unrelated-to-4132-core
+    relationship: subsystem-adjacent
+    evidence: "The PR changes deferred model registration, blender initialization, configuration validation, and a None guard; its body says Fixes #4131. It does not change process_qkv length handling, LMCBlendMetadata cleanup, staging-buffer sizing, or blend reentrancy."
+  - item: LMCache/LMCache#4131
+    state: open
+    adjudication: companion-issue
+    relationship: startup-model-registration
+    evidence: "PR #4157 explicitly references this Issue; the reported scope is startup failure before the layerwise request failures in #4132."
+  - item: LMCache/LMCache#1875
+    state: closed
+    adjudication: historical-adjacent
+    relationship: raw-related-candidate
+    evidence: "Title mentions a blender.process_qkv tensor-size mismatch; no implementation relationship to #4132 was established in this audit."
+  - item: LMCache/LMCache#1064
+    state: closed
+    adjudication: historical-adjacent
+    relationship: raw-related-candidate
+    evidence: "Title mentions GPU buffer memory reuse across prompts; no implementation relationship to #4132 was established in this audit."
+  - item: LMCache/LMCache#3150
+    state: merged
+    adjudication: keyword-only
+    relationship: unrelated
+    evidence: "Search hit for stale singleton; title is MP observability metrics."
+  - item: LMCache/LMCache#4036
+    state: open
+    adjudication: keyword-only
+    relationship: unrelated
+    evidence: "Search hit for staging buffers; title is disk lock and staging-allocation failure."
+  - item: LMCache/LMCache#3620
+    state: open
+    adjudication: keyword-only
+    relationship: unrelated
+    evidence: "Search hit for staging buffers; title is LocalDiskBackend write cleanup."
+  - item: LMCache/LMCache#3819
+    state: open
+    adjudication: keyword-only
+    relationship: unrelated
+    evidence: "Search hit for crash; title is token_database separator handling."
+  - item: LMCache/LMCache#2880
+    state: open
+    adjudication: keyword-only
+    relationship: unrelated
+    evidence: "Search hit for layerwise blender/request isolation; title is vLLM cache salt."
+  - item: LMCache/LMCache#4077
+    state: merged
+    adjudication: keyword-only
+    relationship: unrelated
+    evidence: "Search hit for singleton state; title is DeviceOps refactor."
+  - item: LMCache/LMCache#2962
+    state: open
+    adjudication: keyword-only
+    relationship: unrelated
+    evidence: "Search hit for request isolation; title is LoRA-aware cache keying."
+technical_summary:
+  issue_validity:
+    reported_behavior:
+      - "The reporter describes three failure modes under variable-length load and gives error messages, environment, workload, and claimed local defensive patches."
+    source_confirmed_behavior:
+      - "LMCBlenderBuilder caches one LMCBlender per instance_id in a class-level mapping."
+      - "LMCBlender owns one mutable LMCBlendMetadata object containing imp_indices, attn_mask, and positions."
+      - "process_qkv obtains old_k/old_v from the connector, compares tensors on check layers, records selected indices, and scatters selected k/v rows into old_k/old_v."
+      - "blend_layer advances retrieval and model generators layer by layer and calls metadata.clean() only at the normal end of the generator."
+      - "The layerwise GPU connector maps MemoryObj tensors by layer and get_kv returns the mapped KV tensor pair; batched_to_gpu allocates buffers from the request's num_all_tokens and releases mappings at the end."
+      - "The vLLM adapter obtains the cached blender during connector initialization and calls blender.blend from start_load_kv for eligible layerwise requests."
+    runtime_confirmed_behavior:
+      - "No independent runtime reproduction, GPU run, or maintainer reproduction was available in the collected evidence or this audit."
+    assessment: "The evidence supports a concrete source-level interaction surface for all three reported modes, but confirms neither the reported crashes nor their frequency outside the reporter's account."
+  code_path_map:
+    - file: lmcache/v1/compute/blend/utils.py
+      symbols: [LMCBlenderBuilder.get_or_create, LMCBlenderBuilder.get]
+      relationship: "instance_id -> cached LMCBlender"
+    - file: lmcache/v1/compute/blend/blender.py
+      symbols: [LMCBlender.__init__, LMCBlender.blend, LMCBlender.blend_layer, LMCBlender.process_qkv]
+      relationship: "request tokens -> layerwise generators -> per-layer QKV processing -> metadata/scatter updates"
+    - file: lmcache/v1/compute/blend/metadata.py
+      symbols: [LMCBlendMetadata, LMCBlendMetadata.clean]
+      relationship: "mutable runtime state consumed by process_qkv and reset on normal blend completion"
+    - file: lmcache/v1/gpu_connector/gpu_connectors.py
+      symbols: [VLLMBufferLayerwiseGPUConnector.buffer_mapping, VLLMBufferLayerwiseGPUConnector.get_kv, VLLMBufferLayerwiseGPUConnector.batched_to_gpu]
+      relationship: "layerwise retrieval -> request-sized staging allocations -> mapped KV tensors -> layer cleanup/release"
+    - file: lmcache/integration/vllm/vllm_v1_adapter.py
+      symbols: [LMCacheConnectorV1Impl._init_connector_state, LMCacheConnectorV1Impl.start_load_kv]
+      relationship: "vLLM connector setup -> cached blender acquisition -> eligible request load -> blend invocation"
+feasibility:
+  level: medium
+  reasons:
+    - "The suspected paths are localized to blender, metadata, GPU connector staging, and the vLLM adapter."
+    - "The collected source provides static testable seams, but no direct LMCBlender/blend_layer test was found."
+    - "The reported reproduction requires CUDA/GPU, vLLM 0.19.1, CacheBlend configuration, and variable-length arrival-driven load."
+    - "The three modes span request cleanup, tensor length accounting, and reentrancy/error containment, so the exact accepted scope is not yet established."
+risks:
+  - "A length fix must preserve the original token length used by the check-layer comparison and later imp_indices scatter."
+  - "Mutable singleton metadata may be shared across interleaved asynchronous steps; a local cleanup change would not by itself establish request isolation."
+  - "Changing staging-buffer allocation or slicing can affect CUDA shapes, memory lifetime, and layerwise ping-pong behavior."
+  - "The only maintainer response found is on PR #4157 and states that the related code path is deprecated and those edits will not be accepted; #4132 has no maintainer confirmation."
+  - "A blend exception can escape the vLLM start_load_kv path according to the reporter, but this propagation was not independently reproduced."
+limitations:
+  - no runtime reproduction
+  - no GPU validation
+  - no independent maintainer confirmation on Issue #4132
+  - no upstream LMCache worktree modification or upstream fetch
+  - local source baseline is user Fork dev@f625b9733ad38c6b1bb3ba3d5083998ab5307ffb; Issue reports runtime baseline 668a1fd
+  - PR search hits were adjudicated from titles/bodies and relevant PR #4157 file patches; keyword hits were not treated as implementation evidence
+next_action: "Chat review of this Deep Audit and, if desired, clarification of whether the deprecated layerwise CacheBlend path remains in contribution scope."
