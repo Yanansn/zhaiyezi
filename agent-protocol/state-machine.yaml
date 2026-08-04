@@ -62,9 +62,9 @@ contribution_coordination:
   transitions:
     discovered: [evidence_requested]
     evidence_requested: [evidence_completed]
-    evidence_completed: [awaiting_review]
-    awaiting_review: [deep_audit]
-    deep_audit: [admission_pending]
+    evidence_completed: [deep_audit]
+    deep_audit: [awaiting_review]
+    awaiting_review: [admission_pending]
     admission_pending: [implementation_ready]
     implementation_ready: [implementing]
     implementing: [verification]
@@ -72,12 +72,12 @@ contribution_coordination:
     pr_ready: [completed]
     completed: []
   gates:
-    evidence_completed_to_awaiting_review:
+    evidence_completed_to_deep_audit:
       owner: chat
-      rule: Evidence must be reviewed before Deep Audit or Admission.
-    deep_audit_to_admission_pending:
+      rule: Completed evidence is the bounded input for Deep Audit; Deep Audit must produce a result before Review.
+    awaiting_review_to_admission_pending:
       owner: chat
-      rule: Use the existing Screening classification and Candidate Admission Gate contract.
+      rule: Deep Audit must be reviewed before using the existing Screening classification and Candidate Admission Gate contract.
     admission_pending_to_implementation_ready:
       owner: user
       rule: Gate passage and repository mutations require independent authorization.
@@ -89,8 +89,11 @@ contribution_coordination:
       rule: Existing submitted, reviewing, and terminal Issue statuses remain authoritative for real PRs.
 
 forbidden_shortcuts:
+  - [evidence_completed, awaiting_review]
   - [evidence_completed, admission_pending]
   - [evidence_completed, implementation_ready]
+  - [deep_audit, admission_pending]
+  - [deep_audit, implementation_ready]
   - [awaiting_review, implementation_ready]
   - [admission_pending, implementing]
 

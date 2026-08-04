@@ -11,6 +11,11 @@ agent-work/tasks/<task-id>/REVIEW.yaml        Chat-authored decision
 agent-work/tasks/<task-id>/APPROVAL.yaml      user-authored approval
 ```
 
+`deep-audit` is a first-class task type. It consumes completed evidence and
+produces a screening recommendation for Chat review. It requires non-empty
+`evidence_refs` and does not authorize Admission, implementation, upstream
+writes, or Pull Requests.
+
 Task directories never move. Queue state is derived from the artifacts in that fixed directory. Files under `agent-protocol/examples/` are examples only and are never queue entries.
 
 ## Semantic ownership and materialization
@@ -56,6 +61,10 @@ python3 scripts/agent_queue.py show --task example-task
 
 Registry changes, formal Issue initialization, upstream fetch/code/write/branch Push, Issue/PR/comment/assignment/label actions, and publication always require new user confirmation. Live identity verification remains mandatory before public actions.
 
-Evidence completion enters Review. It does not mean `available`, Candidate Admission passed, selection, or implementation authorization. Queue `completed` only means the current execution artifact was approved; the formal contribution lifecycle remains authoritative.
+Evidence completion enters the `deep_audit` coordination stage. Deep Audit then
+enters `awaiting_review`; it does not mean `available`, Candidate Admission
+passed, selection, or implementation authorization. Queue `completed` only
+means the current execution artifact was approved; the formal contribution
+lifecycle remains authoritative.
 
 See [roles.md](roles.md), [lifecycle.md](lifecycle.md), [permissions.yaml](permissions.yaml), [task-schema.yaml](task-schema.yaml), [state-machine.yaml](state-machine.yaml), [conflict-resolution.md](conflict-resolution.md), and [migration.md](migration.md).

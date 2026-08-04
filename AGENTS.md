@@ -59,7 +59,7 @@ Standing authorization 是用户可选机制；只有 `decisions/authorizations/
 
 该优先级不允许低层来源覆盖系统安全规则、本 `AGENTS.md`、用户审批边界或上游实时事实。来源冲突时停止执行，在当前角色拥有的 artifact 中记录差异，不自动合并或覆盖他人修改。
 
-Evidence task 完成后必须进入 Chat Review；`evidence_completed` 不得直接解释为 `available`、Admission passed、`selected` 或 implementation authorization。facts repository 的 Commit/Push 需要任务授权或有效 standing authorization；上游写入和所有公开动作继续逐次要求用户确认。
+Evidence task 完成后进入 `deep_audit`，Deep Audit 完成后必须进入 Chat Review；`evidence_completed` 和 Deep Audit 均不得直接解释为 `available`、Admission passed、`selected` 或 implementation authorization。facts repository 的 Commit/Push 需要任务授权或有效 standing authorization；上游写入和所有公开动作继续逐次要求用户确认。
 
 ## 候选筛选与接纳边界
 
@@ -71,6 +71,7 @@ Evidence task 完成后必须进入 Chat Review；`evidence_completed` 不得直
 - 只有用户明确要求 Codex 执行完整候选筛选时，Codex 才可按有界 `issue-screening` Brief 完成全部调查阶段。一般性的“记录结果”“继续”或提供 Screening Result Brief 不构成该授权。
 - `Code Verification Brief` 与 Issue Screening 是不同阶段。它只允许 Codex 验证列出的代码事实，例如当前基线是否已有修复、符号或测试是否存在、是否跨 package、是否可本地运行；不得扩展为 Issue/PR/Owner/设计边界的完整筛选。
 - `issue-evidence-collection` 只允许收集完整正文、分页评论、可见 Timeline/Development、显式编号与语义搜索原始结果、未经最终判断的 ownership signals 和 limitations。它不得分配 classification/confidence、判断 `available`、生成 `RESULTS.yaml`、修改 registry、建立正式 Issue 目录或执行公开动作。
+- `deep-audit` 是正式一等任务类型，只消费已完成的 evidence collection、关联 PR 信息和源码事实，输出 Deep Audit `RESULT.yaml`/`REPORT.md` 与 recommendation；必须等待 Chat Review，不代表 Admission、implementation authorization 或 upstream contribution。
 - Issue 通过 Candidate Admission Gate 并正式进入 `harvest-open-source-issue` 后，Codex 才按贡献 Brief 开始 Code Map、Root Cause、Implementation、Testing 和 PR。
 
 - `.agents/skills/screen-open-source-issue/` 默认负责把 Chat 筛选结果写入轻量记录；仅在用户明确授权完整 Codex Screening 时，负责有界的候选发现、快速过滤、完整审计、关联实现与隐性 Owner 搜索、设计/基础设施阻塞判断、筛选分类和 Candidate Admission Gate。它不负责源码实现。

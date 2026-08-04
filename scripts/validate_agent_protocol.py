@@ -147,10 +147,28 @@ def validate_protocol_documents(
         errors.append("agent-protocol/state-machine.yaml: queue states are incomplete")
     coordination = state_machine.get("contribution_coordination", {})
     if coordination.get("transitions", {}).get("evidence_completed") != [
-        "awaiting_review"
+        "deep_audit"
     ]:
         errors.append(
-            "agent-protocol/state-machine.yaml: evidence_completed must only enter awaiting_review"
+            "agent-protocol/state-machine.yaml: evidence_completed must only enter deep_audit"
+        )
+    if coordination.get("transitions", {}).get("deep_audit") != ["awaiting_review"]:
+        errors.append(
+            "agent-protocol/state-machine.yaml: deep_audit must only enter awaiting_review"
+        )
+    if coordination.get("transitions", {}).get("awaiting_review") != [
+        "admission_pending"
+    ]:
+        errors.append(
+            "agent-protocol/state-machine.yaml: awaiting_review must only enter admission_pending"
+        )
+
+    deep_audit_contract = schema.get("task_type_contracts", {}).get("deep-audit", {})
+    if "deep-audit" not in schema.get("enums", {}).get("task_type", []):
+        errors.append("agent-protocol/task-schema.yaml: deep-audit task type is missing")
+    if deep_audit_contract.get("required_request_fields") != ["evidence_refs"]:
+        errors.append(
+            "agent-protocol/task-schema.yaml: deep-audit must require evidence_refs"
         )
 
     catalog = permissions.get("action_catalog")
@@ -301,6 +319,16 @@ def validate_request(
             errors.append(f"{location}.{field}: must be a list")
         elif len(string_items(request[field])) != len(request[field]):
             errors.append(f"{location}.{field}: every item must be a string")
+    if request.get("task_type") == "deep-audit":
+        evidence_refs = request.get("evidence_refs")
+        if not isinstance(evidence_refs, list) or not evidence_refs:
+            errors.append(
+                f"{location}.evidence_refs: deep-audit requires a non-empty list"
+            )
+        elif len(string_items(evidence_refs)) != len(evidence_refs):
+            errors.append(
+                f"{location}.evidence_refs: every item must be a string"
+            )
     if not isinstance(request.get("goal"), str) or not request.get("goal", "").strip():
         errors.append(f"{location}.goal: must be a non-empty string")
     completion = request.get("completion")
@@ -334,6 +362,18 @@ def validate_request(
             errors.append(
                 f"{location}: actions are both allowed and prohibited: "
                 + ", ".join(overlap)
+            )
+    if request.get("task_type") == "deep-audit":
+        forbidden = set(
+            schema.get("task_type_contracts", {})
+            .get("deep-audit", {})
+            .get("prohibited_allowed_actions", [])
+        )
+        unauthorized = sorted(forbidden & set(allowed))
+        if unauthorized:
+            errors.append(
+                f"{location}: deep-audit cannot allow protected action(s): "
+                + ", ".join(unauthorized)
             )
 
 
