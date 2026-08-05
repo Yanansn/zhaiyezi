@@ -1,0 +1,949 @@
+schema_version: 1
+repository: LMCache/LMCache
+issues:
+  LMCache/LMCache#4416:
+    remote_updated_at: '2026-08-04T13:39:59Z'
+    last_scanned_at: '2026-08-05T06:38:52.059905Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4416
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4402:
+    remote_updated_at: '2026-08-03T16:54:33Z'
+    last_scanned_at: '2026-08-05T06:39:08.996561Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4402
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4419:
+    remote_updated_at: '2026-08-04T15:52:24Z'
+    last_scanned_at: '2026-08-05T06:39:29.495336Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4419
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4394:
+    remote_updated_at: '2026-08-03T06:15:10Z'
+    last_scanned_at: '2026-08-05T06:39:36.665455Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4394
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4390:
+    remote_updated_at: '2026-08-03T00:48:40Z'
+    last_scanned_at: '2026-08-05T06:39:41.530028Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4390
+      url: https://github.com/LMCache/LMCache/issues/4390
+      title: '[RFC] Request list snapshot for the LMCache connector'
+      created_at: '2026-08-03T00:48:40Z'
+      updated_at: '2026-08-03T00:48:40Z'
+      labels: []
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  LMCache/LMCache#4387:
+    remote_updated_at: '2026-08-02T15:32:46Z'
+    last_scanned_at: '2026-08-05T06:39:51.685893Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4387
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4386:
+    remote_updated_at: '2026-08-04T12:48:56Z'
+    last_scanned_at: '2026-08-05T06:39:56.185274Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4386
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4385:
+    remote_updated_at: '2026-08-02T12:31:20Z'
+    last_scanned_at: '2026-08-05T06:40:06.999761Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4385
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4365:
+    remote_updated_at: '2026-07-31T18:27:02Z'
+    last_scanned_at: '2026-08-05T06:40:29.223635Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4365
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4364:
+    remote_updated_at: '2026-07-31T20:05:04Z'
+    last_scanned_at: '2026-08-05T06:40:47.014525Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4364
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4360:
+    remote_updated_at: '2026-07-31T15:28:09Z'
+    last_scanned_at: '2026-08-05T06:40:56.281562Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4360
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4352:
+    remote_updated_at: '2026-08-04T21:29:39Z'
+    last_scanned_at: '2026-08-05T06:41:02.327638Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4352
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4345:
+    remote_updated_at: '2026-08-03T05:13:56Z'
+    last_scanned_at: '2026-08-05T06:41:15.996539Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4345
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4344:
+    remote_updated_at: '2026-07-30T15:25:08Z'
+    last_scanned_at: '2026-08-05T06:41:33.025781Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4344
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4340:
+    remote_updated_at: '2026-07-30T09:29:15Z'
+    last_scanned_at: '2026-08-05T06:41:52.991208Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4340
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4342:
+    remote_updated_at: '2026-07-30T08:58:04Z'
+    last_scanned_at: '2026-08-05T06:41:57.209553Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4342
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4311:
+    remote_updated_at: '2026-07-29T23:15:39Z'
+    last_scanned_at: '2026-08-05T06:42:14.168092Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4311
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4305:
+    remote_updated_at: '2026-07-29T17:11:57Z'
+    last_scanned_at: '2026-08-05T06:42:30.486904Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4305
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4299:
+    remote_updated_at: '2026-07-29T11:48:05Z'
+    last_scanned_at: '2026-08-05T06:42:43.285341Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4299
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4307:
+    remote_updated_at: '2026-07-30T02:46:08Z'
+    last_scanned_at: '2026-08-05T06:44:32.471935Z'
+    last_scan_id: 2026-08-05T06-38-12.509833Z
+    result:
+      issue: LMCache/LMCache#4307
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4270:
+    remote_updated_at: '2026-07-30T07:18:56Z'
+    last_scanned_at: '2026-08-05T07:19:41.078386Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4270
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4291:
+    remote_updated_at: '2026-08-01T12:54:55Z'
+    last_scanned_at: '2026-08-05T07:19:47.929053Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4291
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4266:
+    remote_updated_at: '2026-07-30T06:52:40Z'
+    last_scanned_at: '2026-08-05T07:19:56.891436Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4266
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4256:
+    remote_updated_at: '2026-07-28T04:04:10Z'
+    last_scanned_at: '2026-08-05T07:20:10.139364Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4256
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4293:
+    remote_updated_at: '2026-07-29T02:26:28Z'
+    last_scanned_at: '2026-08-05T07:20:22.487731Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4293
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4228:
+    remote_updated_at: '2026-07-28T02:09:50Z'
+    last_scanned_at: '2026-08-05T07:20:44.512973Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4228
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4239:
+    remote_updated_at: '2026-08-02T17:03:56Z'
+    last_scanned_at: '2026-08-05T07:20:49.465345Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4239
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4247:
+    remote_updated_at: '2026-08-01T14:58:22Z'
+    last_scanned_at: '2026-08-05T07:21:04.940303Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4247
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4224:
+    remote_updated_at: '2026-07-27T18:51:07Z'
+    last_scanned_at: '2026-08-05T07:21:09.216961Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4224
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4198:
+    remote_updated_at: '2026-07-22T15:48:16Z'
+    last_scanned_at: '2026-08-05T07:21:29.054177Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4198
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4204:
+    remote_updated_at: '2026-07-22T19:37:14Z'
+    last_scanned_at: '2026-08-05T07:21:41.836500Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4204
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4186:
+    remote_updated_at: '2026-07-22T05:08:25Z'
+    last_scanned_at: '2026-08-05T07:22:03.717795Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4186
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4185:
+    remote_updated_at: '2026-07-28T19:27:41Z'
+    last_scanned_at: '2026-08-05T07:22:12.448647Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4185
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4179:
+    remote_updated_at: '2026-07-23T12:57:32Z'
+    last_scanned_at: '2026-08-05T07:22:18.837168Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4179
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4226:
+    remote_updated_at: '2026-07-30T19:11:00Z'
+    last_scanned_at: '2026-08-05T07:22:39.562669Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4226
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4159:
+    remote_updated_at: '2026-07-24T21:35:47Z'
+    last_scanned_at: '2026-08-05T07:22:51.282885Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4159
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4171:
+    remote_updated_at: '2026-07-30T08:19:54Z'
+    last_scanned_at: '2026-08-05T07:22:56.990447Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4171
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4155:
+    remote_updated_at: '2026-07-19T13:41:47Z'
+    last_scanned_at: '2026-08-05T07:22:58.014110Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4155
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4149:
+    remote_updated_at: '2026-07-19T03:13:37Z'
+    last_scanned_at: '2026-08-05T07:23:09.150877Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4149
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4139:
+    remote_updated_at: '2026-07-21T02:09:30Z'
+    last_scanned_at: '2026-08-05T07:23:15.159167Z'
+    last_scan_id: 2026-08-05T07-18-40.778344Z
+    result:
+      issue: LMCache/LMCache#4139
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4132:
+    remote_updated_at: '2026-07-17T00:44:53Z'
+    last_scanned_at: '2026-08-05T07:31:21.027771Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4132
+      url: https://github.com/LMCache/LMCache/issues/4132
+      title: '[Bug] Layerwise blender reuses stale singleton state and staging buffers
+        across requests — crashes under variable-length load'
+      created_at: '2026-07-17T00:44:53Z'
+      updated_at: '2026-07-17T00:44:53Z'
+      labels: []
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  LMCache/LMCache#4133:
+    remote_updated_at: '2026-07-17T00:44:54Z'
+    last_scanned_at: '2026-08-05T07:31:23.036921Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4133
+      url: https://github.com/LMCache/LMCache/issues/4133
+      title: '[Bug] Lookup→retrieve TOCTOU under eviction pressure kills the engine
+        (layerwise + blending)'
+      created_at: '2026-07-17T00:44:54Z'
+      updated_at: '2026-07-17T00:44:54Z'
+      labels: []
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  LMCache/LMCache#4131:
+    remote_updated_at: '2026-07-20T21:27:17Z'
+    last_scanned_at: '2026-08-05T07:31:28.658915Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4131
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4137:
+    remote_updated_at: '2026-07-17T21:08:53Z'
+    last_scanned_at: '2026-08-05T07:31:30.055700Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4137
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4127:
+    remote_updated_at: '2026-07-16T23:56:07Z'
+    last_scanned_at: '2026-08-05T07:31:46.571734Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4127
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4109:
+    remote_updated_at: '2026-07-14T16:09:17Z'
+    last_scanned_at: '2026-08-05T07:31:47.612567Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4109
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4126:
+    remote_updated_at: '2026-07-17T08:46:20Z'
+    last_scanned_at: '2026-08-05T07:32:04.420210Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4126
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4100:
+    remote_updated_at: '2026-08-04T09:03:38Z'
+    last_scanned_at: '2026-08-05T07:32:07.504143Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4100
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4095:
+    remote_updated_at: '2026-07-18T22:21:55Z'
+    last_scanned_at: '2026-08-05T07:32:13.700928Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4095
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4085:
+    remote_updated_at: '2026-08-02T16:46:47Z'
+    last_scanned_at: '2026-08-05T07:32:30.485354Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4085
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4090:
+    remote_updated_at: '2026-07-13T01:42:16Z'
+    last_scanned_at: '2026-08-05T07:32:31.000504Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4090
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4069:
+    remote_updated_at: '2026-07-09T21:19:35Z'
+    last_scanned_at: '2026-08-05T07:32:40.240032Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4069
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4063:
+    remote_updated_at: '2026-07-14T09:42:33Z'
+    last_scanned_at: '2026-08-05T07:32:58.521639Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4063
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4064:
+    remote_updated_at: '2026-07-16T08:19:18Z'
+    last_scanned_at: '2026-08-05T07:32:58.557577Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4064
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4071:
+    remote_updated_at: '2026-07-10T06:57:54Z'
+    last_scanned_at: '2026-08-05T07:33:01.711831Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4071
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4049:
+    remote_updated_at: '2026-07-11T00:21:03Z'
+    last_scanned_at: '2026-08-05T07:33:08.639747Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4049
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4041:
+    remote_updated_at: '2026-07-10T03:49:49Z'
+    last_scanned_at: '2026-08-05T07:33:19.498482Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4041
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4061:
+    remote_updated_at: '2026-07-09T09:56:30Z'
+    last_scanned_at: '2026-08-05T07:33:22.001136Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4061
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4030:
+    remote_updated_at: '2026-07-07T05:43:25Z'
+    last_scanned_at: '2026-08-05T07:33:29.043836Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4030
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4065:
+    remote_updated_at: '2026-07-09T16:02:02Z'
+    last_scanned_at: '2026-08-05T07:34:11.380183Z'
+    last_scan_id: 2026-08-05T07-30-01.628561Z
+    result:
+      issue: LMCache/LMCache#4065
+      related_pr_status: related_pr_found
+      related_prs: []
+  LMCache/LMCache#4019:
+    remote_updated_at: '2026-07-07T04:07:04Z'
+    last_scanned_at: '2026-08-05T07:36:00.265236Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#4019
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#4018
+  LMCache/LMCache#4029:
+    remote_updated_at: '2026-07-22T07:03:18Z'
+    last_scanned_at: '2026-08-05T07:36:01.514835Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#4029
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#4190
+  LMCache/LMCache#3945:
+    remote_updated_at: '2026-07-04T04:06:10Z'
+    last_scanned_at: '2026-08-05T07:36:06.898330Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3945
+      url: https://github.com/LMCache/LMCache/issues/3945
+      title: Slot-compression hybrid models (e.g. DeepSeek-V4) are accepted but served
+        without per-group sliding-window masking
+      created_at: '2026-06-29T19:39:35Z'
+      updated_at: '2026-07-04T04:06:10Z'
+      labels: []
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  LMCache/LMCache#3940:
+    remote_updated_at: '2026-07-07T02:08:51Z'
+    last_scanned_at: '2026-08-05T07:36:21.355718Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3940
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3924
+  LMCache/LMCache#3957:
+    remote_updated_at: '2026-06-30T12:09:21Z'
+    last_scanned_at: '2026-08-05T07:36:22.155006Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3957
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3798
+      - LMCache/LMCache#3853
+      - LMCache/LMCache#3959
+  LMCache/LMCache#3936:
+    remote_updated_at: '2026-07-06T14:07:33Z'
+    last_scanned_at: '2026-08-05T07:36:23.213859Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3936
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#4021
+  LMCache/LMCache#3931:
+    remote_updated_at: '2026-06-29T20:45:39Z'
+    last_scanned_at: '2026-08-05T07:36:27.977485Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3931
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3853
+  LMCache/LMCache#3912:
+    remote_updated_at: '2026-06-29T20:09:02Z'
+    last_scanned_at: '2026-08-05T07:36:31.822091Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3912
+      url: https://github.com/LMCache/LMCache/issues/3912
+      title: 'Query: Does LMCache support DeepSeek V4 and store/retrieve KVCache to/from
+        localdisk file/filesystem?'
+      created_at: '2026-06-27T09:45:37Z'
+      updated_at: '2026-06-29T20:09:02Z'
+      labels: []
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  LMCache/LMCache#3911:
+    remote_updated_at: '2026-07-01T03:17:50Z'
+    last_scanned_at: '2026-08-05T07:36:36.684388Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3911
+      url: https://github.com/LMCache/LMCache/issues/3911
+      title: '[Bug] Excessive CPU RAM usage when combining --mamba-cache-mode align
+        with LMCacheMPConnector engine_driven SHM transfer mode'
+      created_at: '2026-06-27T08:31:01Z'
+      updated_at: '2026-07-01T03:17:50Z'
+      labels: []
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  LMCache/LMCache#3889:
+    remote_updated_at: '2026-06-26T00:28:40Z'
+    last_scanned_at: '2026-08-05T07:36:46.012616Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3889
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3894
+  LMCache/LMCache#3917:
+    remote_updated_at: '2026-06-27T19:37:36Z'
+    last_scanned_at: '2026-08-05T07:36:46.808724Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3917
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3612
+      - LMCache/LMCache#3918
+  LMCache/LMCache#3861:
+    remote_updated_at: '2026-06-28T01:14:05Z'
+    last_scanned_at: '2026-08-05T07:37:04.718066Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3861
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3910
+      - LMCache/LMCache#3920
+  LMCache/LMCache#3856:
+    remote_updated_at: '2026-06-25T16:22:29Z'
+    last_scanned_at: '2026-08-05T07:37:20.017412Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3856
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3880
+  LMCache/LMCache#3868:
+    remote_updated_at: '2026-06-25T17:27:17Z'
+    last_scanned_at: '2026-08-05T07:37:22.667872Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3868
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#1555
+      - LMCache/LMCache#1638
+      - LMCache/LMCache#3867
+      - LMCache/LMCache#3898
+      - LMCache/LMCache#3933
+      - LMCache/LMCache#3934
+  LMCache/LMCache#3865:
+    remote_updated_at: '2026-06-25T08:53:33Z'
+    last_scanned_at: '2026-08-05T07:37:26.797391Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3865
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#1413
+      - LMCache/LMCache#3874
+      - LMCache/LMCache#3913
+      - LMCache/LMCache#4104
+  LMCache/LMCache#4025:
+    remote_updated_at: '2026-07-31T15:31:44Z'
+    last_scanned_at: '2026-08-05T07:37:28.140711Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#4025
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3908
+      - LMCache/LMCache#3968
+      - LMCache/LMCache#3978
+      - LMCache/LMCache#3990
+      - LMCache/LMCache#4004
+      - LMCache/LMCache#4088
+      - LMCache/LMCache#4151
+      - LMCache/LMCache#4176
+      - LMCache/LMCache#4382
+      - LMCache/LMCache#4383
+      - LMCache/LMCache#4399
+  LMCache/LMCache#3834:
+    remote_updated_at: '2026-06-23T07:49:38Z'
+    last_scanned_at: '2026-08-05T07:37:37.937292Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3834
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#2407
+      - LMCache/LMCache#3833
+  LMCache/LMCache#3855:
+    remote_updated_at: '2026-07-12T06:20:58Z'
+    last_scanned_at: '2026-08-05T07:37:37.983467Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3855
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3189
+      - LMCache/LMCache#4036
+  LMCache/LMCache#3809:
+    remote_updated_at: '2026-06-22T07:47:58Z'
+    last_scanned_at: '2026-08-05T07:37:40.494329Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3809
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3814
+  LMCache/LMCache#3831:
+    remote_updated_at: '2026-06-23T05:34:25Z'
+    last_scanned_at: '2026-08-05T07:37:47.401853Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3831
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3832
+      - LMCache/LMCache#4124
+  LMCache/LMCache#3752:
+    remote_updated_at: '2026-07-28T13:59:52Z'
+    last_scanned_at: '2026-08-05T07:37:52.707254Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3752
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3919
+  LMCache/LMCache#3753:
+    remote_updated_at: '2026-06-30T02:37:30Z'
+    last_scanned_at: '2026-08-05T07:37:54.508709Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3753
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3835
+      - LMCache/LMCache#3891
+  LMCache/LMCache#3710:
+    remote_updated_at: '2026-07-16T15:46:16Z'
+    last_scanned_at: '2026-08-05T07:38:04.301160Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3710
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3277
+  LMCache/LMCache#3688:
+    remote_updated_at: '2026-07-06T18:23:54Z'
+    last_scanned_at: '2026-08-05T07:38:13.952160Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3688
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3687
+      - LMCache/LMCache#4130
+  LMCache/LMCache#3685:
+    remote_updated_at: '2026-06-15T02:43:17Z'
+    last_scanned_at: '2026-08-05T07:38:32.160205Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3685
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3722
+      - LMCache/LMCache#3766
+  LMCache/LMCache#3675:
+    remote_updated_at: '2026-06-24T07:43:45Z'
+    last_scanned_at: '2026-08-05T07:38:33.837080Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3675
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3703
+  LMCache/LMCache#3749:
+    remote_updated_at: '2026-06-28T02:07:02Z'
+    last_scanned_at: '2026-08-05T07:38:41.683770Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3749
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#2141
+      - LMCache/LMCache#3160
+      - LMCache/LMCache#3686
+      - LMCache/LMCache#3921
+      - LMCache/LMCache#3922
+      - LMCache/LMCache#3923
+  LMCache/LMCache#3720:
+    remote_updated_at: '2026-07-05T06:33:18Z'
+    last_scanned_at: '2026-08-05T07:38:47.315066Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3720
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3678
+      - LMCache/LMCache#3719
+      - LMCache/LMCache#3842
+      - LMCache/LMCache#3867
+      - LMCache/LMCache#3971
+  LMCache/LMCache#3670:
+    remote_updated_at: '2026-06-13T09:28:08Z'
+    last_scanned_at: '2026-08-05T07:38:48.459637Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3670
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#1334
+  LMCache/LMCache#3674:
+    remote_updated_at: '2026-06-14T06:31:48Z'
+    last_scanned_at: '2026-08-05T07:38:55.211617Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3674
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3676
+      - LMCache/LMCache#3788
+  LMCache/LMCache#3656:
+    remote_updated_at: '2026-06-12T19:54:28Z'
+    last_scanned_at: '2026-08-05T07:38:55.443854Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3656
+      url: https://github.com/LMCache/LMCache/issues/3656
+      title: 'Query: Does LMCache support DeepSeek-V3.2 and GLM-5.1?'
+      created_at: '2026-06-12T14:13:48Z'
+      updated_at: '2026-06-12T19:54:28Z'
+      labels: []
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  LMCache/LMCache#3661:
+    remote_updated_at: '2026-06-26T18:43:22Z'
+    last_scanned_at: '2026-08-05T07:39:02.576576Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3661
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3594
+      - LMCache/LMCache#3938
+  LMCache/LMCache#3652:
+    remote_updated_at: '2026-06-13T07:06:03Z'
+    last_scanned_at: '2026-08-05T07:39:16.108740Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3652
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#1096
+      - LMCache/LMCache#3584
+      - LMCache/LMCache#3594
+  LMCache/LMCache#3659:
+    remote_updated_at: '2026-06-27T00:46:14Z'
+    last_scanned_at: '2026-08-05T07:39:20.277067Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3659
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#2213
+      - LMCache/LMCache#3205
+      - LMCache/LMCache#3607
+      - LMCache/LMCache#4281
+  LMCache/LMCache#3650:
+    remote_updated_at: '2026-06-12T07:08:48Z'
+    last_scanned_at: '2026-08-05T07:39:24.108310Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3650
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3385
+      - LMCache/LMCache#3651
+  LMCache/LMCache#3641:
+    remote_updated_at: '2026-06-22T05:50:28Z'
+    last_scanned_at: '2026-08-05T07:39:26.663670Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3641
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3594
+  LMCache/LMCache#3654:
+    remote_updated_at: '2026-06-22T15:32:19Z'
+    last_scanned_at: '2026-08-05T07:39:36.077912Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3654
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#3584
+      - LMCache/LMCache#3589
+      - LMCache/LMCache#4052
+  LMCache/LMCache#3624:
+    remote_updated_at: '2026-06-11T19:29:32Z'
+    last_scanned_at: '2026-08-05T07:39:37.718676Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3624
+      url: https://github.com/LMCache/LMCache/issues/3624
+      title: 跨实例共享，lmcache server不支持跨节点
+      created_at: '2026-06-10T09:52:42Z'
+      updated_at: '2026-06-11T19:29:32Z'
+      labels: []
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  LMCache/LMCache#3628:
+    remote_updated_at: '2026-07-03T12:10:25Z'
+    last_scanned_at: '2026-08-05T07:39:49.679791Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3628
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#2330
+      - LMCache/LMCache#3895
+  LMCache/LMCache#3640:
+    remote_updated_at: '2026-06-13T23:35:12Z'
+    last_scanned_at: '2026-08-05T07:39:56.005606Z'
+    last_scan_id: 2026-08-05T07-34-41.996768Z
+    result:
+      issue: LMCache/LMCache#3640
+      related_pr_status: related_pr_found
+      related_prs:
+      - LMCache/LMCache#912
+      - LMCache/LMCache#4050
+      - LMCache/LMCache#4051

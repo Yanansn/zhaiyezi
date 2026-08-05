@@ -331,6 +331,48 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual(1, result["summary"]["no_known_related_pr"])
         self.assertEqual({"remaining": "4999"}, result["rate_limit"])
 
+    def test_discovery_ledger_reuses_unchanged_issue_audit(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            ledger = discovery.DiscoveryLedger(Path(directory), REPOSITORY, {"candidate_limit": 1})
+            first_api = FakeAPI()
+            first_api.issue_search_pages[1] = {
+                "total_count": 1, "incomplete_results": False, "items": [issue(1)]
+            }
+            first = discovery.run_discovery(first_api, REPOSITORY, 1, [], [], ledger=ledger)
+            self.assertEqual(1, first["summary"]["audited_now"])
+
+            second_api = FakeAPI()
+            second_api.issue_search_pages[1] = {
+                "total_count": 1, "incomplete_results": False, "items": [issue(1)]
+            }
+            second = discovery.run_discovery(second_api, REPOSITORY, 1, [], [], ledger=discovery.DiscoveryLedger(Path(directory), REPOSITORY, {"candidate_limit": 1}))
+            self.assertEqual(0, second["summary"]["audited_now"])
+            self.assertEqual(1, second["summary"]["reused_results"])
+            self.assertFalse(any("/timeline" in path for _, path, _ in second_api.calls))
+
+    def test_secondary_limit_uses_longer_backoff(self) -> None:
+        self.assertEqual(60.0, discovery._retry_delay({}, 0, True))
+        self.assertEqual(120.0, discovery._retry_delay({}, 1, True))
+
+    def test_ledger_compacts_non_candidate_results(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            ledger = discovery.DiscoveryLedger(Path(directory), REPOSITORY, {})
+            result = {
+                "issue": f"{REPOSITORY}#9",
+                "title": "Already implemented",
+                "related_pr_status": "related_pr_found",
+                "related_pr_evidence": [
+                    {"pr": f"{REPOSITORY}#10", "sources": [{"kind": "reference-search"}]}
+                ],
+                "limitations": [],
+            }
+            ledger.record_audit(result, "2026-08-05T00:00:00Z")
+            stored = ledger._index["issues"][f"{REPOSITORY}#9"]["result"]
+            self.assertEqual(
+                {"issue": f"{REPOSITORY}#9", "related_pr_status": "related_pr_found", "related_prs": [f"{REPOSITORY}#10"]},
+                stored,
+            )
+
     def test_run_discovery_reports_progress_without_polluting_result(self) -> None:
         api = FakeAPI()
         api.issue_search_pages[1] = {
@@ -455,7 +497,7 @@ class DiscoveryTests(unittest.TestCase):
         )
         self.assertEqual({"ok": True}, client.get("/example"))
         self.assertEqual(2, attempts)
-        self.assertEqual([1.0], sleeps)
+        self.assertEqual(1.0, sleeps[0])
 
     def test_client_honors_bounded_secondary_rate_limit_retry(self) -> None:
         attempts = 0
@@ -478,7 +520,7 @@ class DiscoveryTests(unittest.TestCase):
             "token", opener=opener, sleeper=sleeps.append, max_retries=1
         )
         self.assertEqual({"ok": True}, client.get("/example"))
-        self.assertEqual([2.0], sleeps)
+        self.assertEqual(2.0, sleeps[0])
 
     def test_client_classifies_policy_403_as_authorization_failure(self) -> None:
         def opener(request: Any, timeout: float) -> FakeResponse:
@@ -517,6 +559,20 @@ class DiscoveryTests(unittest.TestCase):
             ["--repository", REPOSITORY, "--limit", "1", "--workers", "0"]
         )
         with self.assertRaisesRegex(SystemExit, "workers must be between"):
+            discovery._validate_args(args)
+
+    def test_negative_ledger_refresh_age_is_rejected(self) -> None:
+        args = discovery.parse_args(
+            ["--repository", REPOSITORY, "--limit", "1", "--refresh-after-days", "-1"]
+        )
+        with self.assertRaisesRegex(SystemExit, "refresh-after-days"):
+            discovery._validate_args(args)
+
+    def test_rescan_requires_ledger(self) -> None:
+        args = discovery.parse_args(
+            ["--repository", REPOSITORY, "--limit", "1", "--rescan-known", "--no-ledger"]
+        )
+        with self.assertRaisesRegex(SystemExit, "requires the discovery ledger"):
             discovery._validate_args(args)
 
     def test_json_and_summary_output_cannot_share_stdout(self) -> None:

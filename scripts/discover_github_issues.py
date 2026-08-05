@@ -19,7 +19,12 @@ from pathlib import Path
 from threading import Lock
 from typing import Any, Callable, Iterable, Protocol
 
-from scripts.local_issue_index import KnownIssue, build_index, exclusion_map
+try:
+    from scripts.local_issue_index import KnownIssue, build_index, exclusion_map
+    from scripts.discovery_ledger import DiscoveryLedger
+except ImportError:  # Direct execution from scripts/.
+    from local_issue_index import KnownIssue, build_index, exclusion_map
+    from discovery_ledger import DiscoveryLedger
 
 
 API_VERSION = "2026-03-10"
@@ -47,11 +52,14 @@ REFERENCE_EXPRESSIONS = (
     "Related-to #{number}",
     "Refs #{number}",
 )
-DEFAULT_WORKERS = 4
+DEFAULT_WORKERS = 2
 MAX_WORKERS = 8
+GENERAL_REQUEST_INTERVAL_SECONDS = 0.5
 # Authenticated GitHub Search API requests are limited to 30 per minute.  Leave
 # a little headroom for rounding and secondary limits when audit workers share it.
 SEARCH_REQUEST_INTERVAL_SECONDS = 2.1
+SECONDARY_RATE_LIMIT_DELAY_SECONDS = 60.0
+DEFAULT_REFRESH_AFTER_DAYS = 7.0
 
 
 class GitHubError(RuntimeError):
@@ -60,6 +68,10 @@ class GitHubError(RuntimeError):
 
 class GitHubAuthorizationError(GitHubError):
     """A credential or organization-policy error that invalidates the scan."""
+
+
+class GitHubSecondaryRateLimitError(GitHubError):
+    """GitHub temporarily rejected a request because of secondary limits."""
 
 
 class GitHubAPI(Protocol):
@@ -108,6 +120,8 @@ class GitHubClient:
         self._rate_limit_lock = Lock()
         self._search_lock = Lock()
         self._next_search_request_at = 0.0
+        self._request_lock = Lock()
+        self._next_request_at = 0.0
 
     def get(self, path: str, params: dict[str, Any] | None = None) -> Any:
         data, _ = self._request(path, params)
@@ -147,6 +161,7 @@ class GitHubClient:
         )
 
         for attempt in range(self._max_retries + 1):
+            self._wait_for_request_slot()
             if path == "/search/issues":
                 self._wait_for_search_slot()
             try:
@@ -156,15 +171,21 @@ class GitHubClient:
                     return json.loads(body), response.headers
             except urllib.error.HTTPError as error:
                 self._record_rate_limit(error.headers)
+                message = _github_error_message(error)
+                secondary_limit = error.code == 403 and "secondary rate limit" in message.casefold()
                 retryable = (
                     error.code == 429
                     or (error.code == 403 and error.headers.get("Retry-After") is not None)
+                    or secondary_limit
                     or 500 <= error.code < 600
                 )
                 if retryable and attempt < self._max_retries:
-                    self._sleeper(_retry_delay(error.headers, attempt))
+                    self._sleeper(_retry_delay(error.headers, attempt, secondary_limit))
                     continue
-                message = _github_error_message(error)
+                if secondary_limit:
+                    raise GitHubSecondaryRateLimitError(
+                        f"GitHub secondary rate limit for {path}; wait before retrying or lower --limit/--workers"
+                    ) from None
                 error_type = (
                     GitHubAuthorizationError
                     if error.code in {401, 403} and not retryable
@@ -207,14 +228,25 @@ class GitHubClient:
         if delay:
             self._sleeper(delay)
 
+    def _wait_for_request_slot(self) -> None:
+        """Pace all endpoints; worker count must not create request bursts."""
+        with self._request_lock:
+            now = time.monotonic()
+            delay = max(0.0, self._next_request_at - now)
+            self._next_request_at = max(now, self._next_request_at) + GENERAL_REQUEST_INTERVAL_SECONDS
+        if delay:
+            self._sleeper(delay)
 
-def _retry_delay(headers: Any, attempt: int) -> float:
+
+def _retry_delay(headers: Any, attempt: int, secondary_limit: bool = False) -> float:
     retry_after = headers.get("Retry-After")
     if retry_after:
         try:
-            return min(float(retry_after), 10.0)
+            return min(float(retry_after), 300.0)
         except ValueError:
             pass
+    if secondary_limit:
+        return SECONDARY_RATE_LIMIT_DELAY_SECONDS * (attempt + 1)
     return float(2**attempt)
 
 
@@ -660,6 +692,9 @@ def run_discovery(
     progress: Callable[[str], None] | None = None,
     workers: int = DEFAULT_WORKERS,
     local_exclusions: dict[int, KnownIssue] | None = None,
+    ledger: DiscoveryLedger | None = None,
+    rescan_known: bool = False,
+    refresh_after_days: float = DEFAULT_REFRESH_AFTER_DAYS,
 ) -> dict[str, Any]:
     notify = progress or (lambda _: None)
     notify(f"Checking read access to {repository}...")
@@ -671,36 +706,60 @@ def run_discovery(
         api, repository, limit, include_labels, exclude_labels, local_exclusions
     )
     notify(f"Found {len(issues)} candidates ({total_count} total query matches).")
+    exclusion_records = [
+        {"issue": entry.issue, "reasons": sorted(entry.reasons), "sources": sorted(entry.sources)}
+        for entry in sorted((local_exclusions or {}).values(), key=lambda item: item.issue.casefold())
+    ]
+    if ledger is not None:
+        ledger.record_local_exclusions(exclusion_records)
     resolver = ReferenceResolver(api)
     results: list[dict[str, Any] | None] = [None] * len(issues)
-    if workers == 1:
-        for index, issue in enumerate(issues, start=1):
-            issue_name = f"{repository}#{issue['number']}"
-            notify(f"[{index}/{len(issues)}] Inspecting {issue_name}...")
-            result = audit_issue(api, repository, issue, resolver)
-            results[index - 1] = result
-            notify(f"[{index}/{len(issues)}] {issue_name}: {result['related_pr_status']}")
-    else:
-        notify(f"Auditing with {workers} bounded workers; Search API is globally paced.")
-        with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="issue-audit") as executor:
-            futures = {
-                executor.submit(audit_issue, api, repository, issue, resolver): (index, issue)
-                for index, issue in enumerate(issues, start=1)
-            }
-            try:
-                for future in as_completed(futures):
-                    index, issue = futures[future]
-                    result = future.result()
-                    results[index - 1] = result
-                    issue_name = f"{repository}#{issue['number']}"
-                    notify(
-                        f"[{index}/{len(issues)}] {issue_name}: "
-                        f"{result['related_pr_status']}"
-                    )
-            except BaseException:
-                for future in futures:
-                    future.cancel()
-                raise
+    work: list[tuple[int, dict[str, Any]]] = []
+    for index, issue in enumerate(issues):
+        reused = None if rescan_known or ledger is None else ledger.reusable(
+            issue, refresh_after_days * 24 * 60 * 60,
+        )
+        if reused is None:
+            work.append((index, issue))
+        else:
+            results[index] = reused
+            ledger.record_reuse(reused)
+    if results and len(work) != len(results):
+        notify(f"Reusing {len(results) - len(work)} unchanged local audit results.")
+    try:
+        if workers == 1:
+            for position, (index, issue) in enumerate(work, start=1):
+                issue_name = f"{repository}#{issue['number']}"
+                notify(f"[{position}/{len(work)}] Inspecting {issue_name}...")
+                result = audit_issue(api, repository, issue, resolver)
+                results[index] = result
+                if ledger is not None:
+                    ledger.record_audit(result, issue.get("updated_at"))
+                notify(f"[{position}/{len(work)}] {issue_name}: {result['related_pr_status']}")
+        elif work:
+            notify(f"Auditing {len(work)} changed/new Issues with {workers} bounded workers; all API endpoints are globally paced.")
+            with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="issue-audit") as executor:
+                futures = {
+                    executor.submit(audit_issue, api, repository, issue, resolver): (index, issue)
+                    for index, issue in work
+                }
+                try:
+                    for position, future in enumerate(as_completed(futures), start=1):
+                        index, issue = futures[future]
+                        result = future.result()
+                        results[index] = result
+                        if ledger is not None:
+                            ledger.record_audit(result, issue.get("updated_at"))
+                        issue_name = f"{repository}#{issue['number']}"
+                        notify(f"[{position}/{len(work)}] {issue_name}: {result['related_pr_status']}")
+                except BaseException:
+                    for future in futures:
+                        future.cancel()
+                    raise
+    except BaseException as error:
+        if ledger is not None:
+            ledger.finish("interrupted", scan_limitations, str(error))
+        raise
     completed_results = [result for result in results if result is not None]
     counts = {
         status: sum(
@@ -724,9 +783,15 @@ def run_discovery(
             "exclude_labels": exclude_labels,
             "local_exclusion_enabled": local_exclusions is not None,
         },
+        "execution": {
+            "audit_workers": workers,
+            "api_request_pacing": "global",
+        },
         "summary": {
             "matched_total": total_count,
             "inspected": len(completed_results),
+            "audited_now": len(work),
+            "reused_results": len(completed_results) - len(work),
             **counts,
         },
         "limitations": scan_limitations,
@@ -734,19 +799,15 @@ def run_discovery(
         "local_exclusion": {
             "enabled": local_exclusions is not None,
             "excluded_total": len(local_exclusions or {}),
-            "excluded": [
-                {
-                    "issue": entry.issue,
-                    "reasons": sorted(entry.reasons),
-                    "sources": sorted(entry.sources),
-                }
-                for entry in sorted((local_exclusions or {}).values(), key=lambda item: item.issue.casefold())
-            ],
+            "excluded": exclusion_records,
         },
     }
     rate_limit = getattr(api, "rate_limit", None)
     if rate_limit:
         output["rate_limit"] = rate_limit
+    if ledger is not None:
+        ledger.finish("completed", scan_limitations)
+        output["ledger"] = {"index": str(ledger.index_path), "scan": str(ledger.scan_path)}
     return output
 
 
@@ -776,6 +837,28 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="include Issues already recorded locally (explicit re-check)",
     )
+    parser.add_argument(
+        "--rescan-known",
+        action="store_true",
+        help="re-audit unchanged results in the repository discovery ledger",
+    )
+    parser.add_argument(
+        "--ledger-root",
+        type=Path,
+        default=Path(__file__).resolve().parents[1] / "discovery",
+        help="repository-grouped discovery ledger root",
+    )
+    parser.add_argument(
+        "--no-ledger",
+        action="store_true",
+        help="do not read or write the incremental discovery ledger",
+    )
+    parser.add_argument(
+        "--refresh-after-days",
+        type=float,
+        default=DEFAULT_REFRESH_AFTER_DAYS,
+        help=f"re-audit unchanged Ledger results after this age (default: {DEFAULT_REFRESH_AFTER_DAYS:g})",
+    )
     parser.add_argument("--timeout", type=float, default=20.0, help="request timeout seconds")
     parser.add_argument("--max-retries", type=int, default=2, help="bounded retry count")
     parser.add_argument(
@@ -783,8 +866,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         type=int,
         default=DEFAULT_WORKERS,
         help=(
-            f"concurrent Issue audits ({1}-{MAX_WORKERS}; default: {DEFAULT_WORKERS}); "
-            "Search API requests remain globally paced"
+            f"concurrent Issue audit task slots ({1}-{MAX_WORKERS}; default: {DEFAULT_WORKERS}); "
+            "all GitHub API requests remain globally paced"
         ),
     )
     parser.add_argument(
@@ -813,6 +896,10 @@ def _validate_args(args: argparse.Namespace) -> None:
         raise SystemExit(
             "labels cannot be both included and excluded: " + ", ".join(sorted(overlap))
         )
+    if args.rescan_known and args.no_ledger:
+        raise SystemExit("--rescan-known requires the discovery ledger")
+    if args.refresh_after_days < 0:
+        raise SystemExit("refresh-after-days must be zero or positive")
 
 
 def render_candidate_summary(output: dict[str, Any]) -> str:
@@ -907,6 +994,21 @@ def main(argv: list[str] | None = None) -> int:
         max_retries=args.max_retries,
     )
     progress = None if args.quiet else lambda message: print(message, file=sys.stderr)
+    project_root = Path(__file__).resolve().parents[1]
+    local_exclusions = None if args.include_known else exclusion_map(
+        build_index(project_root, args.repository), args.repository,
+    )
+    ledger = None if args.no_ledger else DiscoveryLedger(
+        args.ledger_root,
+        args.repository,
+        {
+            "candidate_limit": args.limit,
+            "include_labels": args.include_label,
+            "exclude_labels": args.exclude_label,
+            "include_known": args.include_known,
+            "rescan_known": args.rescan_known,
+        },
+    )
     try:
         output = run_discovery(
             client,
@@ -916,15 +1018,17 @@ def main(argv: list[str] | None = None) -> int:
             args.exclude_label,
             progress,
             args.workers,
-            None if args.include_known else exclusion_map(
-                build_index(Path(__file__).resolve().parents[1], args.repository),
-                args.repository,
-            ),
+            local_exclusions,
+            ledger,
+            args.rescan_known,
+            args.refresh_after_days,
         )
         _write_output(output, args.output)
         if args.summary_output:
             _write_text(render_candidate_summary(output), args.summary_output)
     except (GitHubError, OSError) as error:
+        if ledger is not None:
+            ledger.finish("interrupted", [], str(error))
         print(f"ERROR: {error}", file=sys.stderr)
         return 1
     return 0

@@ -28,6 +28,12 @@ Candidate Admission 是独立 Gate，不是自动状态转换。`DECISION.yaml` 
 
 仓库职责保持分离：`repositories/` 管理目标仓库绑定与发现；`screenings/` 保存轻量筛选记录；`issues/` 保存正式 Issue 研究事实；`agent-work/` 保存有界任务结果；`decisions/` 保存决策提案。上游源码不属于本仓库。
 
+Discovery Ledger 与 Issue 分析状态也保持分离。Ledger 只回答“脚本何时扫描了
+什么、远端是否变化、审计结果能否复用”；`issues/`、`screenings/` 和
+`agent-work/` 才回答“是否正在分析、是否已排除、下一步是什么”。Discovery 只
+单向读取这些本地记录来跳过已知 Issue，不把 Ledger 结果同步回正式状态，也不把
+`no_known_related_pr` 自动解释为可贡献或已通过筛选。
+
 ## 启动与验证
 
 ```bash
@@ -56,4 +62,55 @@ facts repository 的本地 Commit 与上游代码仓库的 Commit 是两个独�
 - [scripts/discover_github_issues.py](scripts/discover_github_issues.py)：只读候选发现。
 
 候选发现默认会读取正式 Issue、任务和筛选 Evidence，排除已经知道或正在处理的
-Issue，并在输出中保留排除来源。使用 `--include-known` 才会进行显式历史复查。
+Issue，并在输出中保留排除来源。每次扫描还会把已完成的审计结果保存到按仓库分组的
+`discovery/<owner>-<repo>/` Ledger；远端 `updated_at` 不变时，下次会复用结果而不再
+请求 Timeline、评论和 PR 搜索。使用 `--include-known` 才会显式包含本地已知 Issue。
+
+### 候选发现用法
+
+需要先提供只读 GitHub Token：
+
+```bash
+export GITHUB_TOKEN=...
+python3 scripts/discover_github_issues.py \
+  --repository LMCache/LMCache \
+  --limit 50 \
+  --include-label "good first issue" \
+  --exclude-label "needs-triage" \
+  --output candidates.json \
+  --summary-output candidates.md
+```
+
+默认会排除 zhaiyezi 已知或正在处理的 Issue。`--include-known` 只在需要显式包含
+本地已知 Issue 时使用；`--rescan-known` 会强制重新审计 Ledger 中远端未变化的结果。
+`--output -` 输出完整 JSON，`--summary-output -` 输出候选摘要；两者不能同时使用
+标准输出。默认 Ledger 根目录为 `discovery/`；`--no-ledger` 可用于不读写 Ledger 的
+一次性运行。为避免漏掉未更新 Issue 后出现的关联 PR，未变化结果最多复用 7 天；可用
+`--refresh-after-days N` 调整，`0` 表示每次都重新审计。脚本只读 GitHub，不认领
+Issue、不修改标签、不评论。
+
+`--workers` 控制 Issue 详情、Timeline 和 PR 证据审计的并发数，范围为 `1–8`，
+默认值为 `2`：
+
+```bash
+# 串行运行，适合调试或严格控制请求压力
+python3 scripts/discover_github_issues.py \
+  --repository LMCache/LMCache --limit 10 --workers 1
+
+# 有界并发，适合常规批量发现
+python3 scripts/discover_github_issues.py \
+  --repository LMCache/LMCache --limit 20 --workers 2
+```
+
+增大 `--workers` 只会并发 Issue 审计工作；所有 GitHub API 端点都有全局节流，
+Search API 还会使用更慢的单独节流。二级限流会按至少 60 秒的退避重试；已完成的
+单个 Issue 审计会立即写入 Ledger，因此中断后可恢复。遇到 GitHub 限流时，应等待并
+降低到 `1` 或 `2`，而不是反复重跑。
+
+因此，`--workers` 是审计任务槽位，不是绕过 GitHub 限流的请求并发数。脚本输出中的
+`execution.audit_workers` 会记录所用槽位，`execution.api_request_pacing: global`
+表示所有 API 请求仍被统一节流。对纯 API 工作负载，`--workers 2` 通常已经足够。
+
+Ledger 采用分层保留：`no_known_related_pr` 的候选保留完整审计信息；
+`related_pr_found` 只保留 Issue、状态和关联 PR 编号；`insufficient_evidence`
+只保留 Issue、状态和限制。这既支持下次增量判断，又避免大量已排除 Issue 膨胀文件。

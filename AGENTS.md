@@ -86,6 +86,13 @@ pass 或 not-actionable；已结束状态和明确终止分类才使用 terminal
 排除来源和原因必须写入发现结果。需要显式复查历史候选时使用
 `--include-known`，不得通过删除事实记录绕过去重规则。
 
+`discovery/<owner>-<repo>/INDEX.yaml` 是候选发现的增量审计缓存，按远端
+`updated_at` 复用已完成的 API 审计；`scans/` 保存每次扫描的完成或中断状态。
+它不产生 screening classification，也不替代正式 Issue、任务或 screening 记录。
+Discovery 只从这些正式记录单向读取排除信息；Ledger 与 Issue 分析状态不做双向
+同步。Ledger 中的 `no_known_related_pr` 只表示本次 API 审计事实，不表示 pass、
+available、Admission 或 implementation authorization。
+
 ## 模型 profile
 
 Luna、Terra、Sol 的 profile 是工作建议，不是运行时模型路由。当前会话不会因为

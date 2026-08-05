@@ -1,0 +1,122 @@
+schema_version: 1
+repository: LMCache/LMCache
+scan_id: 2026-08-05T07-34-41.996768Z
+started_at: '2026-08-05T07:34:42.064121Z'
+completed_at: '2026-08-05T07:39:56.061359Z'
+status: completed
+query:
+  candidate_limit: 100
+  include_labels: []
+  exclude_labels: []
+  include_known: false
+  rescan_known: false
+audited:
+- LMCache/LMCache#4019
+- LMCache/LMCache#4029
+- LMCache/LMCache#3945
+- LMCache/LMCache#3940
+- LMCache/LMCache#3957
+- LMCache/LMCache#3936
+- LMCache/LMCache#3931
+- LMCache/LMCache#3912
+- LMCache/LMCache#3911
+- LMCache/LMCache#3889
+- LMCache/LMCache#3917
+- LMCache/LMCache#3861
+- LMCache/LMCache#3856
+- LMCache/LMCache#3868
+- LMCache/LMCache#3865
+- LMCache/LMCache#4025
+- LMCache/LMCache#3834
+- LMCache/LMCache#3855
+- LMCache/LMCache#3809
+- LMCache/LMCache#3831
+- LMCache/LMCache#3752
+- LMCache/LMCache#3753
+- LMCache/LMCache#3710
+- LMCache/LMCache#3688
+- LMCache/LMCache#3685
+- LMCache/LMCache#3675
+- LMCache/LMCache#3749
+- LMCache/LMCache#3720
+- LMCache/LMCache#3670
+- LMCache/LMCache#3674
+- LMCache/LMCache#3656
+- LMCache/LMCache#3661
+- LMCache/LMCache#3652
+- LMCache/LMCache#3659
+- LMCache/LMCache#3650
+- LMCache/LMCache#3641
+- LMCache/LMCache#3654
+- LMCache/LMCache#3624
+- LMCache/LMCache#3628
+- LMCache/LMCache#3640
+reused:
+- LMCache/LMCache#4419
+- LMCache/LMCache#4416
+- LMCache/LMCache#4402
+- LMCache/LMCache#4394
+- LMCache/LMCache#4390
+- LMCache/LMCache#4387
+- LMCache/LMCache#4386
+- LMCache/LMCache#4385
+- LMCache/LMCache#4365
+- LMCache/LMCache#4364
+- LMCache/LMCache#4360
+- LMCache/LMCache#4352
+- LMCache/LMCache#4345
+- LMCache/LMCache#4344
+- LMCache/LMCache#4342
+- LMCache/LMCache#4340
+- LMCache/LMCache#4311
+- LMCache/LMCache#4307
+- LMCache/LMCache#4305
+- LMCache/LMCache#4299
+- LMCache/LMCache#4293
+- LMCache/LMCache#4291
+- LMCache/LMCache#4270
+- LMCache/LMCache#4266
+- LMCache/LMCache#4256
+- LMCache/LMCache#4247
+- LMCache/LMCache#4239
+- LMCache/LMCache#4228
+- LMCache/LMCache#4226
+- LMCache/LMCache#4224
+- LMCache/LMCache#4204
+- LMCache/LMCache#4198
+- LMCache/LMCache#4186
+- LMCache/LMCache#4185
+- LMCache/LMCache#4179
+- LMCache/LMCache#4171
+- LMCache/LMCache#4159
+- LMCache/LMCache#4155
+- LMCache/LMCache#4149
+- LMCache/LMCache#4139
+- LMCache/LMCache#4137
+- LMCache/LMCache#4133
+- LMCache/LMCache#4132
+- LMCache/LMCache#4131
+- LMCache/LMCache#4127
+- LMCache/LMCache#4126
+- LMCache/LMCache#4109
+- LMCache/LMCache#4100
+- LMCache/LMCache#4095
+- LMCache/LMCache#4090
+- LMCache/LMCache#4085
+- LMCache/LMCache#4071
+- LMCache/LMCache#4069
+- LMCache/LMCache#4065
+- LMCache/LMCache#4064
+- LMCache/LMCache#4063
+- LMCache/LMCache#4061
+- LMCache/LMCache#4049
+- LMCache/LMCache#4041
+- LMCache/LMCache#4030
+local_exclusions:
+- issue: LMCache/LMCache#4086
+  reasons:
+  - known-evidence
+  sources:
+  - screenings/LMCache-LMCache/2026-08-03-lmcache-4086-evidence/evidence/4086.yaml
+limitations: []
+error: null
