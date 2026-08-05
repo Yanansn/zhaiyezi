@@ -42,7 +42,7 @@ target_repository:
 remotes:
   upstream:
     remote_name: upstream
-    url: null
+    url: https://github.com/LMCache/LMCache.git
     canonical_repository: LMCache/LMCache
   fork:
     remote_name: origin
