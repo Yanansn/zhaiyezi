@@ -112,11 +112,9 @@ class AgentProtocolTests(unittest.TestCase):
         validator.validate_protocol_documents(self.schema, self.permissions, self.state_machine, errors)
         self.assertEqual([], errors)
 
-    def test_model_routing_is_manual_and_handoff_is_explicit(self) -> None:
-        self.assertEqual("manual", self.schema["model_routing"]["mode"])
-        self.assertFalse(self.schema["model_routing"]["automatic_switch"])
-        self.assertEqual("agent:terra", self.schema["model_routing"]["task_type_recommendations"]["deep-audit"])
-        self.assertIn("optional", self.state_machine["agent_handoff"]["completion_requirement"])
+    def test_agent_assignment_is_not_model_routing(self) -> None:
+        self.assertNotIn("model_routing", self.schema)
+        self.assertNotIn("agent_handoff", self.state_machine)
 
     def test_handoff_without_recommended_agent_fails(self) -> None:
         data = request(completion={"criteria": [], "validation": [], "handoff": {"next_stage": "analysis", "message": "Continue."}})

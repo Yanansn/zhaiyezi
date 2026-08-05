@@ -1,7 +1,7 @@
 # Codex Multi-Agent Roles
 
 The current workflow is executed by Codex internal agents. No external
-handoff is required for a lifecycle stage.
+handoff is required for a lifecycle stage, and handoff metadata is optional.
 
 | Agent | Primary responsibility | May modify target source | May commit facts |
 | --- | --- | --- | --- |

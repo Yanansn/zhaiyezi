@@ -4,7 +4,7 @@
 
 The repository uses the Codex Multi-Agent Workflow. Luna owns candidate discovery, evidence, screening, and decision proposals; Terra owns deep audit, source analysis, planning, implementation, and tests; Sol is escalation-only for architecture, concurrency, and difficult debugging.
 
-The lifecycle is `candidate → evidence → analysis → decision → implementation → pull-request`. A decision proposal is recorded as `DECISION.yaml`. Candidate Admission remains an independent gate and is never inferred from evidence completion.
+The lifecycle is `candidate → evidence → analysis → decision → implementation → pull-request`. Screening conclusions are stored in task `RESULT.yaml`; `DECISION.yaml` is only for an independent decision gate or escalation. Candidate Admission is never inferred from evidence completion.
 
 ## Recovery checklist
 
@@ -23,7 +23,7 @@ Read `AGENTS.md`, `agent-protocol/`, the applicable Skill, and the selected task
 
 - `repositories/` is the target repository registry, discovery, and binding source.
 - `agent-work/tasks/` contains current bounded task artifacts.
-- `screenings/` contains lightweight screening history.
+- `screenings/` contains legacy screening history only; new screening uses `agent-work/tasks/`.
 - `issues/` contains formal Issue research records, including historical Kubernetes records.
 - `decisions/` contains Agent decision proposals.
 

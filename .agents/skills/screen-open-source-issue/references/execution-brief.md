@@ -11,7 +11,7 @@ repository: owner/repository
 issue_scope: []
 goal: one concrete stage result
 evidence_refs: []
-output_location: screenings/owner-repository/scan-id
+output_location: agent-work/tasks/<task-id>
 allowed_actions: []
 prohibited_actions: []
 approval_required: false
@@ -21,9 +21,9 @@ approval_required: false
 
 | Stage | Agent | Minimum input | Minimum output |
 | --- | --- | --- | --- |
-| candidate/screening-record | Luna | finite candidate scope | `SCOPE.yaml`, `RESULTS.yaml`, `REPORT.md` |
+| candidate/screening-record | Luna | finite candidate scope | `REQUEST.yaml`, `RESULT.yaml` |
 | issue-evidence-collection | Luna | finite Issue list and sources | `SCOPE.yaml`, `REPORT.md`, `evidence/*.yaml` |
-| deep-audit | Terra | completed evidence and target binding | `RESULT.yaml`, `REPORT.md`, `DECISION.yaml` |
+| deep-audit | Terra | completed evidence and target binding | `RESULT.yaml` |
 | code-verification | Terra | enumerated paths/symbols and baseline | code facts, commands, results, limitations |
 | escalation review | Sol | supplied evidence and analysis | escalation `DECISION.yaml` |
 

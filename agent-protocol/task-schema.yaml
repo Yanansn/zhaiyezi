@@ -76,24 +76,8 @@ completion_contract:
   completed_requires_agent_decision: false
   protected_actions_require_user_approval: true
 
-model_routing:
-  mode: manual
-  automatic_switch: false
-  handoff_required: false
-  task_type_recommendations:
-    evidence-collection: agent:luna
-    deep-audit: agent:terra
-    screening-record: agent:luna
-    code-verification: agent:terra
-    ecosystem-analysis: agent:luna
-    code-map: agent:terra
-    plan: agent:terra
-    implementation: agent:terra
-    validation: agent:terra
-    publication: user
-
 compatibility:
   current_artifact_schema_version: 2
-  current_decision_artifact: DECISION.yaml
+  optional_decision_artifact: DECISION.yaml
   current_agents: [agent:luna, agent:terra, agent:sol]
   repository_binding_evidence_and_screening_retained: true

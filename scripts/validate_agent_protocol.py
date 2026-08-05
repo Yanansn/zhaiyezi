@@ -26,10 +26,6 @@ PROTECTED_ACTIONS = {
 TARGET_PHASES = {"evidence", "deep-audit", "implementation"}
 RESULT_STATES = {"active": "active", "decision": "awaiting-decision", "completed": "completed", "blocked": "blocked", "failed": "failed"}
 DECISION_STATES = {"completed": "completed", "changes-requested": "changes-requested", "rejected": "rejected"}
-MODEL_RECOMMENDATIONS = {
-    "candidate": "agent:luna", "evidence": "agent:luna", "analysis": "agent:terra",
-    "decision": "agent:luna", "implementation": "agent:terra", "pull-request": "user",
-}
 
 
 @dataclass(frozen=True)
@@ -182,14 +178,6 @@ def validate_protocol_documents(schema: dict[str, Any], permissions: dict[str, A
         errors.append("task-schema.yaml: deep-audit is missing")
     if schema.get("target_repository_contract", {}).get("phases") != ["evidence", "deep-audit", "implementation"]:
         errors.append("task-schema.yaml: target repository phases are invalid")
-    routing = schema.get("model_routing", {})
-    if routing.get("mode") != "manual" or routing.get("automatic_switch") is not False or routing.get("handoff_required") is not False:
-        errors.append("task-schema.yaml: model routing must be manual with optional handoffs")
-    if routing.get("task_type_recommendations", {}).get("deep-audit") != "agent:terra":
-        errors.append("task-schema.yaml: Deep Audit must recommend Terra")
-    handoff = state_machine.get("agent_handoff", {})
-    if handoff.get("mode") != "optional" or handoff.get("automatic_model_switch") is not False or handoff.get("recommendations") != MODEL_RECOMMENDATIONS:
-        errors.append("state-machine.yaml: optional Agent handoff recommendations are invalid")
     actors = permissions.get("actors", {})
     if set(actors) != AGENTS | {"user"}:
         errors.append("permissions.yaml: only current Agents and user may be actors")

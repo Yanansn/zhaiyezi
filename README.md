@@ -18,7 +18,7 @@ zhaiyezi 是一个 repository-agnostic 的开源 Issue 研究与贡献记录系�
 candidate → evidence → analysis → decision → implementation → pull-request
 ```
 
-Candidate Admission 是独立 Gate，不是自动状态转换。`DECISION.yaml` 是决策提案；`APPROVAL.yaml` 只由 User 产生，并且不会授权上游写入或公开 GitHub 动作之外的额外范围。
+筛选结果只是推荐，不会自动进入贡献任务。用户确认后再创建下一份有界任务；`DECISION.yaml` 仅用于独立决策 Gate，`APPROVAL.yaml` 只由 User 产生，并且不会扩大上游写入或公开 GitHub 动作权限。
 
 ## 任务与事实
 

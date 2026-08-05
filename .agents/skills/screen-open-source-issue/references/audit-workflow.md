@@ -1,6 +1,9 @@
 # Candidate audit workflow
 
-This is the normative stage order. Save concise facts and URLs in `RESULTS.yaml` and user-facing conclusions in `REPORT.md`. A hard exclusion may stop expensive later checks, but only candidates completing every stage may be `available`.
+This is the normative stage order. Save concise facts, URLs, classification,
+feasibility, and next action in the task `RESULT.yaml`. A short `REPORT.md` is
+optional. A hard exclusion may stop expensive later checks, but only
+candidates completing every stage may be `available`.
 
 This order applies only to explicitly authorized complete `issue-screening`. `issue-evidence-collection` may gather the raw inputs for metadata, comments, Timeline/Development, searches, ownership signals, and related items, but stops before judgment: it does not run classification or Admission stages and stores no `RESULTS.yaml`.
 
@@ -110,13 +113,12 @@ Quick Filter does not read the complete discussion or assign `screening_classifi
 - Stop: contradictory or missing facts become `insufficient-evidence` or `watchlist`.
 - Evidence: concise evidence chain, limitations, audited time.
 
-## Stage 14 — Candidate Admission Gate
+## Optional transition — Candidate Admission
 
-- Input: an `available` candidate and completed record.
-- Checks: apply every condition in `candidate-admission-gate.md`; obtain explicit user approval for admission actions.
-- Conclusions: update the available candidate's independent `admission` mapping; do not alter its classification to represent Gate state.
-- Stop: any failed Gate condition or missing approval.
-- Evidence: Gate decision, decision time, user authorization, separately authorized mutations.
+Screening ends with a recommendation in the task `RESULT.yaml`. A user may
+later authorize a separate bounded contribution task after reviewing the
+classification, confidence, feasibility, and limitations. Do not create an
+additional admission artifact for ordinary screening.
 
 ## Required evidence sequence for a complete bounded screening
 
@@ -128,5 +130,5 @@ Issue → metadata Quick Filter (`quick_filtered_out` or Deep Audit queue)
 → open every related PR/commit/Issue/Discussion
 → classify source, implementation, competition, workaround, history,
   ownership and design blockers
-→ final classification → Candidate Admission Gate
+→ final classification → optional user-authorized contribution task
 ```

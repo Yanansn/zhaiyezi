@@ -1,4 +1,8 @@
-# Candidate Admission Gate
+# Historical Candidate Admission Gate
+
+This document describes the retired heavyweight admission record. New
+screening tasks do not create this mapping or follow this file; they record a
+recommendation in `RESULT.yaml` and wait for a new bounded task.
 
 The Gate separates completed Deep Audit from the formal contribution lifecycle. `screening_classification: available` only makes a candidate eligible for evaluation; it does not mean the Gate passed, the Issue was selected, or any repository mutation was authorized.
 

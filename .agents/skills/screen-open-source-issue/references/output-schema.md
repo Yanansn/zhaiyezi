@@ -1,6 +1,10 @@
-# Screening output schema
+# Historical screening output schema
 
-This is the authoritative persisted screening contract. A bounded scan uses `SCOPE.yaml`, `RESULTS.yaml`, and `REPORT.md`; evidence-only mode uses `SCOPE.yaml`, `REPORT.md`, and one or more `evidence/<issue-number>.yaml` files, with no `RESULTS.yaml`.
+This document describes the legacy `screenings/` format and remains only for
+reading or validating historical records. New candidate and screening tasks
+use `agent-work/tasks/<task-id>/REQUEST.yaml` and `RESULT.yaml`; a short
+`REPORT.md` is optional. The Agent Protocol task schema is authoritative for
+new work.
 
 ## Versions and migration
 

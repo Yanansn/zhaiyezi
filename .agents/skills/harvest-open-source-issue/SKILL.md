@@ -40,7 +40,7 @@ Use only the smallest applicable set:
 
 | Stage | Required records |
 | --- | --- |
-| evidence / screening | `SCOPE.yaml`, `RESULTS.yaml`, `REPORT.md` |
+| evidence / screening | task `REQUEST.yaml` and `RESULT.yaml`; optional short `REPORT.md` |
 | ecosystem or discussion re-analysis | `ECOSYSTEM.md`, plus `STATUS.yaml`/`JOURNAL.md` when state changes |
 | code map | `CODE-MAP.md` |
 | plan | `PLAN.md` |

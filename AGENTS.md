@@ -70,8 +70,8 @@ commit、fork Push、PR 或公开行为都必须单独核验和单独获得用�
 
 Evidence、source facts、technical analysis、inference 和 decision 必须分开记录。
 Evidence completed 不等于 admission、selected 或 implementation authorization。
-Candidate Admission、registry mutation、正式 Issue 初始化和 implementation
-都必须由独立任务和明确 User decision 授权。
+筛选 recommendation、registry mutation、正式 Issue 初始化和 implementation
+彼此分离；进入后续贡献任务必须有新的有界任务和明确 User decision。
 
 Repository binding、target repository、evidence 和 screening 是保留的独立能力，
 不改变公开操作权限。
@@ -92,13 +92,10 @@ Discovery 只从这些正式记录单向读取排除信息；Ledger 与 Issue �
 同步。Ledger 中的 `no_known_related_pr` 只表示本次 API 审计事实，不表示 pass、
 available、Admission 或 implementation authorization。
 
-## 模型 profile
+## Agent assignment
 
-Luna、Terra、Sol 的 profile 是工作建议，不是运行时模型路由。当前会话不会因为
-`assigned_agent` 自动切换真实底层模型；需要切换时由运行环境选择对应 profile。
-
-建议：记录/筛选使用 Luna，实现/测试使用 Terra，高风险架构和最终技术判断使用 Sol。
-阶段完成后可根据 `next_action` 创建下一份有界任务；协议不会自动切换真实底层模型，也不要求为每个筛选任务创建交接记录。
+`assigned_agent` 只表示任务归属和权限边界，不表示或触发底层模型切换。
+下一阶段根据 `next_action` 创建新的有界任务；不需要额外交接文件。
 
 ## 公开沟通
 

@@ -38,15 +38,16 @@ Target binding never grants upstream write or public-action permission.
 
 ### Candidate / screening record — Luna
 
-Use the smallest record set:
+Use the task's smallest record set:
 
-- `SCOPE.yaml`
-- `RESULTS.yaml`
-- `REPORT.md`
+- `agent-work/tasks/<task-id>/REQUEST.yaml`
+- `agent-work/tasks/<task-id>/RESULT.yaml`
+- optional short `REPORT.md`
 
-Record candidates, classification, confidence, limitations, and admission
-recommendation separately. `available` never means admitted. Validate with
-`scripts/validate_screening_record.py`.
+Record classification, confidence, evidence references, feasibility,
+limitations, and next action directly in `RESULT.yaml`. `available` never
+means admitted. Historical `screenings/` records remain readable; new tasks
+use `scripts/validate_agent_protocol.py`.
 
 ### Evidence collection — Luna
 
@@ -61,9 +62,9 @@ admission, registry changes, formal Issue records, or public actions.
 ### Deep Audit — Terra
 
 Consume completed evidence and a bounded target binding. Verify only the
-specified Issue/PR/source facts, build the smallest relevant code map, record
-feasibility and risks, and produce `RESULT.yaml`, `REPORT.md`, and
-`DECISION.yaml` when the task contract requires them.
+specified Issue/PR/source facts, build the smallest relevant code map, and
+record feasibility and risks in `RESULT.yaml`. Add a short `REPORT.md` or
+`DECISION.yaml` only when the task contract requires it.
 
 Run the full ecosystem audit only when the task explicitly requires it or when
 new discussion, PR, CI, ownership, or scope evidence could change the result.
@@ -97,7 +98,7 @@ approval is required for protected actions.
 
 ## Outputs and handoff
 
-Write only changed records. Report scope, facts, limitations, files, validator
-results, Git state, and actions not performed. Commit facts only when the
-current task explicitly authorizes it; Push and public actions require separate
-User approval.
+Write only the task result and any explicitly required optional artifact.
+Commit facts only when the current task explicitly authorizes it; Push and
+public actions require separate User approval. Handoff text is optional; the
+next stage starts only from a new bounded task.
