@@ -1,23 +1,21 @@
 schema_version: 2
 
 queue_artifact_state:
-  states: [ready, active, awaiting-decision, awaiting-review, changes-requested, blocked, failed, rejected, completed]
+  states: [ready, active, awaiting-decision, changes-requested, blocked, failed, rejected, completed]
   derivation:
     ready: {rule: REQUEST.status is ready and RESULT.yaml is absent.}
-    active: {rule: The newest RESULT.status is active.}
-    awaiting-decision: {rule: A schema_version 2 RESULT.status is decision and no DECISION covers that result revision.}
-    awaiting-review: {rule: A legacy RESULT.status is review and no REVIEW covers that result revision.}
-    changes-requested: {rule: The current legacy REVIEW or current DECISION requests changes.}
-    blocked: {rule: The newest RESULT.status is blocked and limitations contains a blocker.}
-    failed: {rule: The newest RESULT.status is failed.}
-    rejected: {rule: The current legacy REVIEW or current DECISION is rejected.}
-    completed: {rule: A current DECISION is completed, or a legacy REVIEW is approved and completed.}
+    active: {rule: RESULT.status is active.}
+    awaiting-decision: {rule: RESULT.status is decision and no DECISION covers that result revision.}
+    changes-requested: {rule: DECISION.status is changes-requested.}
+    blocked: {rule: RESULT.status is blocked and limitations contains a blocker.}
+    failed: {rule: RESULT.status is failed.}
+    rejected: {rule: DECISION.status is rejected.}
+    completed: {rule: DECISION.status is completed.}
   transitions:
-    ready: [active, awaiting-decision, awaiting-review, blocked, failed]
-    active: [awaiting-decision, awaiting-review, blocked, failed]
+    ready: [active, awaiting-decision, blocked, failed]
+    active: [awaiting-decision, blocked, failed]
     awaiting-decision: [changes-requested, rejected, completed]
-    awaiting-review: [changes-requested, rejected, completed]
-    changes-requested: [active, awaiting-decision, awaiting-review, blocked, failed]
+    changes-requested: [active, awaiting-decision, blocked, failed]
     blocked: [active, failed]
     failed: []
     rejected: []
@@ -25,9 +23,7 @@ queue_artifact_state:
   rules:
     fixed_task_directory: true
     directory_moves_prohibited: true
-    legacy_review_supported: true
-    current_decision_replaces_chat_review: true
-    materialization_does_not_transfer_decision_ownership: true
+    current_decision_required: true
 
 contribution_coordination:
   states: [candidate, evidence, analysis, decision, implementation, pull-request]
@@ -39,28 +35,9 @@ contribution_coordination:
     implementation: [pull-request]
     pull-request: []
   gates:
-    evidence_to_analysis:
-      owner: agent:terra
-      rule: Evidence must be recorded before source analysis.
-    analysis_to_decision:
-      owner: agent:luna
-      rule: An Agent Decision Proposal records the conclusion, confidence, evidence, risks, and next action.
-    decision_to_implementation:
-      owner: agent:terra
-      rule: Implementation requires an accepted agent decision and a bounded implementation task; it does not grant public actions.
-    implementation_to_pull_request:
-      owner: user
-      rule: Pushing a target fork, creating a Pull Request, and every public GitHub action require explicit User approval.
+    evidence_to_analysis: {owner: agent:terra, rule: Evidence must be recorded before source analysis.}
+    analysis_to_decision: {owner: agent:luna, rule: A decision proposal records conclusion, confidence, evidence, risks, and next action.}
+    decision_to_implementation: {owner: agent:terra, rule: Implementation requires an accepted Agent decision and a bounded task.}
+    implementation_to_pull_request: {owner: user, rule: Target fork Push, PR creation, and public GitHub actions require explicit User approval.}
 
-forbidden_shortcuts:
-  - [candidate, analysis]
-  - [candidate, decision]
-  - [evidence, decision]
-  - [evidence, implementation]
-  - [analysis, implementation]
-  - [decision, pull-request]
-
-compatibility:
-  legacy_chat_codex_queue_states_remain_readable: true
-  current_workflow_has_no_mandatory_chat_review: true
-  repository_binding_evidence_and_screening_are_retained: true
+forbidden_shortcuts: [[candidate, analysis], [candidate, decision], [evidence, decision], [evidence, implementation], [analysis, implementation], [decision, pull-request]]

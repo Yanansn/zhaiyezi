@@ -21,5 +21,4 @@ public action.
 derivation. This document is explanatory only.
 
 Repository binding, evidence, screening, and the Candidate Admission boundary
-remain separate facts. Imported version 1 records, if encountered, are
-diagnostic-only compatibility inputs and derive historic `REVIEW.yaml` states.
+remain separate facts.

@@ -12,8 +12,8 @@ Current tasks use `schema_version: 2` and are assigned to `agent:luna`,
 - Luna produces discovery, evidence, screening, and decision proposals.
 - Terra produces deep audits, plans, implementation changes, and tests.
 - Sol provides escalation-only architecture/concurrency/debug review.
-- `DECISION.yaml` replaces the current-workflow `REVIEW.yaml` and contains
-  conclusion, confidence, evidence references, risks, and the next action.
+- `DECISION.yaml` contains conclusion, confidence, evidence references, risks,
+  and the next action.
 - `approval_required` is mandatory for current REQUESTs. It records whether
   a task expects protected actions; it never grants them.
 
@@ -31,12 +31,6 @@ candidate → evidence → analysis → decision → implementation → pull-req
 The `decision` stage must be materialized in `DECISION.yaml`; it replaces the
 former mandatory Chat Review. Repository binding, target repository discovery,
 evidence collection, and screening records are retained.
-
-## Compatibility
-
-No version 1 task records are retained. The validator can read imported v1
-artifacts for diagnostics; see [legacy-v1.md](legacy-v1.md). New tasks must
-use version 2 agent identities and `DECISION.yaml`.
 
 `state-machine.yaml` is the authoritative lifecycle definition. This README
 and `lifecycle.md` explain it but do not introduce additional transitions.

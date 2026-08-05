@@ -4,199 +4,55 @@ task_directory: agent-work/tasks/<task-id>
 
 request:
   filename: REQUEST.yaml
-  owner: agent
-  required_fields:
-    - schema_version
-    - task_id
-    - task_type
-    - created_by
-    - decision_author
-    - materialized_by
-    - assigned_agent
-    - repository
-    - issue
-    - status
-    - input_refs
-    - goal
-    - allowed_actions
-    - prohibited_actions
-    - expected_outputs
-    - completion
-  optional_fields:
-    - created_at
-    - priority
-    - materialization
-    - target_repository
-    - approval_required
+  owner: assigned-agent
+  required_fields: [schema_version, task_id, task_type, created_by, decision_author, materialized_by, assigned_agent, repository, issue, status, input_refs, goal, allowed_actions, prohibited_actions, expected_outputs, completion]
+  optional_fields: [created_at, priority, target_repository, evidence_refs, approval_required]
   constraints:
+    schema_version: 2
     status: ready
+    approval_required: boolean
     immutable_after_execution_starts: true
 
 result:
   filename: RESULT.yaml
-  owner: agent
-  required_fields:
-    - schema_version
-    - task_id
-    - created_by
-    - decision_author
-    - materialized_by
-    - status
-    - request_ref
-    - outputs
-    - actions_performed
-    - actions_not_performed
-    - validation
-    - limitations
-  optional_fields:
-    - revision
-    - supersedes_review
+  owner: agent:luna-or-agent:terra
+  required_fields: [schema_version, task_id, created_by, decision_author, materialized_by, status, request_ref, outputs, actions_performed, actions_not_performed, validation, limitations]
+  optional_fields: [revision]
 
 decision:
   filename: DECISION.yaml
-  owner: agent
-  required_fields:
-    - schema_version
-    - task_id
-    - created_by
-    - decision_author
-    - materialized_by
-    - status
-    - result_ref
-    - result_revision
-    - conclusion
-    - confidence
-    - evidence_refs
-    - risks
-    - next_action
-
-review:
-  filename: REVIEW.yaml
-  owner: legacy-chat
-  required_fields:
-    - schema_version
-    - task_id
-    - created_by
-    - decision_author
-    - materialized_by
-    - status
-    - result_ref
-    - result_revision
-    - decision
-    - findings
-    - next_actions
-  optional_fields:
-    - materialization
+  owner: agent:luna-or-agent:terra-or-agent:sol
+  required_fields: [schema_version, task_id, created_by, decision_author, materialized_by, status, result_ref, result_revision, conclusion, confidence, evidence_refs, risks, next_action]
 
 approval:
   filename: APPROVAL.yaml
   owner: user
-  required_fields:
-    - schema_version
-    - task_id
-    - approved_by
-    - decision_author
-    - materialized_by
-    - status
-    - actions
-    - scope
-  optional_fields:
-    - materialization
-
-standing_authorization:
-  kind: standing-authorization
-  actual_location: decisions/authorizations/<authorization-id>.yaml
-  template_location: agent-protocol/examples/standing-authorization.yaml
-  required_fields:
-    - schema_version
-    - kind
-    - authorization_id
-    - approved_by
-    - decision_author
-    - materialized_by
-    - status
-    - repository
-    - branch
-    - effective_from
-    - expires_at
-    - grants
-    - always_requires_new_approval
-    - revocation
-  optional_fields:
-    - materialization
-
-materialization_contract:
-  condition: materialized_by differs from decision_author
-  required_fields:
-    - authority
-    - scope
-    - source_summary
-  authority: [user-instruction]
-  scope: [bounded]
+  required_fields: [schema_version, task_id, approved_by, decision_author, materialized_by, status, actions, scope]
 
 enums:
-  task_type:
-    - example
-    - evidence-collection
-    - deep-audit
-    - screening-record
-    - code-verification
-    - ecosystem-analysis
-    - code-map
-    - plan
-    - implementation
-    - validation
-    - publication
-    - review
-    - documentation-contract-update
+  task_type: [evidence-collection, deep-audit, screening-record, code-verification, ecosystem-analysis, code-map, plan, implementation, validation, publication]
   created_by: [agent:luna, agent:terra, agent:sol, user]
   decision_author: [agent:luna, agent:terra, agent:sol, user]
   materialized_by: [agent:luna, agent:terra, agent:sol, user]
   assigned_agent: [agent:luna, agent:terra, agent:sol]
-  legacy_created_by: [chat, codex, user]
-  legacy_decision_author: [chat, codex, user]
-  legacy_materialized_by: [chat, codex, user]
-  legacy_assigned_agent: [chat, codex]
   request_status: [ready]
   result_status: [active, decision, blocked, failed]
-  legacy_result_status: [active, review, blocked, failed]
   decision_status: [completed, changes-requested, rejected]
   decision_confidence: [low, medium, high]
-  review_status: [completed, changes-requested, rejected]
-  review_decision: [approved, changes-requested, rejected]
   approval_status: [approved, revoked]
-  standing_authorization_status: [approved, revoked]
   priority: [low, normal, high, urgent]
 
 task_type_contracts:
   deep-audit:
     purpose: Analyze completed evidence and produce a contribution screening recommendation.
-    input:
-      - evidence collection result
-      - related PR information
-      - source facts
-    output:
-      - RESULT.yaml
-      - REPORT.md
-    required_request_fields:
-      - evidence_refs
-    prohibited_allowed_actions:
-      - modify_upstream_code
-      - upstream_write
-      - push_upstream_branch
-      - create_pull_request
-    does_not_authorize:
-      - admission
-      - implementation authorization
-      - upstream contribution
+    input: [evidence collection result, related PR information, source facts]
+    output: [RESULT.yaml, REPORT.md, DECISION.yaml]
+    required_request_fields: [evidence_refs]
+    prohibited_allowed_actions: [modify_upstream_code, upstream_write, push_upstream_branch, create_pull_request]
+    does_not_authorize: [admission, implementation authorization, upstream contribution]
   implementation:
-    required_request_fields:
-      - target_repository
-    required_target_repository_fields:
-      - name
-      - phase
-      - fork
-      - local
+    required_request_fields: [target_repository]
+    required_target_repository_fields: [name, phase, fork, local]
 
 target_repository_contract:
   phases: [evidence, deep-audit, implementation]
@@ -204,35 +60,13 @@ target_repository_contract:
   implementation_required_fields: [fork, local]
   local_discovery_field: discovery
 
-artifact_state_derivation:
-  request_ready_without_result: ready
-  result_active: active
-  result_decision: awaiting-decision
-  legacy_result_review: awaiting-review
-  result_blocked: blocked
-  result_failed: failed
-  decision_completed: completed
-  legacy_review_approved_completed: completed
-  review_changes_requested: changes-requested
-  review_rejected: rejected
-  newer_result_after_changes_requested: derive-from-newer-result
-
 completion_contract:
   required_fields: [criteria, validation, handoff]
   completed_requires_agent_decision: true
-  protected_actions_require_task_or_valid_standing_authorization: true
+  protected_actions_require_user_approval: true
 
 compatibility:
-  legacy_artifact_schema_version: 1
-  legacy_chat_review_is_supported: true
   current_artifact_schema_version: 2
   current_decision_artifact: DECISION.yaml
   current_agents: [agent:luna, agent:terra, agent:sol]
-  approval_required_field: true
-  coordination_status_is_not_screening_classification: true
-  coordination_status_is_not_issue_status: true
-  queue_completed_is_not_contribution_completed: true
-  evidence_completed_is_not_available: true
-  evidence_completed_is_not_admission: true
-  semantic_ownership_is_not_materialization: true
-  delegated_materialization_does_not_expand_permissions: true
+  repository_binding_evidence_and_screening_retained: true

@@ -1,407 +1,95 @@
 # 摘叶子 Agent 工作规则
 
-## 项目目标
+## 目标
 
-通过处理真实开源 Issue，在理解项目原理和社区协作方式的同时，完成可验证的代码贡献，并保存可查询、可恢复的全过程记录。
+通过真实开源 Issue 建立可验证的研究、实现和公开贡献记录。`zhaiyezi`
+是 facts repository，不保存上游完整源码或无关 patch。
 
-## 当前工作模式
+## Codex Multi-Agent Workflow
 
-当前协议采用 **Codex Multi-Agent Workflow**。Luna 负责候选、证据、筛选与决策提案；Terra 负责深度审计、源码分析、计划、实现与测试；Sol 只进行架构/并发/疑难问题升级审查。每个当前任务由其 `REQUEST.yaml` 的 `assigned_agent` 执行，并以 `DECISION.yaml` 取代强制的 Chat Review。
-
-生命周期为：`candidate → evidence → analysis → decision → implementation → pull-request`。`approval_required: true` 是用户批准门；任何 target fork Push、PR 或公开 GitHub 操作都仍需用户明确批准。历史 schema v1 的 Chat/Codex 任务与 `REVIEW.yaml` 仅为可读、可验证的兼容记录，不构成新任务的必经节点。
-
-## 历史角色分工（仅适用于 schema v1 记录）
-
-- 普通 Chat 默认负责候选发现、Quick Filter、Deep Audit、分类、筛选建议、易懂讲解、学习路径、方案比较、维护者评论解读和最终执行要求整理，并输出 `Screening Result Brief`。
-- 本地 Codex 默认把 `Screening Result Brief` 作为事实输入，负责建立和校验筛选记录；只有用户明确要求完整 Codex Screening、提供有限 `issue-evidence-collection` 或 `Code Verification Brief`，或 Issue 已进入正式贡献流程时，才执行相应范围的调查或工程工作。
-- 公开的 `Yanansn/zhaiyezi` 仓库是普通 Chat 与本地 Codex 之间的持久事实通道。
-- schema v1 历史记录曾使用一次 Chat→Codex 人工交接；该交接不适用于当前多 Agent 任务。
-
-Codex 不负责无边界的候选筛选、长篇教学或重复讨论已经确认的知识。没有 `Execution Brief` 时，不得自行扩展为全面研究任务。
-
-## Agent Coordination Rules
-
-`agent-protocol/` 是 Codex 多 Agent 的仓库级协调层，真实任务固定保存在 `agent-work/tasks/<task-id>/`。目录不随状态移动；当前任务状态由 REQUEST、RESULT 和 DECISION 推导；schema v1 记录继续由 REVIEW 推导。它们只负责传递任务、结果、Decision 和 Approval，不替代本文件、Screening schema、Candidate Admission Gate 或 Harvest 生命周期。
-
-所有 Agent 必须：
-
-1. 启动时读取 `agent-protocol/`，运行 `python3 scripts/validate_agent_protocol.py`，并遵守其中的角色所有权和权限规则。
-2. 只执行分配给自己的、结构有效的 `REQUEST.yaml`；`REQUEST.yaml` 必须引用本阶段适用的 Brief 或包含同等边界信息。
-3. 不跳过任务状态转换，也不把协调层状态当作筛选分类、Admission 或正式 Issue 状态。
-4. 不根据聊天上下文扩大或执行仓库中未记录的任务。当前用户指令可以授权 Codex 忠实落盘一份已完整确定的 Chat Artifact，但只有落盘并通过校验的 REQUEST 才能成为可执行任务。
-5. 以仓库中已提交并 Push 的状态作为跨 Agent 共享事实；本地未 Push 状态只属于当前执行环境。
-6. 区分语义所有权与仓库落盘：当前任务由 Luna/Terra/Sol 按其角色拥有的 Artifact 决定并落盘，用户决定 `APPROVAL.yaml` 与 standing authorization；历史 Chat/Codex 字段只按 v1 compatibility 解释。任何 Agent 都不得通过移动任务目录改变他人文件路径。
-
-当 Chat 缺少仓库写权限时，Codex 可在用户当前明确指令下，把 Chat 已完整确定的 REQUEST、REVIEW 或 decision 结构化落盘。此时必须记录 `decision_author: chat`、`materialized_by: codex` 及 bounded `materialization` 来源；Codex 不获得决策所有权，不得补充推断、改变范围、结论、权限或状态。内容有歧义时必须停止。
-
-Codex 只有在用户当前指令给出完整批准范围时，才可代为落盘 User-authored APPROVAL 或 standing authorization，并保留 `decision_author: user`。Standing authorization 不能授权 `materialize_user_artifact`，更不能产生或扩大用户批准。
-
-当前 Agent 启动顺序：
-
-1. 验证 facts repository 的 remote、branch、HEAD 和 clean worktree。
-2. 仅在已有授权时执行 fast-forward 同步。
-3. 读取 `AGENTS.md`、`HANDOFF.md`、`agent-protocol/`、当前 REQUEST 与适用 Skill。
-4. 运行 `python3 scripts/validate_agent_protocol.py`。
-5. 运行 `python3 scripts/agent_queue.py next --agent agent:luna`、`agent:terra` 或 `agent:sol`。
-6. 一次只执行返回的一个 `ready` 任务，并只写入该 Agent 拥有的 Artifact。
-7. Luna/Terra 可在任务边界内 Commit facts repository；facts Push 与所有 target/public 动作仍按 Approval Gate 决定。
-8. facts-repository standing authorization 永远不能授权上游动作或公开动作。
-
-历史 Chat/Codex 任务恢复顺序（仅 schema v1）：
-
-1. 读取远端 `main`，不把 Codex 本地状态当成共享事实。
-2. 验证协议，并列出 `awaiting-review`、`blocked` 与分配给 Chat 的任务。
-3. 读取 `RESULT.yaml`、`REPORT.md` 和 evidence，形成 Chat-authored `REVIEW.yaml`，需要时形成下一份 `REQUEST.yaml`；无法直接写仓库时，把完整、无歧义内容交由 Codex 落盘。
-4. 只有存在当前任务 Approval 或精确匹配的有效 standing authorization 时，才 Commit/Push Chat-owned Artifacts。
-
-Standing authorization 是用户可选机制；只有 `decisions/authorizations/*.yaml` 中真实、有效、未撤销且 repository/branch/actor/action/path 全部匹配的文件才生效。它可以允许 Codex 落盘 Chat-authored Artifact，但不会转移语义所有权，也不能允许 Codex 产生 User approval。`agent-protocol/examples/` 中的模板不构成授权；没有真实授权时保持 default deny。Registry、正式 Issue 初始化、上游 fetch/code/write/branch Push 和所有 GitHub 公开动作始终需要新的用户确认。
-
-任务来源优先级：
-
-1. Repository task files
-2. Decision records
-3. Current instructions
-4. Chat messages
-
-该优先级不允许低层来源覆盖系统安全规则、本 `AGENTS.md`、用户审批边界或上游实时事实。来源冲突时停止执行，在当前角色拥有的 artifact 中记录差异，不自动合并或覆盖他人修改。
-
-Evidence task 完成后进入分析与 Agent Decision；不再要求 Chat Review。证据、分析或 Decision 均不得直接解释为 `available`、Admission passed、`selected` 或 implementation authorization。Luna/Terra 可在其有界任务内提交 facts repository；facts Push、上游写入和所有公开动作继续受用户批准约束。
-
-## 候选筛选与接纳边界
-
-### 默认协作规则
-
-- 默认是 **Luna 调查与决策，Terra 分析与执行，Sol 升级审查**。Luna 完成 Candidate Discovery、Quick Filter、Evidence、Classification 和 Decision Proposal；Terra 完成 Deep Audit、源码分析、计划、修改与测试；Sol 不实施，只记录升级审查结论。
-- Chat 的 `Screening Result Brief` 必须包含候选列表、classification、confidence、recommendation、证据摘要、limitations 和是否建议进入 Candidate Admission Gate。Codex 默认相信这些内容是本阶段的事实输入，并只负责初始化/更新 `SCOPE.yaml`、`RESULTS.yaml`、`REPORT.md`、运行 validator、必要时更新 `HANDOFF.md`，以及执行另行授权的 Git 操作。
-- 同一次 Screening 的调查结果只保留一份。Codex 不以“复核”为由默认重复完整调查；若 Brief 内部矛盾、缺少 schema 必填信息或无法通过 validator，应报告缺口并停止记录，不得自行补做 GitHub 调查。
-- 只有用户明确要求 Codex 执行完整候选筛选时，Codex 才可按有界 `issue-screening` Brief 完成全部调查阶段。一般性的“记录结果”“继续”或提供 Screening Result Brief 不构成该授权。
-- `Code Verification Brief` 与 Issue Screening 是不同阶段。它只允许 Codex 验证列出的代码事实，例如当前基线是否已有修复、符号或测试是否存在、是否跨 package、是否可本地运行；不得扩展为 Issue/PR/Owner/设计边界的完整筛选。
-- `issue-evidence-collection` 只允许收集完整正文、分页评论、可见 Timeline/Development、显式编号与语义搜索原始结果、未经最终判断的 ownership signals 和 limitations。它不得分配 classification/confidence、判断 `available`、生成 `RESULTS.yaml`、修改 registry、建立正式 Issue 目录或执行公开动作。
-- `deep-audit` 是正式一等任务类型，只消费已完成的 evidence collection、关联 PR 信息和源码事实，输出 Deep Audit `RESULT.yaml`/`REPORT.md` 与 Agent Decision Proposal；不代表 Admission、implementation authorization 或 upstream contribution。
-- Target Repository Management 通过 `repositories/registry.yaml`、`repositories/discovery.yaml` 和 `scripts/repository_discovery.py` 管理 upstream、fork、local discovery 与 Git identity；registry 不得保存绝对路径。Evidence 可不绑定目标仓库，Deep Audit 必须绑定，Implementation 还必须提供 fork 和 local discovery result。目标仓库绑定不授予 upstream write 或 PR 权限。
-- Issue 通过 Candidate Admission Gate 并正式进入 `harvest-open-source-issue` 后，Codex 才按贡献 Brief 开始 Code Map、Root Cause、Implementation、Testing 和 PR。
-
-- `.agents/skills/screen-open-source-issue/` 默认负责把 Chat 筛选结果写入轻量记录；仅在用户明确授权完整 Codex Screening 时，负责有界的候选发现、快速过滤、完整审计、关联实现与隐性 Owner 搜索、设计/基础设施阻塞判断、筛选分类和 Candidate Admission Gate。它不负责源码实现。
-- `.agents/skills/harvest-open-source-issue/` 继续负责已经接纳 Issue 的 Intake、Ecosystem Analysis、Knowledge、Code Map、范围确认、Plan、Implementation、Testing 和 PR。
-- 默认记录必须有完整的 `Screening Result Brief`；完整 Codex Screening 必须有明确授权的 `stage: issue-screening` Brief；证据采集必须有 `stage: issue-evidence-collection` Brief；代码核验必须有窄范围 `Code Verification Brief`。各 Brief 都要明确范围、交付物和审批边界，没有对应有效 Brief 时不得扩大工作。
-- 筛选结果保存在 `screenings/` 的轻量记录中。不得为每个被排除或观察中的候选创建完整 `issues/<owner>-<repo>-<number>/` 目录。
-- Quick Filter 只允许按明确、低成本、可复核的元数据规则写入 `quick_filtered_out`，不产生 `screening_classification`、置信度或 admission；需要完整评论、PR 搜索、Owner 或设计判断的候选必须进入 Deep Audit。
-- `screening_classification` 与贡献生命周期 `status` 完全分离，不得把 `implicit-owner`、`implementation-pr-exists` 等筛选分类加入现有状态枚举。
-- `available` 只表示完整审计未发现已知 Owner、实现冲突或阻塞；它不等于 Candidate Admission Gate passed 或 `selected`。Gate 状态、证据刷新、用户决定和 medium-confidence 限制接受必须独立持久化。
-- Candidate Admission Gate 要求完整审计、`available`、`high`（或用户接受限制的 `medium`）置信度、无已知冲突或设计阻塞，以及用户明确决定继续。
-- 只有 Gate 通过且分别获得授权后，才可修改 `registry/issues.yaml`、初始化正式 Issue 记录并以 `candidate` 或 `screening` 进入 `harvest-open-source-issue`。
-- 默认禁止筛选过程自动修改 registry、初始化正式 Issue、公开认领/评论、Commit 或 Push；这些动作保持各自的审批边界。
-- 新筛选记录使用 RESULTS schema v3；v2 历史记录保持可读。v3 用 `not-an-upstream-bug`，结构化保存 ownership、related items、feasibility、verification matrix、environment 与 repository scope。
-
-## 上下文与可见性边界
-
-- 普通 Chat 只能把已经 Push 到 GitHub 的仓库内容视为共享事实；它看不到 Ubuntu 本地未提交、未 Push 的文件、命令输出、进程状态和工作树变化。
-- Codex 可以读取和操作本地工作区，但不能自动获得普通 Chat 中未写入 `Execution Brief` 或仓库记录的决定。
-- 对话不是持久事实通道。需要跨会话保留的信息必须进入 `Execution Brief`、Issue 记录或 `HANDOFF.md`。
-- Codex 完成阶段后，只有结果被记录并 Push，普通 Chat 才能可靠接续；普通 Chat 开始新阶段前必须重新读取事实仓库，不依赖旧对话记忆。
-- 上游 GitHub 仓库是 Issue、PR、评论和 CI 实时状态的权威来源。
-- `Yanansn/zhaiyezi` 是已核验状态、决策、证据和交接的权威记录。
-- Ubuntu 本地工作区是尚未发布工程状态的权威来源。
-- 当上游 GitHub、事实仓库和本地工作区不一致时，必须报告差异，不得静默猜测、覆盖或把未 Push 状态描述为共享事实。
-
-## 多仓库职责边界
-
-- `zhaiyezi` 与上游项目代码仓库是两个独立 Git 仓库，必须分别检查 branch、commit、remote 和 worktree。
-- 上游代码只能在上游项目本地 Clone 的工作分支中修改和 Commit，并只在获授权后 Push 到用户 Fork。
-- 上游 PR 从用户 Fork 的 head branch 提交到上游官方仓库的目标 base branch；官方仓库通常作为只读同步来源，不直接 Push。
-- `zhaiyezi` 只保存过程记录与证据，不保存上游完整源码、业务代码副本或无必要的 patch 文件。
-- 不得把上游代码 Commit 提交进 `zhaiyezi`，也不得把 `zhaiyezi` 的记录文件提交进上游项目仓库。
-- 若任一仓库存在来源不明的本地修改，必须停止并报告，不得覆盖、暂存或夹带提交。
-- 每阶段结束必须分别报告 facts repository、upstream working repository 和 PR 的 branch、commit、worktree、Push 及远端可见状态。
-- 对事实仓库 Commit、事实仓库 Push、上游工作仓库 Commit、用户 Fork Push、上游 PR 创建或更新的授权必须分别判断；一个动作的授权不得自动扩展到另一个仓库或动作。
-- 单仓库 Brief 发现必须修改第二仓库时，立即暂停并进入范围确认。Related repository 默认只读；每个工作仓库的 remote、base、branch、commit、worktree 和 Push 授权必须独立记录。
-
-## 上游基础分支同步
-
-- 上游代码仓库原则上使用用户 Fork 作为可 Push remote、官方仓库作为只读同步 remote；`origin` 和 `upstream` 只是惯例，必须从 `git remote -v` 和仓库地址核验实际角色。
-- 每个涉及真实上游代码的阶段开始时，先记录工作树、当前分支、remotes 和 HEAD。在 Execution Brief 授权 fetch 后，执行 `git fetch --prune <official-remote>`，核验官方默认开发分支以及本地基础分支相对官方基础分支是 ahead、behind、diverged 还是一致。
-- 使用 `git rev-list --left-right --count <local-base>...<official-remote>/<base>`、`git rev-parse` 和 `git merge-base` 分别核验本地基础分支、官方基础分支和工作分支；不得仅根据分支名推断基线。
-- 只有工作树干净、本地基础分支没有独有提交、双方未 diverge、可以 fast-forward，且简报明确允许时，才可通过 `git switch <base>` 和 `git merge --ff-only <official-remote>/<base>` 自动同步。同步前后都要记录 base Commit。
-- 不使用无参数 `git pull` 同步基础分支：它可能拉取用户 Fork、受 `pull.rebase` 等配置影响、产生 merge Commit 或改写历史，也不能证明同步目标是官方基础分支。
-- 不得为同步自动执行 `git reset --hard`、`git clean -fd`、`git stash`、`git rebase`、`git checkout -- .`、`git restore .`、`git branch -D`、`git push --force` 或 `git push --force-with-lease`。除非简报针对具体仓库、分支和动作逐项授权。
-- 工作树不干净、本地基础分支有独有提交、分支已 diverge、remote 与记录不符、官方默认分支无法确认、工作分支有未识别提交、fetch 失败，或同步需要 merge Commit、rebase、reset、丢弃修改时，必须停止并报告。
-- 基础分支同步与已有工作分支更新是两个审批边界。工作分支已有提交时，不得自动 merge 或 rebase 官方基础分支；必须报告 Commit、ahead/behind、merge-base、冲突风险、PR 状态和是否会改写已 Push 历史，再由新简报决定暂不更新、merge、rebase 或重新创建。
-- PR 已创建时默认不主动 rebase 或 Force Push；只有上游要求、CI 因基线过旧失败、出现冲突、贡献规则要求或用户明确要求时，才提出更新建议。
-- `zhaiyezi` 自身也按同样的非破坏原则核验 `main...origin/main`。只有工作树干净、本地没有独有提交、可 fast-forward 且已获授权时，才可 `git fetch --prune origin` 后执行 `git merge --ff-only origin/main`；不得自动 reset 或覆盖本地记录。
-
-## 启动与恢复
-
-每次开始工作或更换上下文时，必须按顺序执行：
-
-1. 根据 Brief 使用仓库级 Skill：`Screening Result Brief`、明确授权的完整 `stage: issue-screening`、`stage: issue-evidence-collection` 或 `Code Verification Brief` 使用 `.agents/skills/screen-open-source-issue/`；已接纳 Issue 的贡献阶段使用 `.agents/skills/harvest-open-source-issue/`。
-2. 读取根目录 `HANDOFF.md`。
-3. 读取本轮用户提供的对应 `Execution Brief`；筛选格式见 `.agents/skills/screen-open-source-issue/references/execution-brief.md`，贡献格式见 `.agents/skills/harvest-open-source-issue/references/execution-brief.md`。
-4. 若为已接纳 Issue 的贡献 Brief，读取 `registry/issues.yaml`，确认当前活动 Issue 与简报目标一致；候选筛选 Brief 不要求候选预先进入 registry。
-5. 若存在活动 Issue，读取其 `STATUS.yaml`、`JOURNAL.md`、强制一级事实文档 `ECOSYSTEM.md` 以及本阶段所需记录。
-6. 按 Brief 类型执行：默认 `Screening Result Brief` 只落盘并校验；完整 Codex Screening 才作最终审计；evidence collection 只保存原始结构化证据且不分类；`Code Verification Brief` 只核验指定代码事实；正式贡献 Brief 按 harvest 契约核验所需实时事实。
-7. 检查当前 Git 分支、最近提交、远程地址和未提交改动。
-8. 在执行前报告“简报目标、记录状态、实时状态、差异、阻塞、审批边界和本阶段动作”。
-
-若没有 `Execution Brief`，或简报缺少阶段目标、交付物或审批边界，只恢复状态并报告缺口，不开始宽泛调查或编码。
-
-项目文件是历史决定与工作状态的权威记录；GitHub 是外部 Issue、PR 和 CI 实时状态的权威来源。不得仅依靠对话记忆继续任务。
-
-如果对应 Skill 没有自动显示，先确认 Codex 从仓库根目录启动，再按 Brief 类型检查：`Screening Result Brief`、完整 `stage: issue-screening` 或 `Code Verification Brief` 检查 `.agents/skills/screen-open-source-issue/SKILL.md`；正式贡献 Brief 检查 `.agents/skills/harvest-open-source-issue/SKILL.md`。
-
-## 阶段化执行
+当前唯一有效的 Agent 流程是：
 
 ```text
-Issue Intake
-→ Issue Ecosystem Analysis
-→ Knowledge
-→ Inventory (when applicable)
-→ Code Map
-→ Root Cause Analysis
-→ Draft Comment
-→ Technical Review
-→ User Approval
-→ Identity Verification
-→ Publish
-→ Maintainer Feedback
-→ Discussion Re-analysis (when material discussion changes)
-→ Awaiting Scope Confirmation (when the boundary remains incomplete)
-→ Confirmed Implementation Boundary Gate
-→ Plan
-→ Implementation
-→ PR
+candidate → evidence → analysis → decision → implementation → pull-request
 ```
 
-- Issue Intake 后必须完成 Issue Ecosystem Analysis，再进入 Knowledge、Code Map 或方案阶段。该阶段不可因 Issue 页面显示“无关联 PR”而跳过；必须检查 Timeline、cross-reference、Development、下游和 CI。
-- Ecosystem、Knowledge、来源事实、代码事实、测试证据、推断和决策必须分开记录。
-- 每个 Issue 必须有 `ECOSYSTEM.md`。它持续记录 label/project/milestone/assignee/state 变化、mention/reference/cross-reference、linked Issue/PR、Development、Downstream、Related Work、CI、Maintainer Position 和 Open Questions。
-- 对每个关联事件必须判断它是上游实现、下游 workaround、相关证据还是仅引用；不得把 cross-reference 自动等同于修复 PR。无法读取 Project 等元数据时，记录权限或可见性限制，不得猜测。
-- 新评论、新 PR、新 Timeline Event、新 Downstream PR、新 workaround 或新 CI 证据出现时更新 `ECOSYSTEM.md`。其中可能影响判断的社区讨论必须进入 Discussion Re-analysis；不得沿用旧结论自动继续 Plan 或 Implementation。已审阅或已发布的 `COMMENT-DRAFT.md` 是 Snapshot，不用它承载持续生态变化，也不得因此改写已发布正文。
-- 专业名词首次成为关键推理前，应按需在 Issue 的 `KNOWLEDGE.md` 中用目标读者能理解的方式解释。Knowledge 只覆盖理解当前 Issue 所需内容，不得扩展成无关的百科全书式研究。
-- 若枚举、注册表、能力矩阵、插件、驱动、状态、Handler 或其他对象集合会影响根因或修复范围，必须在 `CODE-MAP.md` 建立 Inventory。Inventory 必须说明统计范围、方法、定义与使用位置、是否完整、扩展机制和局限。
-- 不得把一次关键词搜索称为完整 Inventory；不得把开放字符串集合误写成固定枚举；不得把当前源码中的命名定义集合误写成运行时或外部配置可能值的全集。
-- 对象存在明显的创建、转换、传播或消费阶段时，在 `CODE-MAP.md` 记录 Lifecycle / Data Flow。只有内容很大且可跨 Issue 复用时才拆成独立文档。
-- 严格限制在简报指定的单一阶段；“只建立代码地图”不得修改上游代码，“实现”必须基于已确认方案。
-- 修改必须聚焦当前 Issue，不混入无关重构。
-- 测试必须记录工作目录、前置条件、命令、目的、结果和限制。
-- 只更新发生变化且与当前阶段有关的记录；状态或下一步变化时更新 `STATUS.yaml` 和 `JOURNAL.md`，交接摘要变化时再更新 `HANDOFF.md`。
-- Issue 完成或终止时，必须记录最终结果、原因、Review 反馈和学习总结。
+- Luna：candidate discovery、evidence collection、screening、decision proposal。
+- Terra：deep audit、source analysis、implementation planning、代码修改和测试。
+- Sol：architecture、concurrency、疑难 debugging 和 final technical review；只做升级审查，不实施。
+- User：批准 target fork Push、Pull Request 和所有公开 GitHub 行为。
 
-## 社区讨论再分析
+任务固定在 `agent-work/tasks/<task-id>/`，使用 schema version 2：
 
-本节是社区讨论状态、分类与实施门槛的主要事实来源；README 和 Skill 只概述或映射执行步骤，不另建平行状态机。
+- `REQUEST.yaml`：任务边界、assigned agent、权限和 `approval_required`；
+- `RESULT.yaml`：Agent 执行结果；
+- `REPORT.md`：事实和验证报告；
+- `DECISION.yaml`：结论、confidence、evidence、risks 和 next action；
+- `APPROVAL.yaml`：仅用于 User 已批准的受保护动作。
 
-核心原则：**Do not optimize for implementation speed. Optimize for convergence with project maintainers. Implementation is triggered by evidence, not by ideas.** 新评论是新证据，不天然是实施指令。
+当前协议不包含人工 Review 节点；决策统一记录在 `DECISION.yaml`。
 
-### 触发与状态
+## 权限边界
 
-- Issue 进入社区讨论后，新的评论、Review、关联 PR 或其他可能改变判断的讨论证据一经发现，立即暂停 Plan、Coding 和未完成的 Implementation，进入 `discussion-reanalysis`。
-- `discussion-reanalysis` 表示必须重新读取完整相关讨论并复核已有判断；它不是只阅读最后一条评论，也不是把新意见直接覆盖旧结论。
-- 再分析完成但问题定义、实现边界、关键技术假设、非目标或验收标准仍不清楚时，进入 `awaiting-scope-confirmation`。该状态禁止编码。
-- 只有通过 Confirmed Implementation Boundary Gate 后，才可进入现有 `planned` 状态；`implementing` 仍需新的、明确授权实现的 Execution Brief。
-- 后续任一阶段出现新的实质讨论，均可从当前阶段回到 `discussion-reanalysis`。这是一条回退边，不是另一套生命周期。
+Luna/Terra 可以在有界任务内读取、分析、修改本地目标仓库、运行测试、写入
+facts，并提交 `zhaiyezi`。Sol 只能读取、分析、写入升级 Decision。
 
-### 评论者角色与权限
+所有 Agent 都禁止：
 
-区分 Issue reporter/author、community contributor、repository member、reviewer、approver、maintainer，以及 component/subproject lead。Issue 发起者不必然是最终决策者，社区成员的建议不代表项目共识；Reviewer、Approver 和 Maintainer 的权限也必须对应实际代码路径或子项目。
+- 修改上游公开仓库；
+- Push target fork；
+- 创建或更新 Pull Request；
+- Issue comment、Issue assignment、label 或其他公开 GitHub 行为；
+- 修改 registry 或初始化正式 contribution record，除非另有明确 User approval。
 
-必要时结合目标路径的 ownership 文件、component/subproject 归属、历史 Review 和当前 Issue/PR 中的实际职责核验权限；具体生态的 ownership 机制由 Profile 和实时仓库规则补充。GitHub 身份标签只能作为证据之一；权限权重不能替代技术分析，也不能单独制造共识。
+`approval_required: true` 只表示任务包含受保护动作，不能替代
+`APPROVAL.yaml`。Target repository binding 也不授予 upstream write 或 PR 权限。
 
-### 讨论证据分类
+## Repository 管理
 
-- **Proposal / Suggestion**：探索性建议，例如 “I wonder if…”, “Maybe…”, “Could we…”, “I think…” 或 “What about…”。不得解释为最终决定。
-- **Preference**：某位参与者倾向的方案，尚未形成共识。
-- **Clarification**：对问题、范围、约束或历史行为的解释。
-- **Emerging Consensus**：具有相关责任的参与者和技术证据逐渐趋同，但仍可能有未决问题；不能仅按评论数量判断。
-- **Maintainer Direction**：责任范围内的维护者明确给出推荐方向；仍需检查技术边界是否足够具体。
+`repositories/registry.yaml` 是 target repository 配置；
+`scripts/repository_discovery.py` 负责发现本地仓库；
+`agent-work/bindings/` 保存 branch、HEAD、remote、upstream、fork、identity
+和 working-tree 快照。不得把绝对本地路径写入 registry。
 
-`Confirmed Implementation Boundary` 不是评论类型、人员角色或单条证据的标签，而是综合上述证据后得出的决策 Gate：修复内容、非目标和验收边界已足够清楚，且不存在会改变方案选择的关键歧义，才允许进入 Plan。
+上游仓库和 facts repository 是两个独立 Git 仓库。任何 upstream fetch、修改、
+commit、fork Push、PR 或公开行为都必须单独核验和单独获得用户授权。
 
-### 再分析记录与最小检查清单
+## 启动顺序
 
-`ECOSYSTEM.md` 是动态记录。每次实质更新保留历史判断，并记录 `Previous assumption`、`New evidence`、`Commenter role and authority`、`Evidence classification`、`Impact`、`Updated conclusion`、`Remaining uncertainty` 和 `Next decision gate`；不得简单覆盖旧判断而丢失变化链路。
+1. 读取 `AGENTS.md`、`HANDOFF.md`、`agent-protocol/` 和当前 `REQUEST.yaml`。
+2. 检查当前仓库 branch、remote、HEAD 和 worktree。
+3. 运行 `python3 scripts/validate_agent_protocol.py`。
+4. 运行 `python3 scripts/agent_queue.py next --agent <assigned-agent>`。
+5. 只执行一个 ready 任务，只写入当前 Agent 拥有的路径。
+6. 运行任务规定的测试和校验，写入 `RESULT.yaml`、`REPORT.md`，需要时写入 `DECISION.yaml`。
 
-1. 获取并阅读完整最新讨论。
-2. 识别新增评论及其上下文。
-3. 判断评论者角色和与目标范围相关的权限。
-4. 区分建议、偏好、澄清、共识、维护者方向或正式边界。
-5. 检查问题定义和技术假设是否改变。
-6. 检查实现范围与非目标是否改变。
-7. 检查是否存在相互冲突的意见或实现。
-8. 更新 `ECOSYSTEM.md`、必要的分析记录和 Issue 状态。
-9. 选择继续调查、请求澄清、等待更多意见、准备实施、暂停或放弃。
-10. 只有满足实施门槛后才进入 Coding。
+没有结构有效的 REQUEST、目标不清楚、权限越界、来源不明的本地修改或跨仓库
+范围冲突时，停止并记录阻塞，不自行扩大任务。
 
-### Confirmed Implementation Boundary Gate
+## 事实与决策边界
 
-对新建或重新评估的 Issue，进入 `planned` 前必须确认：问题定义清楚；实现边界和非目标清楚；没有影响方案选择的关键技术歧义；相关社区证据和维护者方向（如需要）足以支持该边界；冲突意见已解决、已有明确处理方式或不影响当前选择；验收标准可描述；现有调查证据仍有效；不需要先向社区确认会改变方案选择的范围问题。Gate 不要求形式化标签、正式批准或由维护者指定全部实现细节；小型明确 Issue 可以凭充分证据通过。代码调查、原型分析和方案比较不受此 Gate 阻止，但不得把原型当作已授权 Implementation。
+Evidence、source facts、technical analysis、inference 和 decision 必须分开记录。
+Evidence completed 不等于 admission、selected 或 implementation authorization。
+Candidate Admission、registry mutation、正式 Issue 初始化和 implementation
+都必须由独立任务和明确 User decision 授权。
 
-历史上已经处于 `planned` 或更后阶段的记录不会因本规则自动获得 Gate 认证，也不会被自动降级；恢复或重新评估时必须按当前证据复核。任一 Gate 条件不满足时，保持 `discussion-reanalysis` 或 `awaiting-scope-confirmation`，不得为了更快编码降低标准。
+Repository binding、target repository、evidence 和 screening 是保留的独立能力，
+不改变公开操作权限。
 
-## 输出要求
+## 模型 profile
 
-- 聚焦“修改了什么、为什么这样修改、如何验证、还剩什么风险”。
-- 不重复普通 Chat 已在简报中确认的教学内容。
-- 保存足够的命令、路径和证据，使普通 Chat 能从公开仓库读取并继续讲解。
+Luna、Terra、Sol 的 profile 是工作建议，不是运行时模型路由。当前会话不会因为
+`assigned_agent` 自动切换真实底层模型；需要切换时由运行环境选择对应 profile。
 
-## Issue 研究记录职责
+建议：记录/筛选使用 Luna，实现/测试使用 Terra，高风险架构和最终技术判断使用 Sol。
 
-- `PROJECT.yaml` 回答“这个仓库怎样贡献和验证”：保存选中的 language/ecosystem/repository Profiles、实时规则覆盖、默认/贡献/受影响/发布分支、构建与测试发现、跨仓库范围、feasibility、verification matrix、environment 和每个工作仓库的独立 Git/Push 边界。新记录必须生成；旧记录在下一次 Project Discovery 或 Implementation 前补齐。
-- `ISSUE.md` 回答“问题是什么”：保存外部事实、实时状态、讨论、范围和验收条件。
-- `ECOSYSTEM.md` 回答“Issue 周围正在发生什么”：持续保存 Timeline、Development、Downstream、Related Work、CI、维护者立场、开放问题和当前生态摘要，并区分真正实现、workaround 与引用。
-- `KNOWLEDGE.md` 回答“读懂问题需要知道什么”：保存必要名词、关系、心智模型、例外和常见误解；不写根因结论或预定方案。
-- `CODE-MAP.md` 回答“源码实际怎样组织和运行”：保存 Inventory、文件职责、注册和调用路径、Lifecycle / Data Flow、历史及可测试点。
-- `ANALYSIS.md` 回答“基于知识和源码事实可以推出什么”：保存根因或假设、证据与置信度、技术限定、风险、方案比较和未决问题，不大段重复 Knowledge 或 Inventory。
-- `PLAN.md` 回答“方向确认后具体怎么改”：保存选择方案、替代方案、修改边界、兼容性、测试计划与风险控制。
+## 公开沟通
 
-`ECOSYSTEM.md` 对所有 Issue 都是 Mandatory；Inventory 默认属于 `CODE-MAP.md`，因为它记录源码事实。Knowledge 单独成文是为了让初学者可按需阅读；Lifecycle 默认留在代码地图，避免机械增加文件。
-
-## Public communication contract
-
-### External identity
-
-所有面向 GitHub 社区的公开行为最终都通过用户的 GitHub 身份发布，包括 Issue comment/reply、Pull Request、Pull Request Review、Discussion、RFC，以及会被 Push 到 GitHub 的 Commit message 或 description。ChatGPT 与 Codex 不拥有独立社区身份；这些内容一经公开，代表的是**用户本人**。
-
-事实仓库中的 Draft 只是内部准备产物。文件已经生成、通过校验、Commit 或 Push 到事实仓库，均不等于允许把内容发布到上游社区。
-
-### Responsibilities
-
-- 普通 Chat：负责技术分析、调查结论整理、方案比较、风险判断、评论润色，以及评论、PR 和 Review Draft 的技术 Review；把已审阅结果整理进单阶段 Execution Brief。
-- 本地 Codex：负责按简报执行调查、本地修改和 Git 操作；生成公开内容 Draft；在用户明确授权后，使用已核验的用户 GitHub 身份执行评论发布、Issue 更新、PR 创建或更新、Review 请求等动作，并记录 URL、时间和实际内容。
-- GitHub：承载对外可见的用户身份、社区记录和维护者反馈，不承担技术决策或授权判断。
-- 用户：是所有公开内容的最终主体和审批者。只有用户能授权发布、更新或回复。
-
-### Publication lifecycle
-
-```text
-Research
-→ Draft
-→ Technical Review
-→ Awaiting User Approval
-→ Publish
-→ Awaiting Maintainer Feedback
-```
-
-`COMMENT-DRAFT.md`、PR Draft/`PR.md`、RFC Draft 和 Discussion Draft 都必须经过 Technical Review，随后等待用户明确授权，才允许 Publish。Technical Review 可以由普通 Chat、人工 Reviewer 或团队完成。Draft 被修改后，先前针对旧文本的 Review 或授权不得自动套用到实质变化后的新文本；需要重新 Review 和授权。
-
-### Approval rule
-
-未经用户对本轮目标、公开位置和动作的明确授权，禁止：
-
-- 发布或回复 Issue/PR comment；
-- 创建或更新 PR，包括 Draft PR；
-- 提交 Pull Request Review 或请求 Reviewer；
-- assign 用户本人或他人；
-- 添加、删除或修改 labels；
-- 发布或更新 Discussion、RFC 或其他社区提案。
-
-即使 `COMMENT-DRAFT.md`、PR Draft 或 RFC Draft 已完成、已通过 Technical Review、已 Commit 或已 Push 到事实仓库，也不得自动发布。`Execution Brief` 中缺少发布字段、字段含糊或写为 `prohibited` 时，一律视为未授权。准备草稿、发布草稿、回复维护者和更新现有公开内容是四个独立审批边界。
-
-### Identity verification
-
-发布 Issue comment/reply、Pull Request、Pull Request Review、Discussion、RFC、Reviewer request、Assignment 或 Label command 前，必须记录 `Expected GitHub identity`、实时取得的 `Authenticated GitHub identity` 和 `Identity verified (yes/no)`。预期身份由用户明确指定；认证身份必须在发布前通过 `gh auth status` 或等价的实际认证信息重新获取，不得复用历史核验。
-
-两者不一致、无法取得认证身份或 `Identity verified` 不是 `yes` 时，必须停止发布。不得根据 SSH key 名称、Git remote 或历史记录推断身份。Identity Verification 是 Publish Gate，不是新的生命周期或 Issue 状态。
-
-> Identity verification is a mandatory publication gate. Publication must stop if the authenticated GitHub identity does not match the expected identity.
-
-发布前必须重新核验目标、实时社区状态、待发布文本、用户身份和授权仍然匹配。发布后立即记录 URL、发布时间、实际发布内容和下一步维护者反馈状态。详细契约见 `.agents/skills/harvest-open-source-issue/references/public-communication.md`。
-
-## 阶段完成与回传
-
-Codex 每个阶段完成后必须汇报：
-
-- 修改了什么以及为什么修改；
-- 执行了哪些测试或检查，以及环境、结果和限制；
-- 更新了哪些事实记录；
-- 当前分支、最新提交和是否存在未提交修改；
-- 哪些内容已经 Push，哪些内容仍仅存在本地；
-- 下一阶段建议，以及是否仍需要用户授权。
-
-若已获 Push 授权，Push 后必须给出远端可见的最新 commit SHA。若未获授权或 Push 失败，必须明确说明普通 Chat 当前不能直接读取哪些本地结果。
-
-## PR 生命周期
-
-### `pr-ready`
-
-- 代码实现完成，当前范围内的本地测试已完成，最终 diff 已检查。
-- PR 标题、正文、Issue 链接和测试说明已准备，但尚未创建上游 PR。
-
-### `submitted`
-
-- 工作分支已 Push 到用户 Fork，上游 PR 已创建。
-- `STATUS.yaml` 和 `PR.md` 已记录 PR URL、编号、base/head 分支和 Commit。
-
-### `reviewing`
-
-- 正在等待或处理维护者 Review、CI 和后续修改。
-- Review 或 CI 反馈由普通 Chat 整理成新的单阶段 Brief；修改继续 Push 到同一 PR 分支。
-- 不重复创建新 PR，除非原 PR 已明确终止且新 PR 确有必要。
-
-### 终态
-
-`merged`、`closed`、`rejected`、`blocked`、`superseded` 都必须记录最终结果、原因、CI 与 Review 结果、是否合入、学习总结和后续任务。
-
-## 外部操作审批
-
-以下操作必须由本轮 `Execution Brief` 分别明确授权，或在执行前另行取得用户确认：
-
-- 公开评论或回复 Issue、PR
-- 认领或分配 Issue
-- Commit 到事实仓库
-- Push 事实仓库
-- Fetch 官方 upstream
-- Fast-forward 本地基础分支
-- Merge 官方基础分支到工作分支
-- Rebase 工作分支到官方基础分支
-- 改写或 Force Push 工作分支
-- Commit 到上游工作仓库
-- Push 上游工作分支到用户 Fork
-- 创建或更新上游 PR
-- 关闭或合并 PR
-- 请求 Reviewer 或代表用户作出社区承诺
-
-只读调查、本地代码修改、与任务直接相关的本地测试和记录更新，只能在简报指定范围内自动执行。
-
-所有社区公开动作还必须满足上面的 Public communication contract；一般性的“继续”“完成”或对事实仓库 Push 的授权，不得解释为社区发布授权。
-
-## 子 Agent
-
-默认不使用子 Agent。只有简报明确允许，且任务可明显并行、边界清晰、收益足以覆盖额外用量时才启用；同一代码区域不得并行写入。
-
-允许使用子 Agent 时，子 Agent 默认只读，只做证据收集、代码搜索、日志归纳或交叉核验；返回必须是结构化结论、最小必要证据、未解决问题和建议下一步，不得把完整日志、完整文件或重复探索过程带回主线程。
-
-## 模型与 Token 策略
-
-目标是在保持贡献质量的前提下节省额度。默认按“Luna 读和整理，Terra 做和修，Sol 判和审”执行。
-
-### 默认模型（推荐 profile，不是运行时自动路由）
-
-- `zhaiyezi` facts repository 的 VSCode Codex / Codex CLI 默认使用 `gpt-5.6-luna` + `medium` reasoning。
-- 上游代码实现阶段默认使用 `gpt-5.6-terra` + `medium` reasoning。
-- 复杂测试失败、跨模块根因或 CI 诊断使用 `gpt-5.6-terra` + `high` reasoning。
-- `gpt-5.6-sol` 只用于高风险最终判断：公开评论、维护者方向解释、Confirmed Implementation Boundary、PR ready 审查、架构取舍或无法收敛的疑难问题。
-
-### 阶段选择
-
-- Issue 候选发现、Quick Filter、筛选记录落盘、Markdown/YAML 机械更新、validator 修复、状态恢复、测试日志摘要：Luna。
-- Deep Audit、Code Map、Root Cause、实现计划、常规代码修改、PR 草稿准备：Terra。
-- 公共社区内容最终审稿、是否进入实现、是否创建/更新 PR、方案是否符合维护者方向：Sol。
-
-### 使用限制
-
-- 不得用 Sol 做宽泛仓库扫描、格式化、简单测试、普通记录更新或重复读取历史上下文。
-- 不得为了“更稳”默认提升 reasoning；先收窄上下文和任务边界，再考虑提高模型或 reasoning。
-- 启动任务前先声明最小读取集合；优先读取 `HANDOFF.md`、目标 Issue 的 `STATUS.yaml`、当前阶段文档、当前 diff 和相关测试输出，不默认扫描整个仓库。
-- `zhaiyezi` 只保存事实和交接记录；真实上游代码修改应在上游 clone 中执行，并按 profile 选择 Terra 或 Sol。
-- 当前协议不负责运行时模型路由；如果会话无法自动切换模型，按下列 profile 手动选择，并通过收窄上下文降低用量。
-
-### 推荐 profile
-
-- 默认记录/筛选：`luna` 或项目默认。
-- 实现阶段：`terra`。
-- 疑难实现或 CI 诊断：`terra-high`。
-- 最终高风险审查：`sol` 或 `sol-low`。
+所有公开内容代表 User 的 GitHub 身份。发布前必须重新核验目标、内容、授权和
+authenticated identity。没有明确 User approval 时，只能生成内部 draft，不能发布。
 
 ## 完成条件
 
-只有当状态、实现、测试证据、PR/终止结果和学习总结均已记录时，一个 Issue 才算闭环。
+阶段完成必须记录：变更、事实来源、测试命令和结果、限制、branch/HEAD/worktree、
+commit 和 Push 状态。Pull Request 阶段只有在 User approval 后才能执行 target fork
+Push、创建 PR 或其他公开动作。

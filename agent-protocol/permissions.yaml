@@ -5,8 +5,6 @@ actors:
   agent:terra: {role: terra}
   agent:sol: {role: sol}
   user: {role: approval-authority}
-  chat: {role: legacy-decision-agent}
-  codex: {role: legacy-execution-agent}
 
 roles:
   luna:
@@ -18,12 +16,6 @@ roles:
   sol:
     allowed_actions: [read_repository, repository_read, analyze_code, write_decision_proposal, escalate]
     owned_paths: [agent-work/tasks/*/DECISION.yaml, decisions/**]
-  legacy-decision-agent:
-    allowed_actions: [read_repository, create_task, create_review, create_decision]
-    owned_paths: [decisions/**, agent-work/tasks/*/REQUEST.yaml, agent-work/tasks/*/REVIEW.yaml]
-  legacy-execution-agent:
-    allowed_actions: [read_repository, repository_read, collect_evidence, analyze_code, repository_modify, modify_facts_repository, run_tests, write_result, write_report, write_evidence, materialize_chat_artifact, materialize_user_artifact]
-    owned_paths: [agent-work/tasks/*/RESULT.yaml, agent-work/tasks/*/REPORT.md, agent-work/tasks/*/evidence/**, screenings/**]
   approval-authority:
     allowed_actions: [approve_protected_action]
     owned_paths: [agent-work/tasks/*/APPROVAL.yaml]
@@ -34,64 +26,31 @@ action_catalog:
   read_repository: local-read
   repository_read: target-repository-read
   repository_modify: target-repository-write
-  create_task: local-write
-  create_review: legacy-local-write
-  create_decision: legacy-local-write
   collect_evidence: local-write
   analyze_code: local-read
-  modify_facts_repository: local-write
   run_tests: local-execution
   write_result: local-write
   write_report: local-write
   write_evidence: local-write
   write_decision_proposal: local-write
   escalate: local-write
-  materialize_chat_artifact: legacy-authorization-required
-  materialize_user_artifact: always-user-confirmation-required
   commit_facts_repository: agent-local-commit
-  push_facts_repository: standing-or-task-authorization-required
-  modify_registry: always-user-confirmation-required
-  initialize_formal_issue: always-user-confirmation-required
-  fetch_official_upstream: always-user-confirmation-required
-  modify_upstream_code: always-user-confirmation-required
-  upstream_write: always-user-confirmation-required
-  push_upstream_branch: always-user-confirmation-required
-  create_issue: always-user-confirmation-required
-  comment_issue: always-user-confirmation-required
-  assign_issue: always-user-confirmation-required
-  add_labels: always-user-confirmation-required
-  create_pull_request: always-user-confirmation-required
+  push_facts_repository: user-approval-required
+  modify_registry: user-approval-required
+  initialize_formal_issue: user-approval-required
+  fetch_official_upstream: user-approval-required
+  modify_upstream_code: user-approval-required
+  upstream_write: user-approval-required
+  push_upstream_branch: user-approval-required
+  create_issue: user-approval-required
+  comment_issue: user-approval-required
+  assign_issue: user-approval-required
+  add_labels: user-approval-required
+  create_pull_request: user-approval-required
 
-default_prohibited_actions: [materialize_user_artifact, modify_registry, initialize_formal_issue, fetch_official_upstream, modify_upstream_code, upstream_write, push_upstream_branch, create_issue, comment_issue, assign_issue, add_labels, create_pull_request]
-
-approval_required_actions: [materialize_chat_artifact, materialize_user_artifact, push_facts_repository, modify_registry, initialize_formal_issue, fetch_official_upstream, modify_upstream_code, upstream_write, push_upstream_branch, create_issue, comment_issue, assign_issue, add_labels, create_pull_request]
-standing_authorizable_actions: [commit_facts_repository, push_facts_repository, materialize_chat_artifact]
-always_user_confirmation_actions: [materialize_user_artifact, modify_registry, initialize_formal_issue, fetch_official_upstream, modify_upstream_code, upstream_write, push_upstream_branch, create_issue, comment_issue, assign_issue, add_labels, create_pull_request]
-
-standing_authorization:
-  repository: Yanansn/zhaiyezi
-  branch: main
-  file_location: decisions/authorizations/*.yaml
-  actor_path_allowlist:
-    agent:luna: [agent-work/tasks/*/REQUEST.yaml, agent-work/tasks/*/RESULT.yaml, agent-work/tasks/*/REPORT.md, agent-work/tasks/*/evidence/**, agent-work/tasks/*/DECISION.yaml, decisions/**]
-    agent:terra: [agent-work/tasks/*/REQUEST.yaml, agent-work/tasks/*/RESULT.yaml, agent-work/tasks/*/REPORT.md, agent-work/tasks/*/evidence/**, agent-work/tasks/*/DECISION.yaml, decisions/**]
-    agent:sol: [agent-work/tasks/*/DECISION.yaml, decisions/**]
-    chat: [agent-work/tasks/*/REQUEST.yaml, agent-work/tasks/*/REVIEW.yaml, decisions/**]
-    codex: [agent-work/tasks/*/REQUEST.yaml, agent-work/tasks/*/REVIEW.yaml, agent-work/tasks/*/RESULT.yaml, agent-work/tasks/*/REPORT.md, agent-work/tasks/*/evidence/**, screenings/**, decisions/**]
-
-materialization:
-  semantic_ownership_transfers: false
-  codex:
-    materialize_chat_artifact:
-      authority: user-instruction
-      scope: bounded
-      paths: [agent-work/tasks/*/REQUEST.yaml, agent-work/tasks/*/REVIEW.yaml, decisions/**]
-      excluded_paths: [decisions/authorizations/**]
-    materialize_user_artifact:
-      authority: explicit-user-approval
-      scope: bounded
-      paths: [agent-work/tasks/*/APPROVAL.yaml, decisions/authorizations/*.yaml]
-  never_materializable_actions: [modify_registry, initialize_formal_issue, fetch_official_upstream, modify_upstream_code, upstream_write, push_upstream_branch, create_issue, comment_issue, assign_issue, add_labels, create_pull_request]
+default_prohibited_actions: [modify_registry, initialize_formal_issue, fetch_official_upstream, modify_upstream_code, upstream_write, push_upstream_branch, create_issue, comment_issue, assign_issue, add_labels, create_pull_request]
+approval_required_actions: [push_facts_repository, modify_registry, initialize_formal_issue, fetch_official_upstream, modify_upstream_code, upstream_write, push_upstream_branch, create_issue, comment_issue, assign_issue, add_labels, create_pull_request]
+always_user_confirmation_actions: [push_facts_repository, modify_registry, initialize_formal_issue, fetch_official_upstream, modify_upstream_code, upstream_write, push_upstream_branch, create_issue, comment_issue, assign_issue, add_labels, create_pull_request]
 
 rules:
   default: deny

@@ -147,7 +147,7 @@ class AgentRoleTests(unittest.TestCase):
             prohibited_actions=[],
         )
         _, errors = self.inspect(self.write_task(request))
-        self.assertTrue(any("create_pull_request requires current task approval" in error for error in errors))
+        self.assertTrue(any("protected actions require current user APPROVAL.yaml" in error for error in errors))
 
     def test_agent_decision_replaces_chat_review(self) -> None:
         task_id = "decision-without-review"

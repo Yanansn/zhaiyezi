@@ -19,6 +19,5 @@ Current artifacts use `schema_version: 2` and identify semantic ownership as
 `decision_author: agent:luna`, `agent:terra`, `agent:sol`, or `user`.
 `materialized_by` is the same internal agent for current artifacts.
 
-Version 1 Chat/Codex artifacts remain legacy facts. They retain their original
-ownership fields and `REVIEW.yaml` semantics, but new work must use agents and
-`DECISION.yaml`.
+There is one current artifact format: schema version 2 with Agent ownership
+and `DECISION.yaml`.

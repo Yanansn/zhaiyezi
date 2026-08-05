@@ -49,21 +49,7 @@ def load_queue(root: Path) -> tuple[list[validator.TaskRecord], list[str]]:
     errors: list[str] = []
     schema, permissions, state_machine = validator.protocol_documents(root, errors)
     validator.validate_protocol_documents(schema, permissions, state_machine, errors)
-    errors.extend(validator.validate_examples(root, schema, permissions))
-    errors.extend(validator.legacy_queue_errors(root))
-    authorizations = validator.load_standing_authorizations(
-        root, schema, permissions, errors
-    )
-    repository, branch = validator.repository_state(root)
-    records = validator.collect_task_records(
-        root,
-        schema,
-        permissions,
-        authorizations,
-        errors,
-        repository=repository,
-        branch=branch,
-    )
+    records = validator.collect_task_records(root, schema, permissions, errors)
     return sort_records(records), errors
 
 
@@ -131,17 +117,17 @@ def parse_args() -> argparse.Namespace:
     commands = parser.add_subparsers(dest="command", required=True)
 
     list_parser = commands.add_parser("list", help="list valid queue tasks")
-    list_parser.add_argument("--agent", choices=("agent:luna", "agent:terra", "agent:sol", "chat", "codex"))
+    list_parser.add_argument("--agent", choices=("agent:luna", "agent:terra", "agent:sol"))
     list_parser.add_argument(
         "--status",
         choices=(
-            "ready", "active", "awaiting-decision", "awaiting-review", "changes-requested",
+            "ready", "active", "awaiting-decision", "changes-requested",
             "blocked", "failed", "rejected", "completed",
         ),
     )
 
     next_parser = commands.add_parser("next", help="show the next ready task")
-    next_parser.add_argument("--agent", required=True, choices=("agent:luna", "agent:terra", "agent:sol", "chat", "codex"))
+    next_parser.add_argument("--agent", required=True, choices=("agent:luna", "agent:terra", "agent:sol"))
 
     show_parser = commands.add_parser("show", help="show one real queue task")
     show_parser.add_argument("--task", required=True)

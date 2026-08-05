@@ -9,5 +9,4 @@ references, risks, and next action. It is not a User approval: target-fork
 Push, Pull Request creation, and public GitHub actions remain subject to an
 explicit User-owned `APPROVAL.yaml`.
 
-Historic Markdown decisions and schema v1 Chat/Codex task artifacts remain
-readable for compatibility.
+All durable decisions use the current Agent ownership model.
