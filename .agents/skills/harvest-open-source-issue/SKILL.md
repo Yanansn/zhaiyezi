@@ -1,153 +1,108 @@
 ---
 name: harvest-open-source-issue
-description: Execute a stage-scoped open-source contribution from a confirmed Execution Brief by verifying live facts, reading real code, building precise code maps, implementing, testing, diagnosing failures, updating records, and performing approved Git or GitHub publication steps. Use when Codex receives a bounded engineering brief for an already screened issue or resumes an established contribution stage.
+description: Execute one bounded contribution stage from a confirmed Agent task, with independent repository checks, targeted validation, and explicit public-action gates.
 ---
 
 # Harvest Open Source Issues
 
-Treat Codex as the engineering execution agent for an issue that ordinary Chat has already screened and explained. Execute one bounded stage at a time and preserve evidence for the next Chat handoff.
+This Skill covers accepted Issue work: ecosystem analysis when needed, code
+mapping, planning, implementation, testing, review response, and publication
+preparation. It does not discover unbounded candidates or infer authorization.
 
-## Intake gate
+## Agent ownership
 
-- Require an `Execution Brief` containing the issue, confirmed facts, goal, required investigation, constraints, expected deliverables, and approval boundary.
-- Read [execution-brief.md](references/execution-brief.md) when starting a new stage or when the brief is incomplete.
-- Identify the facts repository and, for real code work, the separate upstream working repository from the brief.
-- Verify the brief against repository records, live GitHub state, and each applicable local repository's branch, commit, remotes, and worktree before acting.
-- Require separate authorization for fetching the official upstream, fast-forwarding the local base, merging or rebasing a working branch, and rewriting or force-pushing a working branch.
-- If the brief is absent, materially stale, or lacks a stage goal, deliverables, or approval boundary, report the gap and stop. Do not expand into candidate screening or open-ended research.
+- `agent:terra` owns code map, plan, implementation, tests, and local diagnosis.
+- `agent:luna` supplies evidence, screening facts, and decision proposals.
+- `agent:sol` reviews architecture, concurrency, difficult failures, and
+  high-risk final decisions; it does not implement.
+- `user` owns target-fork Push, PR creation, comments, reviews, labels,
+  assignments, and all other public GitHub actions.
 
-## Operating principles
+## Shared Preflight
 
-- Distinguish GitHub facts, source-code facts, test evidence, and inference.
-- Read the issue body, full Timeline, labels, assignees, discussion, Development links, cross-references, downstream work, related pull requests and CI evidence before implementation.
-- Build a code map and identify analogous implementations or tests before proposing a solution.
-- Keep changes scoped to the accepted issue. Do not bundle opportunistic refactors.
-- Run the narrowest meaningful checks first. Never claim success without recorded evidence.
-- Report engineering evidence concisely: what changed, why it works, how it was validated, and remaining risks.
-- Require user confirmation before public comments, issue assignment, pushes, pull requests, reviews, or other person-facing actions.
-- Default to no subagents. Use them only when the brief permits them and parallel work has clear value.
-- Update only records whose facts changed in the current stage.
-- Treat unpushed local results as invisible to ordinary Chat; never present them as shared facts.
-- At the end of each stage, state explicitly what was pushed and what remains local. Use [execution-brief.md](references/execution-brief.md) for the full return contract.
-- Make upstream code changes only in the upstream working repository; make contribution-record changes only in the facts repository.
-- Treat every GitHub-facing message or artifact as speech by the user. Follow [public-communication.md](references/public-communication.md); never publish directly from research or infer publication permission from a completed Draft.
+Require a valid current `REQUEST.yaml` with one stage, exact goal, deliverables,
+constraints, and approval boundary. Then:
 
-## Workflow
+1. Run `python3 scripts/validate_agent_protocol.py`.
+2. Check facts repository branch, HEAD, remote, and worktree.
+3. For code work, independently check the target repository path, branch, HEAD,
+   remotes, base, working branch, and worktree.
+4. Resolve remote roles from URLs; never assume `origin` is the fork.
+5. Stop on dirty or unknown state, divergent bases, stale scope, missing brief,
+   or an action not explicitly authorized.
 
-1. **Verify intake and discover the project**
-   - Parse the Execution Brief and state the exact stage boundary.
-   - Verify the facts repository and upstream working repository independently when both apply.
-   - Resolve remote roles from configured repository URLs instead of assuming `origin` is the Fork or `upstream` is official.
-   - When authorized, fetch the official remote with pruning, identify its default development branch, and compare the local base, official base, and working branch with `rev-list`, `rev-parse`, and `merge-base`.
-   - Fast-forward a local base only when the worktree is clean, the local base has no unique commits, the histories have not diverged, `--ff-only` can succeed, and the brief explicitly permits it. Record the base Commit before and after.
-   - Stop on dirty state, unique local base commits, divergence, unknown commits, remote mismatch, an unknown default branch, fetch failure, or any need for merge Commit, rebase, reset, or discarded work.
-   - Read `AGENTS.md`, `CONTRIBUTING.md`, issue/PR templates, build files, test guidance, and relevant ownership files.
-   - Apply matching language, ecosystem, and repository checklists from [profiles/README.md](references/profiles/README.md), then let live repository instructions override every static Profile assumption.
-   - Record GitHub default, contribution target, Issue-affected, and current release branches separately; the default branch is not necessarily the PR base.
-   - Record language, build system, test framework, CI, contribution rules, CLA/DCO requirements, and community conventions.
-   - Read [project-discovery.md](references/project-discovery.md).
-2. **Analyze the Issue ecosystem (mandatory)**
-   - Create or refresh `ECOSYSTEM.md` before Knowledge, code mapping, planning or implementation. This stage is mandatory for every active Issue.
-   - Inspect label, project, milestone, assignee and state changes; mentions, references, cross-references, linked Issues and linked PRs; the Development section; downstream projects and workarounds; related or historical work; project CI and downstream CI; maintainer positions; and open questions.
-   - Classify every linked item as an upstream implementation, downstream workaround, related evidence, historical work or reference-only event. A cross-reference is not proof of an implementation PR.
-   - Treat `ECOSYSTEM.md` as continuous research. Refresh it when a new comment, PR, Timeline event, downstream change, workaround or CI signal appears. Treat public Drafts as frozen snapshots; do not rewrite a reviewed or published Draft merely to absorb new ecosystem facts.
-   - When new discussion may affect the problem, assumptions, scope, risk, acceptance, or community viability, set `discussion-reanalysis`, pause planning or implementation, and follow the authoritative discussion re-analysis contract in `AGENTS.md`.
-   - Record access or visibility limitations instead of inferring unavailable Project or relationship metadata.
-3. **Map when requested**
-   - Identify the background a target reader needs. Add only necessary issue-specific explanations to `KNOWLEDGE.md`; reuse links for stable cross-issue material instead of copying it.
-   - Decide whether a collection affects root cause or fix scope. If so, build an Inventory with an explicit counting boundary, method, definitions, usage, extensibility, completeness and limitations.
-   - Trace relevant files, registration, call paths and tests. Add Lifecycle / Data Flow when objects or configuration pass through meaningful creation, conversion, filtering or consumption stages.
-   - Do not infer the whole system from one example or call a keyword-search result complete. Inventory exists to prevent local observations from producing a wrong fix boundary, not to document the entire upstream project.
-   - Record these source facts in `CODE-MAP.md`, then keep conclusions and solution comparisons in `ANALYSIS.md`. Read [research-contract.md](references/research-contract.md).
-   - Do not modify upstream code when the brief says the stage is code-map-only.
-4. **Plan when requested**
-   - State the root cause or unresolved hypothesis, preferred solution, alternatives, risks, compatibility concerns, and validation strategy.
-   - Plan only after the Confirmed Implementation Boundary Gate in `AGENTS.md` passes. If re-analysis is complete but material scope remains uncertain, use `awaiting-scope-confirmation`, prepare a concise confirmation comment when requested, and pause before implementation.
-5. **Implement when requested**
-   - Require a confirmed implementation boundary and a new Brief that explicitly authorizes implementation. New material discussion returns the Issue to `discussion-reanalysis` and pauses coding.
-   - Create a descriptive branch from the verified official base after checking repository conventions.
-   - Treat updating an existing working branch as separate from synchronizing the local base. Never merge or rebase the official base into a branch with commits without explicit authorization; do not rebase or force-push an open PR by default.
-   - Work in the upstream working repository and make the smallest coherent change. Explain important code decisions and connect them to the code map.
-6. **Validate when requested or required by implementation**
-   - Format and lint, run targeted unit or package tests, then integration/e2e tests when proportional and feasible.
-   - Record exact commands, environment, results, limitations, and CI-only coverage in `TESTING.md`.
-   - Read [testing.md](references/testing.md).
-7. **Prepare or publish when authorized**
-   - Inspect both repositories for unrelated changes and keep their commits separate.
-   - Before creating a PR, verify the user Fork remote, official upstream remote, target base branch, and head branch.
-   - In the upstream working repository run `git status -sb`, `git log --oneline <upstream-base>..HEAD`, `git diff --check <upstream-base>...HEAD`, and `git diff --stat <upstream-base>...HEAD`.
-   - Check the PR template, `CONTRIBUTING`, CLA/DCO, `Signed-off-by`, release-note requirements, Issue linkage, unrelated changes, and whether commits need cleanup or squash.
-   - Propose branch name, commit structure and messages, PR title/body, issue linkage, release note, and reviewer notes according to repository rules.
-   - For any GitHub comment, reply, PR description, Review, Discussion or RFC, first create an exact Draft, obtain Technical Review, then wait for explicit user approval. Technical Review may come from ordinary Chat, a human reviewer or a team. A Draft PR is already public and follows the same gate.
-   - Treat preparation, initial publication, maintainer reply and update of existing public content as separate permissions. Missing publication fields mean prohibited.
-   - Immediately before an authorized publication, obtain the actual authenticated GitHub identity and compare it with the user-specified expected identity. Never infer identity from an SSH key name, remote URL or history; stop if they differ or cannot be verified.
-   - Re-verify the live target and exact approved content. Afterward record the URL, publication time, actual content and maintainer-feedback state.
-   - Perform Commit, Push, PR, comment, or review actions only when the brief or a later user message explicitly authorizes each external boundary.
-8. **Re-analyze updated community discussion (mandatory trigger)**
-   - Read the full current discussion, not only the newest comment; identify the new evidence in context.
-   - Establish the commenter's project- and path-relevant role using ownership, component/subproject responsibility, review history and current duties when necessary. Do not treat identity as a substitute for technical evidence.
-   - Classify discussion evidence as Proposal/Suggestion, Preference, Clarification, Emerging Consensus, or Maintainer Direction. Exploratory wording is not a final decision. Assess Confirmed Implementation Boundary separately as the decision Gate defined in `AGENTS.md`, not as a comment type.
-   - Recheck the problem definition, technical assumptions, scope, non-goals, conflicting views, risks, acceptance criteria and validity of prior research. Preserve the previous assumption and evidence-to-conclusion change in `ECOSYSTEM.md`.
-   - Choose continued investigation, clarification, waiting, planning, pause or abandonment. Coding remains prohibited until the gate in `AGENTS.md` passes.
-9. **Review and close**
-   - Diagnose CI failures, respond to review, iterate implementation and tests, and update records.
-   - Finish with merged, rejected, superseded, or blocked status plus a learning retrospective and suggested next issue.
+Fetch, fast-forward, merge, rebase, force-push, upstream modification, and
+public actions each require their own explicit authorization.
 
-## Multi-repository execution order
+## Minimum records by stage
 
-1. Read the rules, handoff, brief, and issue record in the facts repository.
-2. Verify the facts repository branch, commit, remote, and worktree.
-3. Enter the upstream working repository and verify official upstream, user Fork, base branch, working branch, commit, and worktree. If authorized, fetch the official remote and safely fast-forward only an eligible local base.
-4. Verify the live upstream Issue, full Timeline, Development links, cross-references, downstream work, PRs, comments, assignee, CI, and Review state; refresh `ECOSYSTEM.md` when facts changed.
-5. Perform the requested investigation, implementation, or validation in the upstream working repository.
-6. Return to the facts repository and update only changed records.
-7. Inspect `git diff` and `git status` separately in both repositories.
-8. Commit, Push, and create or update a PR only under their respective explicit approvals.
-9. Report the facts repository, upstream working repository, and PR states separately.
+Use only the smallest applicable set:
 
-Never use a generic `git pull` for base synchronization. Prefer an authorized `git fetch --prune <official-remote>`, followed by `git switch <base>` and `git merge --ff-only <official-remote>/<base>` only when all safety conditions hold. Never recover automatically with `reset --hard`, clean, stash, rebase, restore, branch deletion, or force-push.
+| Stage | Required records |
+| --- | --- |
+| evidence / screening | `SCOPE.yaml`, `RESULTS.yaml`, `REPORT.md` |
+| ecosystem or discussion re-analysis | `ECOSYSTEM.md`, plus `STATUS.yaml`/`JOURNAL.md` when state changes |
+| code map | `CODE-MAP.md` |
+| plan | `PLAN.md` |
+| implementation | `IMPLEMENTATION.md` |
+| validation | `TESTING.md` |
+| publication | `PR.md` and the exact public Draft |
+| terminal outcome | changed status, `JOURNAL.md`, and `LEARNING.md` when useful |
 
-## Record contract
+`PROJECT.yaml`, `ISSUE.md`, `KNOWLEDGE.md`, `ECOSYSTEM.md`, `COMMENT-DRAFT.md`
+and `LEARNING.md` are conditional unless the task or changed facts require
+them. Do not create placeholder documents merely to satisfy a checklist.
 
-Use one directory per issue under `issues/<owner>-<repo>-<number>/`. Maintain:
+## Stage rules
 
-- `STATUS.yaml`: machine-readable current state, blockers, next actions, facts repository, official upstream/base, user Fork/working branch, PR, and last verification time.
-- `PROJECT.yaml`: selected Profiles, live overrides, branch model, Project Discovery, repository scope, feasibility, verification matrix, and environment. It is required for new records and optional for legacy records until their next discovery/implementation stage.
-- `ISSUE.md`: source facts and structured requirement summary.
-- `ECOSYSTEM.md`: mandatory first-class, continuously refreshed facts about Timeline, Development, downstream impact and workarounds, related work, CI, maintainer positions, discussion re-analysis history, open questions, and the current ecosystem summary.
-- `KNOWLEDGE.md`: optional-in-content background, terms, mental models, distinctions and exceptions needed by a new reader; the file is part of new records but may remain minimal when no domain explanation is needed.
-- `ANALYSIS.md`: accessible technical explanation, root cause or hypotheses, scope, and non-goals.
-- `CODE-MAP.md`: relevant files, conditional Inventory, call flow, Lifecycle / Data Flow, analogous code, tests, and ownership.
-- `PLAN.md`: chosen solution, alternatives, risk, and validation plan.
-- `IMPLEMENTATION.md`: actual changes and reasoning.
-- `TESTING.md`: commands, environment, evidence, failures, limitations, and CI results.
-- `LEARNING.md`: concepts learned and reusable problem-solving methods.
-- `PR.md`: official repository, user Fork, base/head branches, commits, title/body, Issue linkage, URL/number, CI, review feedback, and outcome.
-- `COMMENT-DRAFT.md`: when a public comment is being considered, the exact Draft, claims/evidence, maintainer questions, publication status, approval flags, target, and post-publication URL/time.
-- `JOURNAL.md`: append-only dated decisions and material actions.
+### Ecosystem and discussion
 
-Use `scripts/init_issue_record.py` to initialize a record and `scripts/validate_issue_record.py` before reporting a stage complete. Never overwrite journal history.
+Create or refresh `ECOSYSTEM.md` when the Issue is active and ecosystem facts
+could affect ownership, scope, feasibility, acceptance, or implementation.
+For binding-only, protocol, pure code-verification, or facts-only tasks, record
+the limitation and do not perform a full ecosystem audit. New comments, PRs,
+Timeline events, workarounds, or CI evidence that may change the decision force
+discussion re-analysis and pause implementation.
 
-`ECOSYSTEM.md` is mandatory for every active Issue. Inventory and Lifecycle remain conditional sections, not new status values or mandatory standalone files. The record contract and suggested section shapes are defined in [research-contract.md](references/research-contract.md).
+### Code map and plan
 
-Public communication lifecycle labels are artifact metadata, not Issue statuses. Keep the existing Issue status model unchanged; track the core booleans plus the lightweight expected-identity and identity-verification gate under `public_communication` in `STATUS.yaml`.
+Read the relevant source, ownership files, analogous code, and tests. Build an
+Inventory or Lifecycle/Data Flow only when it affects the boundary. Keep source
+facts in `CODE-MAP.md` and inference, risks, alternatives, and unresolved
+questions in `ANALYSIS.md` when that file is needed. Do not call a keyword
+search a complete inventory.
 
-Do not rewrite all record files on every turn. Use this minimum mapping:
+Implementation requires a confirmed boundary, explicit non-goals, acceptance
+criteria, and a new task that authorizes local modification. Scope expansion or
+material new discussion pauses coding.
 
-- ecosystem or discussion update: `ECOSYSTEM.md` whenever Timeline, Development, downstream, related work, CI, maintainer position or open questions change; for material discussion also update the re-analysis log, `STATUS.yaml`, `JOURNAL.md`, and any conclusion whose validity changed;
-- discovery or code map: refresh `ECOSYSTEM.md` first, then `KNOWLEDGE.md` only when reader prerequisites change and `CODE-MAP.md` for source facts, plus `STATUS.yaml` and `JOURNAL.md` only when state or next action changes;
-- plan: `PLAN.md` and changed status/journal facts;
-- implementation: `IMPLEMENTATION.md` and changed status/journal facts;
-- validation or CI: `TESTING.md` and changed status/journal facts;
-- publication or review: `PR.md` and changed status/journal facts;
-- terminal outcome: final status, outcome, relevant testing/PR evidence, `LEARNING.md`, `JOURNAL.md`, and the project handoff.
+### Implementation and validation
 
-## Status model
+Modify only the target working repository and keep the change focused. Run the
+narrowest meaningful checks first, then proportional integration/CI checks.
+Record exact commands, environment, results, failures, and limitations in
+`TESTING.md`. Never claim GPU, distributed, benchmark, or CI coverage from a
+smaller local test.
 
-Use one of: `candidate`, `screening`, `awaiting-triage`, `selected`, `analyzing`, `discussion-reanalysis`, `awaiting-scope-confirmation`, `planned`, `implementing`, `testing`, `pr-ready`, `submitted`, `reviewing`, `merged`, `blocked`, `rejected`, `superseded`, `closed`.
+### Publication
 
-Ordinary Chat normally hands off an issue after screening. Do not skip from an unverified brief or unconfirmed discussion directly to implementation. For new or re-evaluated records, entering `planned` means the Confirmed Implementation Boundary Gate has passed; existing historical `planned` records are not retroactively certified and must be checked when resumed. `discussion-reanalysis` and `awaiting-scope-confirmation` prohibit implementation, while read-only investigation, prototypes and solution comparison may continue within an authorized Brief. A contribution is complete only when its outcome and learning retrospective are recorded.
+Prepare an exact Draft before any public action. Sol or an equivalent technical
+review may review high-risk content, but publication always requires explicit
+User approval and live identity verification. Immediately before publication,
+recheck target, base/head, content, authorization, identity, and worktree.
+After publication, record URL, time, actual content, and maintainer feedback.
 
-## Adaptation
+## Repository boundary
 
-Keep this workflow repository-agnostic. Infer project-specific practices from the repository. Load an ecosystem profile from `references/profiles/` only when present and applicable; repository instructions always override a profile. Add a profile only after repeated real work demonstrates reusable, stable guidance.
+Facts repository and upstream working repository remain separate. Never commit
+upstream source into facts, and never commit facts artifacts into upstream.
+Inspect both repositories separately at the end of every stage and report what
+was committed, pushed, published, or left local.
+
+## Stop and return
+
+Stop instead of broadening the task when scope, ownership, baseline, required
+evidence, authorization, or public identity is unclear. Return the changed
+records, validation commands/results, limitations, Git state, and the next
+bounded action. Do not infer admission or implementation permission from a
+completed audit or decision.

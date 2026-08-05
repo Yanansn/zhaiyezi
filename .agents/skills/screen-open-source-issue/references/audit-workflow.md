@@ -118,7 +118,7 @@ Quick Filter does not read the complete discussion or assign `screening_classifi
 - Stop: any failed Gate condition or missing approval.
 - Evidence: Gate decision, decision time, user authorization, separately authorized mutations.
 
-## Mandatory flow
+## Required evidence sequence for a complete bounded screening
 
 ```text
 Issue → metadata Quick Filter (`quick_filtered_out` or Deep Audit queue)

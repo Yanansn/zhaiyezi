@@ -5,15 +5,15 @@ Use the smallest research depth that makes the issue understandable and prevents
 ## Document responsibilities
 
 - `ISSUE.md`: external facts and the problem contract—state, discussion, scope and acceptance.
-- `ECOSYSTEM.md`: mandatory continuous facts around the Issue—Timeline, Development, downstream workarounds, related work, CI, maintainer positions, open questions and current ecosystem summary.
+- `ECOSYSTEM.md`: conditional continuous facts when ecosystem state can affect scope, ownership, feasibility, acceptance, or implementation.
 - `KNOWLEDGE.md`: background a new reader needs—terms, relationships, mental models, exceptions and misconceptions. Do not put issue root-cause conclusions or a chosen implementation here.
 - `CODE-MAP.md`: source facts—definitions, files, Inventory, registration, calls, data flow, lifecycle, history and test seams.
 - `ANALYSIS.md`: inferences from the above—hypotheses, evidence, confidence, qualification, risks and solution comparison.
 - `PLAN.md`: the direction to implement after required confirmation—change boundary, alternatives and validation.
 
-## Mandatory Issue Ecosystem Analysis
+## Conditional Issue Ecosystem Analysis
 
-Create `ECOSYSTEM.md` for every Issue. Complete it immediately after Issue Intake and refresh it throughout research, publication, maintainer feedback, planning and implementation whenever ecosystem facts change.
+Create `ECOSYSTEM.md` when the task or changed ecosystem facts can affect scope, ownership, feasibility, acceptance, or implementation. Refresh it whenever those facts change.
 
 Required sections:
 
@@ -35,7 +35,7 @@ The analysis must cover label, project, milestone, assignee and state changes; m
 
 `ECOSYSTEM.md` is continuous knowledge. `COMMENT-DRAFT.md`, PR descriptions and other public Drafts are snapshots governed by the Public Communication Contract. New ecosystem facts update `ECOSYSTEM.md`; they do not silently mutate a reviewed or published public artifact.
 
-Material community discussion also requires a durable re-analysis entry under `## 7. Maintainer Position`. New records include the following shape; legacy records add it when material discussion next triggers re-analysis. Preserve, rather than overwrite, completed entries:
+Material community discussion also requires a durable re-analysis entry under `## 7. Maintainer Position`. New records include the following shape. Preserve, rather than overwrite, completed entries:
 
 ```text
 Previous assumption:
@@ -52,7 +52,7 @@ Append a new field block for each material re-analysis instead of replacing an e
 
 ## Knowledge decision
 
-Create `KNOWLEDGE.md` for every new record, but fill only what the issue needs. Explain a domain term before it becomes essential to reasoning. Prefer a link to stable shared knowledge when it is sufficient, while keeping issue-specific prerequisites local so a cold start remains understandable.
+Create `KNOWLEDGE.md` only when a domain term or mental model is needed for the current decision. Fill only what the issue needs. Prefer a link to stable shared knowledge when it is sufficient.
 
 Suggested sections may be selected or removed:
 

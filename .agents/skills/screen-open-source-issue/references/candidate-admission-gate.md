@@ -8,7 +8,7 @@ The persisted `admission` mapping and its allowed values are defined by [output-
 
 All must be true:
 
-1. The complete fourteen-stage audit and all mandatory searches are recorded.
+1. The bounded audit and all searches required by the task are recorded.
 2. Classification is `available`; confidence is `high`, or is `medium` with the user's explicit acceptance of named limitations.
 3. Volatile ownership, Issue/PR state, discussion, searches, and current-base facts were refreshed and `evidence_refreshed_at` records when.
 4. Structured ownership has no active implicit or explicit owner, and no related item has `blocks_contribution: true`.

@@ -1,181 +1,57 @@
-# Screening collaboration Briefs
+# Screening Task Brief
 
-This contract defines four distinct inputs. The default is a Chat-produced `Screening Result Brief` that Codex records without repeating the investigation. A complete Codex Screening requires explicit user authorization. `issue-evidence-collection` collects evidence without classifying it. A `Code Verification Brief` authorizes only enumerated source-code checks. All are distinct from the contribution-stage Brief used by `harvest-open-source-issue`.
-
-## Default: Screening Result Brief
-
-Chat completes Candidate Discovery, Quick Filter, Deep Audit, Classification, and Screening Recommendation, then supplies:
+Use one bounded brief for one screening stage. The assigned Agent owns the
+work; no Chat handoff is required.
 
 ```yaml
-brief_type: screening-result
-stage: screening-record
-produced_by: chat
-
+task_id: example-screening
+task_type: evidence-collection | screening-record | deep-audit | code-verification
+assigned_agent: agent:luna | agent:terra | agent:sol
 repository: owner/repository
-scan_date: YYYY-MM-DD
-candidate_scope: {}
-
-screening_result:
-  candidates: []
-  recommendation_summary:
-  evidence_summary: []
-  limitations: []
-  candidate_admission_gate_recommendations: []
-
-output_location: screenings/<owner>-<repository>/<scan-id>
-
-baseline:
-  facts_repository: Yanansn/zhaiyezi
-  local_path:
-  expected_branch:
-  expected_commit: verify-before-start
-  expected_worktree: clean
-
-approval:
-  create_screening_records: allowed
-  modify_registry: prohibited
-  initialize_issue_record: prohibited
-  commit_facts_repository: prohibited
-  push_facts_repository: prohibited
+issue_scope: []
+goal: one concrete stage result
+evidence_refs: []
+output_location: screenings/owner-repository/scan-id
+allowed_actions: []
+prohibited_actions: []
+approval_required: false
 ```
 
-Candidate data must contain enough classification, confidence, recommendation, evidence, limitations, and Gate recommendation information to produce schema-valid `SCOPE.yaml`, `RESULTS.yaml`, and `REPORT.md`. Codex treats it as factual input. It checks completeness and record consistency but does not reopen Issues, search PRs, reassess owners, or repeat Deep Audit. Missing or contradictory facts are returned to Chat for correction.
+## Stage minimums
 
-## Exception: complete Codex Screening Brief
+| Stage | Agent | Minimum input | Minimum output |
+| --- | --- | --- | --- |
+| candidate/screening-record | Luna | finite candidate scope | `SCOPE.yaml`, `RESULTS.yaml`, `REPORT.md` |
+| issue-evidence-collection | Luna | finite Issue list and sources | `SCOPE.yaml`, `REPORT.md`, `evidence/*.yaml` |
+| deep-audit | Terra | completed evidence and target binding | `RESULT.yaml`, `REPORT.md`, `DECISION.yaml` |
+| code-verification | Terra | enumerated paths/symbols and baseline | code facts, commands, results, limitations |
+| escalation review | Sol | supplied evidence and analysis | escalation `DECISION.yaml` |
 
-This mode authorizes one bounded candidate investigation only when the user explicitly asks Codex to perform the complete Screening.
+## Approval boundary
 
-```yaml
-brief_type: complete-codex-screening
-stage: issue-screening
+The brief must list allowed and prohibited actions. Missing approval fields mean
+prohibited. Registry mutation, formal Issue initialization, facts Push, target
+fork Push, PR creation, comments, labels, assignment, and other public actions
+are separate approvals. `approval_required: true` does not itself authorize an
+action.
 
-repository: owner/repository
-candidate_scope:
-  latest: 80
-  state: open
-  sort: created-desc
-include_labels: []
-exclude_labels: []
-technical_preferences:
-  languages: []
-  areas: []
-scan_date: YYYY-MM-DD
+## Preflight and stop conditions
 
-required_checks:
-  full_comments: true
-  timeline_and_development: true
-  issue_number_references: true
-  title_and_symptoms: true
-  symbols_and_files: true
-  linked_items: true
-  ownership: true
-  design_and_scope: true
-  complexity_and_feasibility: true
+Before mutation, verify the facts repository branch, HEAD, remote, and
+worktree. For target-repository work, verify that repository independently.
+Stop on missing scope, contradictory facts, stale baseline, unknown changes,
+inaccessible required evidence, an existing output path, or an action outside
+the brief. Return the gap to the assigned Agent; do not broaden the search.
 
-output_location: screenings/<owner>-<repository>/<scan-id>
+## Evidence boundaries
 
-baseline:
-  facts_repository: Yanansn/zhaiyezi
-  local_path:
-  expected_branch:
-  expected_commit: verify-before-start
-  expected_worktree: clean
+Evidence collection records raw facts only. It must not classify, recommend
+admission, modify registry, initialize formal Issue records, or publish.
+Screening classification, confidence, and admission are separate fields.
+`available` never means admitted or authorized for implementation.
 
-approval:
-  create_screening_records: allowed
-  modify_registry: prohibited
-  initialize_issue_record: prohibited
-  publish_public_comment: prohibited
-  assign_issue: prohibited
-  commit_facts_repository: prohibited
-  push_facts_repository: prohibited
-```
+## Return
 
-### Required complete-Screening content
-
-- A finite candidate count, explicit Issue list, date range, or equivalent bounded scope.
-- Inclusion/exclusion rules and technical preferences.
-- Required audit depth and search/access limitations already known.
-- Exact output location and expected facts-repository state.
-- Separate approval values for every mutation or public action.
-- Expected deliverables, stop conditions, and return format.
-
-Missing approval fields mean `prohibited`. `create_screening_records` permits only the lightweight scan directory. It does not authorize registry changes, formal Issue initialization, Commit, Push, assignment, comment, label changes, or PR work.
-
-## Exception: Issue Evidence Collection Brief
-
-```yaml
-brief_type: issue-evidence-collection
-stage: issue-evidence-collection
-repository: owner/repository
-scan_id: YYYY-MM-DD-evidence
-issues:
-  - 123
-required_sources:
-  issue_body: true
-  all_comments: true
-  timeline_and_development: true
-  explicit_issue_number_prs: true
-  title_symptom_search: true
-  symbol_search: true
-output_location: screenings/<owner>-<repository>/<scan-id>/evidence
-approval:
-  create_screening_records: allowed
-  assign_classification: prohibited
-  evaluate_admission: prohibited
-  modify_registry: prohibited
-  initialize_issue_record: prohibited
-  publish_public_comment: prohibited
-  assign_issue: prohibited
-  commit_facts_repository: prohibited
-  push_facts_repository: prohibited
-```
-
-Store one schema-v1 evidence file per Issue. Preserve raw search results, relationship evidence, pagination completeness, extracted-but-unjudged ownership signals, and limitations. Do not create `RESULTS.yaml`; evidence collection never emits `available` or any final classification.
-
-## Exception: Code Verification Brief
-
-```yaml
-brief_type: code-verification
-stage: code-verification
-
-repository: owner/repository
-source_baseline:
-  local_path:
-  branch:
-  commit: verify-before-start
-
-facts_to_verify:
-  - question:
-    paths_or_symbols: []
-    required_evidence: []
-
-constraints:
-  repeat_issue_screening: prohibited
-  inspect_issue_or_pr_ownership: prohibited
-  assign_classification: prohibited
-  make_gate_recommendation: prohibited
-
-output:
-  code_facts:
-  commands_and_results:
-  limitations:
-
-approval:
-  fetch_official_upstream: prohibited
-  modify_files: prohibited
-  commit_facts_repository: prohibited
-  push_facts_repository: prohibited
-```
-
-Codex verifies only the listed code facts, such as whether the current baseline already contains a fix, whether a function/test exists, whether the path crosses packages, or whether a targeted local check can run. It does not repeat the Issue/PR/Owner/design audit. Fetching or any mutation retains its own approval boundary.
-
-## Stop conditions
-
-Stop and report before mutation when the Brief is absent/unbounded, repository baseline differs materially, unknown local changes exist, a requested action exceeds approval, or the output path already exists. For a Screening Result Brief, missing schema-required facts are a Chat handback, not permission for Codex to investigate GitHub. For explicitly authorized complete Screening, also stop when required search access is unavailable for the requested confidence. Do not broaden any mode to compensate.
-
-## Return contract
-
-For Screening Result recording or complete Screening, report schema-v3 funnel counts (`quick_filtered_out` separately from all Deep Audit buckets), classifications/confidence/limitations, persisted admission state, files changed, validation outcomes, and Git state. For evidence collection, report collected sources, completeness, limitations, output files, and explicitly state that no classification or admission was produced. For Code Verification, report only the requested code facts, baseline, commands, results, and limitations. Always state which of Commit, Push, registry mutation, formal Issue initialization, and public actions were or were not performed.
-
-Quick Filter records never carry screening classification/confidence or admission data. Candidate Admission Gate evaluation updates the independent `admission` mapping and never authorizes registry mutation, Issue initialization, or contribution-Brief creation by implication. Use [output-schema.md](output-schema.md) as the authoritative data contract.
+Report collected facts, classifications when authorized, limitations, output
+files, validation results, Git state, and actions not performed. State whether
+Commit or Push occurred.
