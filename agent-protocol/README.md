@@ -1,8 +1,8 @@
 # Codex Multi-Agent Protocol
 
 `agent-protocol/` coordinates durable facts under `agent-work/tasks/<task-id>/`.
-The current workflow is Codex-internal and does not require Chat as a review
-or decision gate.
+The current workflow is Codex-internal and uses Agent artifacts as its review
+and decision mechanism.
 
 ## Agents and artifacts
 
@@ -28,9 +28,9 @@ default.
 candidate → evidence → analysis → decision → implementation → pull-request
 ```
 
-The `decision` stage must be materialized in `DECISION.yaml`; it replaces the
-former mandatory Chat Review. Repository binding, target repository discovery,
-evidence collection, and screening records are retained.
+The `decision` stage must be materialized in `DECISION.yaml` as a first-class
+Agent artifact. Repository binding, target repository discovery, evidence
+collection, and screening records are retained.
 
 `state-machine.yaml` is the authoritative lifecycle definition. This README
 and `lifecycle.md` explain it but do not introduce additional transitions.

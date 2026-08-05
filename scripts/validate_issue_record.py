@@ -180,7 +180,7 @@ def validate(record: Path) -> tuple[list[str], list[str]]:
         errors.extend(validate_project(project_path))
     else:
         warnings.append(
-            "legacy record has no PROJECT.yaml; add it before a new Project Discovery or implementation stage"
+            "record has no PROJECT.yaml; add it before a new Project Discovery or implementation stage"
         )
 
     communication = {
@@ -188,7 +188,7 @@ def validate(record: Path) -> tuple[list[str], list[str]]:
         for key in PUBLIC_COMMUNICATION_FIELDS
     }
     if all(value is None for value in communication.values()):
-        message = "legacy record has no public_communication fields; add them before resuming public work"
+        message = "record has no public_communication fields; add them before resuming public work"
         if status in TERMINAL_STATUSES:
             warnings.append(message)
         else:
@@ -234,7 +234,7 @@ def validate(record: Path) -> tuple[list[str], list[str]]:
 
     knowledge_path = record / "KNOWLEDGE.md"
     if not knowledge_path.exists():
-        message = "legacy record has no KNOWLEDGE.md; add it before resuming research"
+        message = "record has no KNOWLEDGE.md; add it before resuming research"
         if status in TERMINAL_STATUSES:
             warnings.append(message)
         else:
@@ -249,7 +249,7 @@ def validate(record: Path) -> tuple[list[str], list[str]]:
 
     ecosystem_path = record / "ECOSYSTEM.md"
     if not ecosystem_path.exists():
-        message = "legacy record has no ECOSYSTEM.md; add it before resuming research"
+        message = "record has no ECOSYSTEM.md; add it before resuming research"
         if status in TERMINAL_STATUSES:
             warnings.append(message)
         else:
@@ -283,7 +283,7 @@ def validate(record: Path) -> tuple[list[str], list[str]]:
         discussion_heading = "### Discussion re-analysis log"
         if discussion_heading not in ecosystem_text:
             message = (
-                "legacy ECOSYSTEM.md has no Discussion re-analysis log; "
+                "ECOSYSTEM.md has no Discussion re-analysis log; "
                 "add it when material discussion is next re-analyzed"
             )
             if status in DISCUSSION_STATUSES:

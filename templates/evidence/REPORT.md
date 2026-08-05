@@ -20,4 +20,4 @@ This record contains evidence only. It does not assign a screening classificatio
 
 ## Next authorized step
 
-Complete the bounded evidence files, validate the record, then hand the evidence to Chat or an explicitly authorized complete Screening.
+Complete the bounded evidence files, validate the record, then hand the evidence to the next assigned Agent or an explicitly authorized complete Screening.

@@ -131,7 +131,7 @@ def validate_repository_registry(root: Path) -> list[str]:
     return errors
 
 
-def validate_agent_roles(root: Path) -> list[str]:
+def validate_agent_roles(root: Path, permissions: dict[str, Any] | None = None) -> list[str]:
     errors: list[str] = []
     expected = {"luna": "discovery-and-decision", "terra": "analysis-and-execution", "sol": "escalation-review"}
     for name, role in expected.items():
@@ -142,6 +142,11 @@ def validate_agent_roles(root: Path) -> list[str]:
         for field in ("responsibilities", "allowed_actions", "prohibited_actions"):
             if not isinstance(data.get(field), list) or not data[field]:
                 errors.append(f"{path}.{field}: must be a non-empty list")
+        if permissions is not None:
+            declared = set(string_items(data.get("allowed_actions")))
+            configured = set(string_items(permissions.get("roles", {}).get(name, {}).get("allowed_actions")))
+            if declared != configured:
+                errors.append(f"{path}: allowed_actions must match permissions.yaml role {name}")
     sol = load_yaml(root / "agents" / "sol.yaml", [])
     if not {"repository_modify", "commit_facts_repository", "push_facts_repository"}.issubset(set(string_items(sol.get("prohibited_actions")))):
         errors.append("agents/sol.yaml: Sol must remain escalation-only")
@@ -225,6 +230,9 @@ def validate_request(request: dict[str, Any], schema: dict[str, Any], permission
         errors.append(f"{location}.assigned_agent: must be a current Agent")
     if request.get("status") != "ready":
         errors.append(f"{location}.status: must be ready")
+    task_type = request.get("task_type")
+    if task_type not in schema.get("enums", {}).get("task_type", []):
+        errors.append(f"{location}.task_type: invalid task type")
     task_id = request.get("task_id")
     if not isinstance(task_id, str) or not TASK_ID_RE.fullmatch(task_id):
         errors.append(f"{location}.task_id: invalid identifier")
@@ -241,7 +249,25 @@ def validate_request(request: dict[str, Any], schema: dict[str, Any], permission
             errors.append(f"{location}.{field}: must be a list of strings")
     if not isinstance(request.get("approval_required"), bool):
         errors.append(f"{location}.approval_required: must be boolean")
-    if request.get("task_type") == "deep-audit":
+    action_catalog = permissions.get("action_catalog", {})
+    allowed_actions = set(string_items(request.get("allowed_actions")))
+    prohibited_actions = set(string_items(request.get("prohibited_actions")))
+    unknown_actions = (allowed_actions | prohibited_actions) - set(action_catalog)
+    if unknown_actions:
+        errors.append(f"{location}: unknown actions: {', '.join(sorted(unknown_actions))}")
+    role_name = permissions.get("actors", {}).get(request.get("assigned_agent"), {}).get("role")
+    role_actions = set(string_items(permissions.get("roles", {}).get(role_name, {}).get("allowed_actions")))
+    non_protected_forbidden = (allowed_actions - set(PROTECTED_ACTIONS)) - role_actions
+    if non_protected_forbidden:
+        errors.append(f"{location}: assigned Agent cannot perform: {', '.join(sorted(non_protected_forbidden))}")
+    if allowed_actions & prohibited_actions:
+        errors.append(f"{location}: actions cannot be both allowed and prohibited")
+    contract = schema.get("task_type_contracts", {}).get(task_type, {})
+    contract_prohibited = set(string_items(contract.get("prohibited_allowed_actions")))
+    overlap = allowed_actions & contract_prohibited
+    if overlap:
+        errors.append(f"{location}: task type prohibits allowed actions: {', '.join(sorted(overlap))}")
+    if task_type == "deep-audit":
         refs = request.get("evidence_refs")
         if not isinstance(refs, list) or not refs:
             errors.append(f"{location}.evidence_refs: deep-audit requires a non-empty list")
@@ -364,7 +390,8 @@ def inspect_task_directory(task: Path, schema: dict[str, Any], permissions: dict
 def collect_task_records(root: Path, schema: dict[str, Any], permissions: dict[str, Any], errors: list[str]) -> list[TaskRecord]:
     records: list[TaskRecord] = []
     tasks = root / "agent-work" / "tasks"
-    tasks.mkdir(parents=True, exist_ok=True)
+    if not tasks.exists():
+        return records
     for task in sorted(path for path in tasks.iterdir() if path.is_dir()):
         record, task_errors = inspect_task_directory(task, schema, permissions)
         errors.extend(task_errors)
@@ -438,8 +465,8 @@ def repository_state(root: Path) -> tuple[str, str]:
 def validate(root: Path, *, now: Any = None) -> list[str]:
     errors: list[str] = []
     errors.extend(validate_repository_registry(root))
-    errors.extend(validate_agent_roles(root))
     schema, permissions, state_machine = protocol_documents(root, errors)
+    errors.extend(validate_agent_roles(root, permissions))
     validate_protocol_documents(schema, permissions, state_machine, errors)
     collect_task_records(root, schema, permissions, errors)
     return errors

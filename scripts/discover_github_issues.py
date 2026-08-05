@@ -747,7 +747,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--output", default="-", help="JSON output path, or - for standard output"
     )
     parser.add_argument(
-        "--chat-output",
+        "--summary-output",
         help="compact candidate Markdown path, or - for standard output",
     )
     parser.add_argument("--timeout", type=float, default=20.0, help="request timeout seconds")
@@ -778,8 +778,8 @@ def _validate_args(args: argparse.Namespace) -> None:
         raise SystemExit("max-retries must be between 0 and 5")
     if not 1 <= args.workers <= MAX_WORKERS:
         raise SystemExit(f"workers must be between 1 and {MAX_WORKERS}")
-    if args.output == "-" and args.chat_output == "-":
-        raise SystemExit("JSON output and chat output cannot both use standard output")
+    if args.output == "-" and args.summary_output == "-":
+        raise SystemExit("JSON output and summary output cannot both use standard output")
     if any(not label.strip() for label in (*args.include_label, *args.exclude_label)):
         raise SystemExit("labels must not be empty")
     overlap = set(args.include_label) & set(args.exclude_label)
@@ -789,7 +789,7 @@ def _validate_args(args: argparse.Namespace) -> None:
         )
 
 
-def render_chat_summary(output: dict[str, Any]) -> str:
+def render_candidate_summary(output: dict[str, Any]) -> str:
     summary = output["summary"]
     query = output["query"]
     candidates = [
@@ -837,7 +837,7 @@ def render_chat_summary(output: dict[str, Any]) -> str:
             "",
             (
                 "This is Candidate Discovery evidence only. `no_known_related_pr` "
-                "does not mean `available`; Chat must continue Deep Audit, ownership, "
+                "does not mean `available`; the assigned Agent must continue Deep Audit, ownership, "
                 "semantic PR, design, and feasibility checks."
             ),
         ]
@@ -891,8 +891,8 @@ def main(argv: list[str] | None = None) -> int:
             args.workers,
         )
         _write_output(output, args.output)
-        if args.chat_output:
-            _write_text(render_chat_summary(output), args.chat_output)
+        if args.summary_output:
+            _write_text(render_candidate_summary(output), args.summary_output)
     except (GitHubError, OSError) as error:
         print(f"ERROR: {error}", file=sys.stderr)
         return 1

@@ -13,9 +13,8 @@ candidate → evidence → analysis → decision → implementation → pull-req
 - `pull-request`: target-fork push, PR creation, and every public action
   require explicit User approval.
 
-There is no mandatory Chat Review transition. A completed `DECISION.yaml`
-closes the corresponding task artifact; it does not by itself authorize a
-public action.
+`DECISION.yaml` closes the corresponding task artifact; it does not by itself
+authorize a public action.
 
 `state-machine.yaml` is the source of truth for transitions and queue-state
 derivation. This document is explanatory only.

@@ -138,6 +138,16 @@ class AgentProtocolTests(unittest.TestCase):
         errors = validator.validate_change_set([{"actor": "agent:sol", "action": "repository_modify", "path": "agent-work/tasks/x/RESULT.yaml"}], self.permissions)
         self.assertTrue(any("cannot perform action" in error for error in errors))
 
+    def test_assigned_agent_cannot_request_unassigned_action(self) -> None:
+        data = request(agent="agent:luna", assigned_agent="agent:luna", allowed_actions=["run_tests"])
+        _, errors = self.inspect(self.write_task(data))
+        self.assertTrue(any("assigned Agent cannot perform" in error for error in errors))
+
+    def test_unknown_request_action_is_rejected(self) -> None:
+        data = request(allowed_actions=["not-an-action"])
+        _, errors = self.inspect(self.write_task(data))
+        self.assertTrue(any("unknown actions" in error for error in errors))
+
     def test_current_lifecycle_has_no_review_state(self) -> None:
         self.assertNotIn("awaiting-review", self.state_machine["queue_artifact_state"]["states"])
         self.assertEqual([], validator.validate_transition(self.state_machine, "decision", "implementation"))

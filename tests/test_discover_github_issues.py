@@ -483,7 +483,7 @@ class DiscoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(SystemExit, "workers must be between"):
             discovery._validate_args(args)
 
-    def test_json_and_chat_output_cannot_share_stdout(self) -> None:
+    def test_json_and_summary_output_cannot_share_stdout(self) -> None:
         args = discovery.parse_args(
             [
                 "--repository",
@@ -492,7 +492,7 @@ class DiscoveryTests(unittest.TestCase):
                 "1",
                 "--output",
                 "-",
-                "--chat-output",
+                "--summary-output",
                 "-",
             ]
         )
@@ -512,7 +512,7 @@ class DiscoveryTests(unittest.TestCase):
             discovery._write_output({"title": "测试"}, str(destination))
             self.assertEqual({"title": "测试"}, json.loads(destination.read_text()))
 
-    def test_chat_summary_contains_only_no_known_pr_candidates(self) -> None:
+    def test_candidate_summary_contains_only_no_known_pr_candidates(self) -> None:
         output = {
             "repository": REPOSITORY,
             "generated_at": "2026-07-31T08:00:00Z",
@@ -553,7 +553,7 @@ class DiscoveryTests(unittest.TestCase):
                 },
             ],
         }
-        rendered = discovery.render_chat_summary(output)
+        rendered = discovery.render_candidate_summary(output)
         self.assertIn("Candidate issue", rendered)
         self.assertNotIn("Occupied issue", rendered)
         self.assertNotIn("Incomplete issue", rendered)
