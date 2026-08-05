@@ -4,18 +4,24 @@
 
 通过处理真实开源 Issue，在理解项目原理和社区协作方式的同时，完成可验证的代码贡献，并保存可查询、可恢复的全过程记录。
 
-## 角色分工
+## 当前工作模式
+
+当前协议采用 **Codex Multi-Agent Workflow**。Luna 负责候选、证据、筛选与决策提案；Terra 负责深度审计、源码分析、计划、实现与测试；Sol 只进行架构/并发/疑难问题升级审查。每个当前任务由其 `REQUEST.yaml` 的 `assigned_agent` 执行，并以 `DECISION.yaml` 取代强制的 Chat Review。
+
+生命周期为：`candidate → evidence → analysis → decision → implementation → pull-request`。`approval_required: true` 是用户批准门；任何 target fork Push、PR 或公开 GitHub 操作都仍需用户明确批准。历史 schema v1 的 Chat/Codex 任务与 `REVIEW.yaml` 仅为可读、可验证的兼容记录，不构成新任务的必经节点。
+
+## 历史角色分工（仅适用于 schema v1 记录）
 
 - 普通 Chat 默认负责候选发现、Quick Filter、Deep Audit、分类、筛选建议、易懂讲解、学习路径、方案比较、维护者评论解读和最终执行要求整理，并输出 `Screening Result Brief`。
 - 本地 Codex 默认把 `Screening Result Brief` 作为事实输入，负责建立和校验筛选记录；只有用户明确要求完整 Codex Screening、提供有限 `issue-evidence-collection` 或 `Code Verification Brief`，或 Issue 已进入正式贡献流程时，才执行相应范围的调查或工程工作。
 - 公开的 `Yanansn/zhaiyezi` 仓库是普通 Chat 与本地 Codex 之间的持久事实通道。
-- 每个阶段只进行一次人工交接：普通 Chat 生成 `Execution Brief`，用户将其交给 Codex；Codex 完成后把授权范围内的结果发布到事实仓库。
+- schema v1 历史记录曾使用一次 Chat→Codex 人工交接；该交接不适用于当前多 Agent 任务。
 
 Codex 不负责无边界的候选筛选、长篇教学或重复讨论已经确认的知识。没有 `Execution Brief` 时，不得自行扩展为全面研究任务。
 
 ## Agent Coordination Rules
 
-`agent-protocol/` 是 Chat 与 Codex 的仓库级协调层，真实任务固定保存在 `agent-work/tasks/<task-id>/`。目录不随状态移动；状态由 REQUEST、RESULT 和 REVIEW 推导。它们只负责传递任务、结果、Review 和 Approval，不替代本文件、Screening schema、Candidate Admission Gate 或 Harvest 生命周期。
+`agent-protocol/` 是 Codex 多 Agent 的仓库级协调层，真实任务固定保存在 `agent-work/tasks/<task-id>/`。目录不随状态移动；当前任务状态由 REQUEST、RESULT 和 DECISION 推导；schema v1 记录继续由 REVIEW 推导。它们只负责传递任务、结果、Decision 和 Approval，不替代本文件、Screening schema、Candidate Admission Gate 或 Harvest 生命周期。
 
 所有 Agent 必须：
 
@@ -24,24 +30,24 @@ Codex 不负责无边界的候选筛选、长篇教学或重复讨论已经确�
 3. 不跳过任务状态转换，也不把协调层状态当作筛选分类、Admission 或正式 Issue 状态。
 4. 不根据聊天上下文扩大或执行仓库中未记录的任务。当前用户指令可以授权 Codex 忠实落盘一份已完整确定的 Chat Artifact，但只有落盘并通过校验的 REQUEST 才能成为可执行任务。
 5. 以仓库中已提交并 Push 的状态作为跨 Agent 共享事实；本地未 Push 状态只属于当前执行环境。
-6. 区分语义所有权与仓库落盘：Chat 决定 `REQUEST.yaml`/`REVIEW.yaml`/普通 decisions 的内容，Codex 决定 `RESULT.yaml`/`REPORT.md`/`evidence/` 的内容，用户决定 `APPROVAL.yaml` 与 standing authorization 的内容；任何 Agent 都不得通过移动任务目录改变他人文件路径。
+6. 区分语义所有权与仓库落盘：当前任务由 Luna/Terra/Sol 按其角色拥有的 Artifact 决定并落盘，用户决定 `APPROVAL.yaml` 与 standing authorization；历史 Chat/Codex 字段只按 v1 compatibility 解释。任何 Agent 都不得通过移动任务目录改变他人文件路径。
 
 当 Chat 缺少仓库写权限时，Codex 可在用户当前明确指令下，把 Chat 已完整确定的 REQUEST、REVIEW 或 decision 结构化落盘。此时必须记录 `decision_author: chat`、`materialized_by: codex` 及 bounded `materialization` 来源；Codex 不获得决策所有权，不得补充推断、改变范围、结论、权限或状态。内容有歧义时必须停止。
 
 Codex 只有在用户当前指令给出完整批准范围时，才可代为落盘 User-authored APPROVAL 或 standing authorization，并保留 `decision_author: user`。Standing authorization 不能授权 `materialize_user_artifact`，更不能产生或扩大用户批准。
 
-Codex 启动顺序：
+当前 Agent 启动顺序：
 
 1. 验证 facts repository 的 remote、branch、HEAD 和 clean worktree。
 2. 仅在已有授权时执行 fast-forward 同步。
-3. 读取 `AGENTS.md`、`HANDOFF.md`、`agent-protocol/`、对应 Brief 与 Skill。
+3. 读取 `AGENTS.md`、`HANDOFF.md`、`agent-protocol/`、当前 REQUEST 与适用 Skill。
 4. 运行 `python3 scripts/validate_agent_protocol.py`。
-5. 运行 `python3 scripts/agent_queue.py next --agent codex`。
-6. 一次只执行返回的一个 `ready` 任务。Codex 自主创作只限 Codex-authored Artifacts；代为落盘 Chat/User Artifact 时必须满足 provenance 与 materialization Gate。
-7. 仅依据当前任务 Approval 或精确匹配的有效 standing authorization 决定是否 Commit/Push facts repository。
+5. 运行 `python3 scripts/agent_queue.py next --agent agent:luna`、`agent:terra` 或 `agent:sol`。
+6. 一次只执行返回的一个 `ready` 任务，并只写入该 Agent 拥有的 Artifact。
+7. Luna/Terra 可在任务边界内 Commit facts repository；facts Push 与所有 target/public 动作仍按 Approval Gate 决定。
 8. facts-repository standing authorization 永远不能授权上游动作或公开动作。
 
-Chat 启动顺序：
+历史 Chat/Codex 任务恢复顺序（仅 schema v1）：
 
 1. 读取远端 `main`，不把 Codex 本地状态当成共享事实。
 2. 验证协议，并列出 `awaiting-review`、`blocked` 与分配给 Chat 的任务。
@@ -59,19 +65,19 @@ Standing authorization 是用户可选机制；只有 `decisions/authorizations/
 
 该优先级不允许低层来源覆盖系统安全规则、本 `AGENTS.md`、用户审批边界或上游实时事实。来源冲突时停止执行，在当前角色拥有的 artifact 中记录差异，不自动合并或覆盖他人修改。
 
-Evidence task 完成后进入 `deep_audit`，Deep Audit 完成后必须进入 Chat Review；`evidence_completed` 和 Deep Audit 均不得直接解释为 `available`、Admission passed、`selected` 或 implementation authorization。facts repository 的 Commit/Push 需要任务授权或有效 standing authorization；上游写入和所有公开动作继续逐次要求用户确认。
+Evidence task 完成后进入分析与 Agent Decision；不再要求 Chat Review。证据、分析或 Decision 均不得直接解释为 `available`、Admission passed、`selected` 或 implementation authorization。Luna/Terra 可在其有界任务内提交 facts repository；facts Push、上游写入和所有公开动作继续受用户批准约束。
 
 ## 候选筛选与接纳边界
 
 ### 默认协作规则
 
-- 默认是 **Chat 调查，Codex 记录**。Chat 完成 Candidate Discovery、Quick Filter、Deep Audit、Classification 和 Screening Recommendation；Codex 不重复读取 Issue、搜索 PR、判断 Owner 或重做 Deep Audit。
+- 默认是 **Luna 调查与决策，Terra 分析与执行，Sol 升级审查**。Luna 完成 Candidate Discovery、Quick Filter、Evidence、Classification 和 Decision Proposal；Terra 完成 Deep Audit、源码分析、计划、修改与测试；Sol 不实施，只记录升级审查结论。
 - Chat 的 `Screening Result Brief` 必须包含候选列表、classification、confidence、recommendation、证据摘要、limitations 和是否建议进入 Candidate Admission Gate。Codex 默认相信这些内容是本阶段的事实输入，并只负责初始化/更新 `SCOPE.yaml`、`RESULTS.yaml`、`REPORT.md`、运行 validator、必要时更新 `HANDOFF.md`，以及执行另行授权的 Git 操作。
 - 同一次 Screening 的调查结果只保留一份。Codex 不以“复核”为由默认重复完整调查；若 Brief 内部矛盾、缺少 schema 必填信息或无法通过 validator，应报告缺口并停止记录，不得自行补做 GitHub 调查。
 - 只有用户明确要求 Codex 执行完整候选筛选时，Codex 才可按有界 `issue-screening` Brief 完成全部调查阶段。一般性的“记录结果”“继续”或提供 Screening Result Brief 不构成该授权。
 - `Code Verification Brief` 与 Issue Screening 是不同阶段。它只允许 Codex 验证列出的代码事实，例如当前基线是否已有修复、符号或测试是否存在、是否跨 package、是否可本地运行；不得扩展为 Issue/PR/Owner/设计边界的完整筛选。
 - `issue-evidence-collection` 只允许收集完整正文、分页评论、可见 Timeline/Development、显式编号与语义搜索原始结果、未经最终判断的 ownership signals 和 limitations。它不得分配 classification/confidence、判断 `available`、生成 `RESULTS.yaml`、修改 registry、建立正式 Issue 目录或执行公开动作。
-- `deep-audit` 是正式一等任务类型，只消费已完成的 evidence collection、关联 PR 信息和源码事实，输出 Deep Audit `RESULT.yaml`/`REPORT.md` 与 recommendation；必须等待 Chat Review，不代表 Admission、implementation authorization 或 upstream contribution。
+- `deep-audit` 是正式一等任务类型，只消费已完成的 evidence collection、关联 PR 信息和源码事实，输出 Deep Audit `RESULT.yaml`/`REPORT.md` 与 Agent Decision Proposal；不代表 Admission、implementation authorization 或 upstream contribution。
 - Target Repository Management 通过 `repositories/registry.yaml`、`repositories/discovery.yaml` 和 `scripts/repository_discovery.py` 管理 upstream、fork、local discovery 与 Git identity；registry 不得保存绝对路径。Evidence 可不绑定目标仓库，Deep Audit 必须绑定，Implementation 还必须提供 fork 和 local discovery result。目标仓库绑定不授予 upstream write 或 PR 权限。
 - Issue 通过 Candidate Admission Gate 并正式进入 `harvest-open-source-issue` 后，Codex 才按贡献 Brief 开始 Code Map、Root Cause、Implementation、Testing 和 PR。
 

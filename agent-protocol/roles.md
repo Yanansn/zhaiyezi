@@ -1,30 +1,24 @@
-# Agent roles
+# Codex Multi-Agent Roles
 
-## Chat (`decision-agent`)
+The current workflow is executed by Codex internal agents. Chat is not a
+required decision or review node.
 
-Chat semantically owns:
+| Agent | Primary responsibility | May modify target source | May commit facts |
+| --- | --- | --- | --- |
+| `agent:luna` | discovery, evidence, screening, contribution value, decision proposals | no | yes |
+| `agent:terra` | deep audit, source analysis, implementation planning, code and tests | yes, only in a bounded task | yes |
+| `agent:sol` | architecture/concurrency/debug escalation and final technical review | no | no |
+| `user` | approvals for target-fork push, PRs, and public GitHub actions | by explicit approval | by explicit approval |
 
-- `decisions/**`
-- `agent-work/tasks/*/REQUEST.yaml`
-- `agent-work/tasks/*/REVIEW.yaml`
+`agent:sol` produces escalation-oriented `DECISION.yaml` artifacts only. It
+does not modify source, facts reports, or Git history.
 
-Chat authors bounded requests and reviews Codex results. When Chat lacks repository write capability, Codex may materialize the complete Chat-authored content under explicit user instruction. Chat remains `decision_author`; materialization does not let Codex alter scope, permissions, status, or conclusions. Chat does not edit `RESULT.yaml`, manufacture execution evidence, publish as the user, or turn evidence into an Admission decision without the existing Screening gate.
+## Decision ownership
 
-## Codex (`execution-agent`)
+Current artifacts use `schema_version: 2` and identify semantic ownership as
+`decision_author: agent:luna`, `agent:terra`, `agent:sol`, or `user`.
+`materialized_by` is the same internal agent for current artifacts.
 
-Codex semantically owns:
-
-- `agent-work/tasks/*/RESULT.yaml`
-- `agent-work/tasks/*/REPORT.md`
-- `agent-work/tasks/*/evidence/**`
-- `screenings/**`
-
-Codex executes the recorded stage, reports validation and limitations, and returns gaps instead of inventing a decision. It may act as repository materializer for Chat-authored REQUEST/REVIEW/decisions only with complete bounded content, explicit user instruction, valid provenance, and matching path authorization. It may similarly materialize a complete user approval only under that user's current explicit instruction. Codex never becomes the decision author through materialization and cannot independently classify, admit, approve, or publish.
-
-## User (`approval-authority`)
-
-The user semantically owns `agent-work/tasks/*/APPROVAL.yaml` and standing authorizations and is the final authority for protected Git and GitHub actions. Codex may materialize only the user's exact, complete current instruction, preserving `decision_author: user` provenance.
-
-## Shared file
-
-`HANDOFF.md` is shared and serialized. A task modifying it must name it in `expected_outputs`, and concurrent writers must stop. It is not a substitute for task artifacts.
+Version 1 Chat/Codex artifacts remain legacy facts. They retain their original
+ownership fields and `REVIEW.yaml` semantics, but new work must use agents and
+`DECISION.yaml`.

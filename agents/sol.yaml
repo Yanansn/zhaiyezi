@@ -1,0 +1,28 @@
+schema_version: 1
+agent: sol
+role: escalation-review
+responsibilities:
+  - architecture review
+  - concurrency issues
+  - difficult debugging
+  - final technical review
+allowed_actions:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - write_decision_proposal
+  - escalate
+prohibited_actions:
+  - repository_modify
+  - write_result
+  - write_report
+  - write_evidence
+  - commit_facts_repository
+  - push_facts_repository
+  - upstream_write
+  - push_upstream_branch
+  - create_pull_request
+  - comment_issue
+  - create_issue
+  - assign_issue
+  - add_labels

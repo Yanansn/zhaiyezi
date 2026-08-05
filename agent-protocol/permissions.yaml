@@ -1,59 +1,42 @@
-schema_version: 2
+schema_version: 3
 
 actors:
-  chat:
-    role: decision-agent
-  codex:
-    role: execution-agent
-  user:
-    role: approval-authority
+  agent:luna: {role: luna}
+  agent:terra: {role: terra}
+  agent:sol: {role: sol}
+  user: {role: approval-authority}
+  chat: {role: legacy-decision-agent}
+  codex: {role: legacy-execution-agent}
 
 roles:
-  decision-agent:
-    allowed_actions:
-      - read_repository
-      - create_task
-      - create_review
-      - create_decision
-    owned_paths:
-      - decisions/**
-      - agent-work/tasks/*/REQUEST.yaml
-      - agent-work/tasks/*/REVIEW.yaml
-  execution-agent:
-    allowed_actions:
-      - read_repository
-      - repository_read
-      - collect_evidence
-      - analyze_code
-      - repository_modify
-      - modify_facts_repository
-      - run_tests
-      - write_result
-      - write_report
-      - write_evidence
-      - materialize_chat_artifact
-      - materialize_user_artifact
-    owned_paths:
-      - agent-work/tasks/*/RESULT.yaml
-      - agent-work/tasks/*/REPORT.md
-      - agent-work/tasks/*/evidence/**
-      - screenings/**
+  luna:
+    allowed_actions: [read_repository, repository_read, collect_evidence, analyze_code, write_result, write_report, write_evidence, write_decision_proposal, commit_facts_repository]
+    owned_paths: [agent-work/tasks/*/REQUEST.yaml, agent-work/tasks/*/RESULT.yaml, agent-work/tasks/*/REPORT.md, agent-work/tasks/*/evidence/**, agent-work/tasks/*/DECISION.yaml, decisions/**]
+  terra:
+    allowed_actions: [read_repository, repository_read, analyze_code, repository_modify, run_tests, write_result, write_report, write_decision_proposal, commit_facts_repository]
+    owned_paths: [agent-work/tasks/*/REQUEST.yaml, agent-work/tasks/*/RESULT.yaml, agent-work/tasks/*/REPORT.md, agent-work/tasks/*/evidence/**, agent-work/tasks/*/DECISION.yaml, decisions/**]
+  sol:
+    allowed_actions: [read_repository, repository_read, analyze_code, write_decision_proposal, escalate]
+    owned_paths: [agent-work/tasks/*/DECISION.yaml, decisions/**]
+  legacy-decision-agent:
+    allowed_actions: [read_repository, create_task, create_review, create_decision]
+    owned_paths: [decisions/**, agent-work/tasks/*/REQUEST.yaml, agent-work/tasks/*/REVIEW.yaml]
+  legacy-execution-agent:
+    allowed_actions: [read_repository, repository_read, collect_evidence, analyze_code, repository_modify, modify_facts_repository, run_tests, write_result, write_report, write_evidence, materialize_chat_artifact, materialize_user_artifact]
+    owned_paths: [agent-work/tasks/*/RESULT.yaml, agent-work/tasks/*/REPORT.md, agent-work/tasks/*/evidence/**, screenings/**]
   approval-authority:
-    allowed_actions:
-      - approve_protected_action
-    owned_paths:
-      - agent-work/tasks/*/APPROVAL.yaml
+    allowed_actions: [approve_protected_action]
+    owned_paths: [agent-work/tasks/*/APPROVAL.yaml]
 
-shared_serialized_paths:
-  - HANDOFF.md
+shared_serialized_paths: [HANDOFF.md]
 
 action_catalog:
   read_repository: local-read
   repository_read: target-repository-read
   repository_modify: target-repository-write
   create_task: local-write
-  create_review: local-write
-  create_decision: local-write
+  create_review: legacy-local-write
+  create_decision: legacy-local-write
   collect_evidence: local-write
   analyze_code: local-read
   modify_facts_repository: local-write
@@ -61,9 +44,11 @@ action_catalog:
   write_result: local-write
   write_report: local-write
   write_evidence: local-write
-  materialize_chat_artifact: standing-or-task-authorization-required
+  write_decision_proposal: local-write
+  escalate: local-write
+  materialize_chat_artifact: legacy-authorization-required
   materialize_user_artifact: always-user-confirmation-required
-  commit_facts_repository: standing-or-task-authorization-required
+  commit_facts_repository: agent-local-commit
   push_facts_repository: standing-or-task-authorization-required
   modify_registry: always-user-confirmation-required
   initialize_formal_issue: always-user-confirmation-required
@@ -77,74 +62,22 @@ action_catalog:
   add_labels: always-user-confirmation-required
   create_pull_request: always-user-confirmation-required
 
-default_prohibited_actions:
-  - materialize_user_artifact
-  - modify_registry
-  - initialize_formal_issue
-  - fetch_official_upstream
-  - modify_upstream_code
-  - upstream_write
-  - push_upstream_branch
-  - create_issue
-  - comment_issue
-  - assign_issue
-  - add_labels
-  - create_pull_request
+default_prohibited_actions: [materialize_user_artifact, modify_registry, initialize_formal_issue, fetch_official_upstream, modify_upstream_code, upstream_write, push_upstream_branch, create_issue, comment_issue, assign_issue, add_labels, create_pull_request]
 
-approval_required_actions:
-  - repository_modify
-  - materialize_chat_artifact
-  - materialize_user_artifact
-  - commit_facts_repository
-  - push_facts_repository
-  - modify_registry
-  - initialize_formal_issue
-  - fetch_official_upstream
-  - modify_upstream_code
-  - upstream_write
-  - push_upstream_branch
-  - create_issue
-  - comment_issue
-  - assign_issue
-  - add_labels
-  - create_pull_request
-
-standing_authorizable_actions:
-  - commit_facts_repository
-  - push_facts_repository
-  - materialize_chat_artifact
-
-always_user_confirmation_actions:
-  - materialize_user_artifact
-  - modify_registry
-  - initialize_formal_issue
-  - fetch_official_upstream
-  - modify_upstream_code
-  - upstream_write
-  - push_upstream_branch
-  - create_issue
-  - comment_issue
-  - assign_issue
-  - add_labels
-  - create_pull_request
+approval_required_actions: [materialize_chat_artifact, materialize_user_artifact, push_facts_repository, modify_registry, initialize_formal_issue, fetch_official_upstream, modify_upstream_code, upstream_write, push_upstream_branch, create_issue, comment_issue, assign_issue, add_labels, create_pull_request]
+standing_authorizable_actions: [commit_facts_repository, push_facts_repository, materialize_chat_artifact]
+always_user_confirmation_actions: [materialize_user_artifact, modify_registry, initialize_formal_issue, fetch_official_upstream, modify_upstream_code, upstream_write, push_upstream_branch, create_issue, comment_issue, assign_issue, add_labels, create_pull_request]
 
 standing_authorization:
   repository: Yanansn/zhaiyezi
   branch: main
   file_location: decisions/authorizations/*.yaml
   actor_path_allowlist:
-    chat:
-      - agent-work/tasks/*/REQUEST.yaml
-      - agent-work/tasks/*/REVIEW.yaml
-      - decisions/**
-    codex:
-      - agent-work/tasks/*/REQUEST.yaml
-      - agent-work/tasks/*/REVIEW.yaml
-      - agent-work/tasks/*/RESULT.yaml
-      - agent-work/tasks/*/REPORT.md
-      - agent-work/tasks/*/evidence/**
-      - screenings/**
-      - decisions/**
+    agent:luna: [agent-work/tasks/*/REQUEST.yaml, agent-work/tasks/*/RESULT.yaml, agent-work/tasks/*/REPORT.md, agent-work/tasks/*/evidence/**, agent-work/tasks/*/DECISION.yaml, decisions/**]
+    agent:terra: [agent-work/tasks/*/REQUEST.yaml, agent-work/tasks/*/RESULT.yaml, agent-work/tasks/*/REPORT.md, agent-work/tasks/*/evidence/**, agent-work/tasks/*/DECISION.yaml, decisions/**]
+    agent:sol: [agent-work/tasks/*/DECISION.yaml, decisions/**]
+    chat: [agent-work/tasks/*/REQUEST.yaml, agent-work/tasks/*/REVIEW.yaml, decisions/**]
+    codex: [agent-work/tasks/*/REQUEST.yaml, agent-work/tasks/*/REVIEW.yaml, agent-work/tasks/*/RESULT.yaml, agent-work/tasks/*/REPORT.md, agent-work/tasks/*/evidence/**, screenings/**, decisions/**]
 
 materialization:
   semantic_ownership_transfers: false
@@ -152,39 +85,19 @@ materialization:
     materialize_chat_artifact:
       authority: user-instruction
       scope: bounded
-      paths:
-        - agent-work/tasks/*/REQUEST.yaml
-        - agent-work/tasks/*/REVIEW.yaml
-        - decisions/**
-      excluded_paths:
-        - decisions/authorizations/**
+      paths: [agent-work/tasks/*/REQUEST.yaml, agent-work/tasks/*/REVIEW.yaml, decisions/**]
+      excluded_paths: [decisions/authorizations/**]
     materialize_user_artifact:
       authority: explicit-user-approval
       scope: bounded
-      paths:
-        - agent-work/tasks/*/APPROVAL.yaml
-        - decisions/authorizations/*.yaml
-  never_materializable_actions:
-    - modify_registry
-    - initialize_formal_issue
-    - fetch_official_upstream
-    - modify_upstream_code
-    - upstream_write
-    - push_upstream_branch
-    - create_issue
-    - comment_issue
-    - assign_issue
-    - add_labels
-    - create_pull_request
+      paths: [agent-work/tasks/*/APPROVAL.yaml, decisions/authorizations/*.yaml]
+  never_materializable_actions: [modify_registry, initialize_formal_issue, fetch_official_upstream, modify_upstream_code, upstream_write, push_upstream_branch, create_issue, comment_issue, assign_issue, add_labels, create_pull_request]
 
 rules:
   default: deny
   missing_action: prohibited
-  task_approval_is_task_scoped: true
-  standing_authorization_is_repository_scoped: true
-  standing_authorization_is_branch_scoped: true
-  standing_authorization_is_actor_action_path_scoped: true
-  template_is_not_authorization: true
-  materialization_requires_provenance: true
-  materialization_does_not_grant_decision_authority: true
+  approval_required_does_not_grant_authorization: true
+  user_approval_required_for_target_fork_push_and_public_actions: true
+  luna_and_terra_may_commit_facts: true
+  sol_is_escalation_only: true
   publication_requires_live_identity_verification: true

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the fixed-path Chat/Codex coordination protocol."""
+"""Validate the Codex multi-agent protocol and legacy task artifacts."""
 
 from __future__ import annotations
 
@@ -35,6 +35,7 @@ ISSUE_RE = re.compile(r"^[^/\s]+/[^#\s]+#[1-9][0-9]*$")
 RESULT_STATES = {
     "active": "active",
     "review": "awaiting-review",
+    "decision": "awaiting-decision",
     "blocked": "blocked",
     "failed": "failed",
 }
@@ -43,6 +44,13 @@ REVIEW_STATES = {
     ("changes-requested", "changes-requested"): "changes-requested",
     ("rejected", "rejected"): "rejected",
 }
+DECISION_STATES = {
+    "completed": "completed",
+    "changes-requested": "changes-requested",
+    "rejected": "rejected",
+}
+AGENT_ACTORS = {"agent:luna", "agent:terra", "agent:sol"}
+LEGACY_ACTORS = {"chat", "codex", "user"}
 CHAT_MATERIALIZATION_DENIED_PATHS = ("decisions/authorizations/**",)
 TARGET_REPOSITORY_PHASES = {"evidence", "deep-audit", "implementation"}
 UPSTREAM_ACTIONS = {
@@ -67,6 +75,7 @@ class TaskRecord:
     request: dict[str, Any]
     result: dict[str, Any] | None
     review: dict[str, Any] | None
+    decision: dict[str, Any] | None
     approval: dict[str, Any] | None
     status: str
 
@@ -150,6 +159,33 @@ def validate_repository_registry(root: Path) -> list[str]:
         for item in scan_roots
     ):
         errors.append(f"{discovery_path}.scan_roots: must be non-empty relative paths")
+    return errors
+
+
+def validate_agent_roles(root: Path) -> list[str]:
+    errors: list[str] = []
+    expected = {
+        "luna": "discovery-and-decision",
+        "terra": "analysis-and-execution",
+        "sol": "escalation-review",
+    }
+    directory = root / "agents"
+    for name, role in expected.items():
+        path = directory / f"{name}.yaml"
+        data = load_yaml(path, errors)
+        if data.get("schema_version") != 1:
+            errors.append(f"{path}.schema_version: must be 1")
+        if data.get("agent") != name:
+            errors.append(f"{path}.agent: must be {name}")
+        if data.get("role") != role:
+            errors.append(f"{path}.role: must be {role}")
+        for field in ("responsibilities", "allowed_actions", "prohibited_actions"):
+            if not isinstance(data.get(field), list) or not data[field]:
+                errors.append(f"{path}.{field}: must be a non-empty list")
+    sol = load_yaml(directory / "sol.yaml", [])
+    prohibited = set(string_items(sol.get("prohibited_actions")))
+    if not {"repository_modify", "commit_facts_repository", "push_facts_repository"}.issubset(prohibited):
+        errors.append("agents/sol.yaml: Sol must remain escalation-only")
     return errors
 
 
@@ -250,43 +286,33 @@ def validate_protocol_documents(
     state_machine: dict[str, Any],
     errors: list[str],
 ) -> None:
-    if schema.get("schema_version") != 3:
-        errors.append("agent-protocol/task-schema.yaml: schema_version must be 3")
-    if permissions.get("schema_version") != 2:
-        errors.append("agent-protocol/permissions.yaml: schema_version must be 2")
+    if schema.get("schema_version") != 4:
+        errors.append("agent-protocol/task-schema.yaml: schema_version must be 4")
+    if permissions.get("schema_version") != 3:
+        errors.append("agent-protocol/permissions.yaml: schema_version must be 3")
     if state_machine.get("schema_version") != 2:
         errors.append("agent-protocol/state-machine.yaml: schema_version must be 2")
     if schema.get("task_directory") != "agent-work/tasks/<task-id>":
         errors.append("agent-protocol/task-schema.yaml: task_directory must be fixed")
 
     required_states = {
-        "ready", "active", "awaiting-review", "changes-requested",
+        "ready", "active", "awaiting-decision", "awaiting-review", "changes-requested",
         "blocked", "failed", "rejected", "completed",
     }
     queue = state_machine.get("queue_artifact_state", {})
     if set(queue.get("states", [])) != required_states:
         errors.append("agent-protocol/state-machine.yaml: queue states are incomplete")
     coordination = state_machine.get("contribution_coordination", {})
-    if coordination.get("transitions", {}).get("evidence_completed") != [
-        "target_repository_binding"
-    ]:
-        errors.append(
-            "agent-protocol/state-machine.yaml: evidence_completed must only enter target_repository_binding"
-        )
-    if coordination.get("transitions", {}).get("target_repository_binding") != ["deep_audit"]:
-        errors.append(
-            "agent-protocol/state-machine.yaml: target_repository_binding must only enter deep_audit"
-        )
-    if coordination.get("transitions", {}).get("deep_audit") != ["awaiting_review"]:
-        errors.append(
-            "agent-protocol/state-machine.yaml: deep_audit must only enter awaiting_review"
-        )
-    if coordination.get("transitions", {}).get("awaiting_review") != [
-        "admission_pending"
-    ]:
-        errors.append(
-            "agent-protocol/state-machine.yaml: awaiting_review must only enter admission_pending"
-        )
+    expected_lifecycle = {
+        "candidate": ["evidence"],
+        "evidence": ["analysis"],
+        "analysis": ["decision"],
+        "decision": ["implementation"],
+        "implementation": ["pull-request"],
+        "pull-request": [],
+    }
+    if coordination.get("transitions") != expected_lifecycle:
+        errors.append("agent-protocol/state-machine.yaml: multi-agent lifecycle is invalid")
 
     deep_audit_contract = schema.get("task_type_contracts", {}).get("deep-audit", {})
     if "deep-audit" not in schema.get("enums", {}).get("task_type", []):
@@ -313,13 +339,11 @@ def validate_protocol_documents(
         errors.append("agent-protocol/permissions.yaml.action_catalog: must be a mapping")
         catalog = {}
     if standing != {
-        "commit_facts_repository",
-        "push_facts_repository",
-        "materialize_chat_artifact",
+        "commit_facts_repository", "push_facts_repository", "materialize_chat_artifact"
     }:
         errors.append(
             "agent-protocol/permissions.yaml.standing_authorizable_actions: "
-            "must contain only facts Commit/Push and Chat artifact materialization"
+            "must contain only facts Commit/Push and legacy Chat artifact materialization"
         )
     if not required_always.issubset(always):
         errors.append(
@@ -350,6 +374,8 @@ def validate_protocol_documents(
             "agent-protocol/permissions.yaml.materialization: user authorizations "
             "must be excluded from Chat materialization"
         )
+    if set(schema.get("compatibility", {}).get("current_agents", [])) != AGENT_ACTORS:
+        errors.append("agent-protocol/task-schema.yaml: current agents are invalid")
 
 
 def validate_provenance(
@@ -405,6 +431,35 @@ def validate_provenance(
         )
 
 
+def is_legacy_artifact(value: dict[str, Any]) -> bool:
+    """Version 1 artifacts retain the former Chat/Codex ownership contract."""
+    return value.get("schema_version") == 1
+
+
+def validate_agent_provenance(
+    value: dict[str, Any],
+    location: str,
+    errors: list[str],
+    *,
+    allowed_authors: set[str],
+) -> None:
+    author = value.get("decision_author")
+    creator = value.get("created_by")
+    materializer = value.get("materialized_by")
+    if author not in allowed_authors:
+        errors.append(f"{location}.decision_author: must be an authorized agent or user")
+    if creator != author:
+        errors.append(f"{location}.created_by: must match decision_author")
+    if materializer not in AGENT_ACTORS | {"user"}:
+        errors.append(f"{location}.materialized_by: must be an agent or user")
+    if materializer != author:
+        errors.append(
+            f"{location}.materialized_by: current multi-agent artifacts must be self-materialized"
+        )
+    if value.get("materialization") is not None:
+        errors.append(f"{location}.materialization: is legacy-only and must be absent")
+
+
 def validate_request(
     request: dict[str, Any],
     schema: dict[str, Any],
@@ -415,20 +470,30 @@ def validate_request(
     require_fields(
         request, schema.get("request", {}).get("required_fields", []), location, errors
     )
-    if request.get("schema_version") != 1:
-        errors.append(f"{location}.schema_version: must be 1")
+    legacy = is_legacy_artifact(request)
+    if request.get("schema_version") not in {1, 2}:
+        errors.append(f"{location}.schema_version: must be 1 (legacy) or 2")
     task_id = request.get("task_id")
     if not isinstance(task_id, str) or not TASK_ID_RE.fullmatch(task_id):
         errors.append(f"{location}.task_id: invalid task identifier")
     enums = schema.get("enums", {})
     if request.get("task_type") not in enums.get("task_type", []):
         errors.append(f"{location}.task_type: unknown value {request.get('task_type')!r}")
-    if request.get("created_by") != "chat":
-        errors.append(f"{location}.created_by: REQUEST.yaml owner must be chat")
-    validate_provenance(
-        request, "chat", {"chat", "codex"}, schema, location, errors
-    )
-    if request.get("assigned_agent") not in enums.get("assigned_agent", []):
+    if legacy:
+        if request.get("created_by") != "chat":
+            errors.append(f"{location}.created_by: legacy REQUEST.yaml owner must be chat")
+        validate_provenance(
+            request, "chat", {"chat", "codex"}, schema, location, errors
+        )
+        allowed_assignees = enums.get("legacy_assigned_agent", [])
+    else:
+        validate_agent_provenance(
+            request, location, errors, allowed_authors=AGENT_ACTORS | {"user"}
+        )
+        if not isinstance(request.get("approval_required"), bool):
+            errors.append(f"{location}.approval_required: must be boolean")
+        allowed_assignees = enums.get("assigned_agent", [])
+    if request.get("assigned_agent") not in allowed_assignees:
         errors.append(f"{location}.assigned_agent: invalid Agent")
     if request.get("status") != "ready":
         errors.append(f"{location}.status: new REQUEST.yaml status must be ready")
@@ -516,16 +581,22 @@ def validate_result(
     require_fields(
         result, schema.get("result", {}).get("required_fields", []), location, errors
     )
-    if result.get("schema_version") != 1:
-        errors.append(f"{location}.schema_version: must be 1")
+    legacy = is_legacy_artifact(request)
+    if result.get("schema_version") != request.get("schema_version"):
+        errors.append(f"{location}.schema_version: must match REQUEST.yaml")
     if result.get("task_id") != request.get("task_id"):
         errors.append(f"{location}.task_id: must match REQUEST.yaml")
-    if result.get("created_by") != "codex":
-        errors.append(f"{location}.created_by: RESULT.yaml owner must be codex")
-    validate_provenance(
-        result, "codex", {"codex"}, schema, location, errors
-    )
-    if result.get("status") not in schema.get("enums", {}).get("result_status", []):
+    if legacy:
+        if result.get("created_by") != "codex":
+            errors.append(f"{location}.created_by: legacy RESULT.yaml owner must be codex")
+        validate_provenance(result, "codex", {"codex"}, schema, location, errors)
+        allowed_statuses = schema.get("enums", {}).get("legacy_result_status", [])
+    else:
+        validate_agent_provenance(
+            result, location, errors, allowed_authors={"agent:luna", "agent:terra"}
+        )
+        allowed_statuses = schema.get("enums", {}).get("result_status", [])
+    if result.get("status") not in allowed_statuses:
         errors.append(f"{location}.status: invalid result status")
     revision = result.get("revision", 1)
     if not isinstance(revision, int) or isinstance(revision, bool) or revision < 1:
@@ -584,6 +655,46 @@ def validate_review(
             errors.append(f"{location}.{field}: must be a list")
 
 
+def validate_decision(
+    decision: dict[str, Any],
+    request: dict[str, Any],
+    result: dict[str, Any] | None,
+    schema: dict[str, Any],
+    location: str,
+    errors: list[str],
+) -> None:
+    require_fields(
+        decision, schema.get("decision", {}).get("required_fields", []), location, errors
+    )
+    if decision.get("schema_version") != 2:
+        errors.append(f"{location}.schema_version: must be 2")
+    if decision.get("task_id") != request.get("task_id"):
+        errors.append(f"{location}.task_id: must match REQUEST.yaml")
+    validate_agent_provenance(
+        decision, location, errors, allowed_authors=AGENT_ACTORS
+    )
+    if decision.get("status") not in schema.get("enums", {}).get("decision_status", []):
+        errors.append(f"{location}.status: invalid decision status")
+    if decision.get("result_ref") != "RESULT.yaml":
+        errors.append(f"{location}.result_ref: must be RESULT.yaml")
+    revision = decision.get("result_revision")
+    if not isinstance(revision, int) or isinstance(revision, bool) or revision < 1:
+        errors.append(f"{location}.result_revision: must be a positive integer")
+    if result is None:
+        errors.append(f"{location}: requires RESULT.yaml")
+    elif revision != result_revision(result):
+        errors.append(f"{location}.result_revision: must match current RESULT revision")
+    if decision.get("confidence") not in schema.get("enums", {}).get("decision_confidence", []):
+        errors.append(f"{location}.confidence: invalid confidence")
+    if not isinstance(decision.get("conclusion"), str) or not decision["conclusion"].strip():
+        errors.append(f"{location}.conclusion: must be a non-empty string")
+    if not isinstance(decision.get("next_action"), str) or not decision["next_action"].strip():
+        errors.append(f"{location}.next_action: must be a non-empty string")
+    for field in ("evidence_refs", "risks"):
+        if not isinstance(decision.get(field), list) or len(string_items(decision[field])) != len(decision[field]):
+            errors.append(f"{location}.{field}: must be a list of strings")
+
+
 def validate_approval(
     approval: dict[str, Any],
     request: dict[str, Any],
@@ -626,9 +737,13 @@ def derive_task_status(
     request: dict[str, Any],
     result: dict[str, Any] | None,
     review: dict[str, Any] | None,
+    decision: dict[str, Any] | None,
     location: str,
     errors: list[str],
 ) -> str:
+    if not is_legacy_artifact(request) and decision is not None:
+        if decision.get("result_revision") == result_revision(result):
+            return DECISION_STATES.get(decision.get("status"), "invalid")
     if review is not None:
         current_revision = result_revision(result)
         reviewed_revision = review.get("result_revision")
@@ -904,6 +1019,7 @@ def inspect_task_directory(
     artifacts: dict[str, dict[str, Any] | None] = {
         "RESULT.yaml": None,
         "REVIEW.yaml": None,
+        "DECISION.yaml": None,
         "APPROVAL.yaml": None,
     }
     for filename in artifacts:
@@ -912,6 +1028,7 @@ def inspect_task_directory(
             artifacts[filename] = load_yaml(path, errors)
     result = artifacts["RESULT.yaml"]
     review = artifacts["REVIEW.yaml"]
+    decision = artifacts["DECISION.yaml"]
     approval = artifacts["APPROVAL.yaml"]
     if result is not None:
         validate_result(result, request, schema, str(task / "RESULT.yaml"), errors)
@@ -921,12 +1038,18 @@ def inspect_task_directory(
         validate_review(review, request, schema, str(task / "REVIEW.yaml"), errors)
         if result is None:
             errors.append(f"{task / 'REVIEW.yaml'}: requires RESULT.yaml")
+        if not is_legacy_artifact(request):
+            errors.append(f"{task / 'REVIEW.yaml'}: REVIEW.yaml is legacy-only; use DECISION.yaml")
+    if decision is not None:
+        if is_legacy_artifact(request):
+            errors.append(f"{task / 'DECISION.yaml'}: DECISION.yaml requires a schema_version 2 REQUEST")
+        validate_decision(decision, request, result, schema, str(task / "DECISION.yaml"), errors)
     if approval is not None:
         validate_approval(approval, request, schema, str(task / "APPROVAL.yaml"), errors)
 
-    status = derive_task_status(request, result, review, str(task), errors)
-    if status == "completed" and review is None:
-        errors.append(f"{task}: completed status requires an approved REVIEW.yaml")
+    status = derive_task_status(request, result, review, decision, str(task), errors)
+    if status == "completed" and ((is_legacy_artifact(request) and review is None) or (not is_legacy_artifact(request) and decision is None)):
+        errors.append(f"{task}: completed status requires its current decision artifact")
 
     catalog = set(permissions.get("action_catalog", {}))
     allowed = set(string_items(request.get("allowed_actions")))
@@ -984,7 +1107,13 @@ def inspect_task_directory(
                 f"{task / filename}.materialized_by: Codex materialization requires "
                 "a valid standing authorization for this Chat-owned path"
             )
-    for action in sorted(allowed & set(permissions.get("approval_required_actions", []))):
+    approval_actions = set(permissions.get("approval_required_actions", []))
+    if is_legacy_artifact(request):
+        approval_actions.update({"repository_modify", "commit_facts_repository"})
+    for action in sorted(allowed & approval_actions):
+        if not is_legacy_artifact(request) and action in {"create_pull_request", "push_upstream_branch", "upstream_write", "comment_issue", "create_issue", "assign_issue", "add_labels"} and request.get("approval_required") is not True:
+            errors.append(f"{request_path}.approval_required: must be true for {action}")
+            continue
         if not task_action_authorized(
             action,
             request,
@@ -1000,7 +1129,7 @@ def inspect_task_directory(
                 "or a valid standing authorization"
             )
 
-    record = TaskRecord(task, request, result, review, approval, status)
+    record = TaskRecord(task, request, result, review, decision, approval, status)
     return (None, errors) if errors else (record, [])
 
 
@@ -1161,6 +1290,16 @@ def validate_change_set(
         delegated = delegated_materialization_path_allowed(
             actor, action, path, permissions
         )
+        actor_data = permissions.get("actors", {}).get(actor)
+        role = actor_data.get("role") if isinstance(actor_data, dict) else None
+        if action and isinstance(role, str):
+            allowed_actions = set(
+                permissions.get("roles", {}).get(role, {}).get("allowed_actions", [])
+            )
+            if action not in allowed_actions:
+                errors.append(
+                    f"actor {actor!r} cannot perform action {action!r}"
+                )
         if (
             delegated
             and action == "materialize_chat_artifact"
@@ -1243,6 +1382,7 @@ def repository_state(root: Path) -> tuple[str, str]:
 def validate(root: Path, *, now: datetime | None = None) -> list[str]:
     errors: list[str] = []
     errors.extend(validate_repository_registry(root))
+    errors.extend(validate_agent_roles(root))
     schema, permissions, state_machine = protocol_documents(root, errors)
     validate_protocol_documents(schema, permissions, state_machine, errors)
     errors.extend(validate_examples(root, schema, permissions))

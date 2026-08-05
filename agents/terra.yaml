@@ -1,0 +1,27 @@
+schema_version: 1
+agent: terra
+role: analysis-and-execution
+responsibilities:
+  - deep audit
+  - source analysis
+  - implementation planning
+  - code modification
+  - tests
+allowed_actions:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - repository_modify
+  - run_tests
+  - write_result
+  - write_report
+  - write_decision_proposal
+  - commit_facts_repository
+prohibited_actions:
+  - upstream_write
+  - push_upstream_branch
+  - create_pull_request
+  - comment_issue
+  - create_issue
+  - assign_issue
+  - add_labels

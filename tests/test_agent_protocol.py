@@ -244,14 +244,14 @@ class AgentProtocolTests(unittest.TestCase):
             [{"actor": "chat", "path": "agent-work/tasks/test-task/RESULT.yaml"}],
             self.permissions,
         )
-        self.assertTrue(any("owned by codex" in error for error in errors))
+        self.assertTrue(any("cannot modify" in error for error in errors))
 
     def test_codex_cannot_modify_request(self) -> None:
         errors = validator.validate_change_set(
             [{"actor": "codex", "path": "agent-work/tasks/test-task/REQUEST.yaml"}],
             self.permissions,
         )
-        self.assertTrue(any("owned by chat" in error for error in errors))
+        self.assertTrue(any("cannot modify" in error for error in errors))
 
     def test_chat_authored_chat_materialized_request_is_valid(self) -> None:
         _, errors = self.inspect(self.write_task(request()))
@@ -330,7 +330,7 @@ class AgentProtocolTests(unittest.TestCase):
             [{"actor": "codex", "path": path}], self.permissions
         )
         self.assertEqual([], allowed)
-        self.assertTrue(any("owned by chat" in error for error in denied))
+        self.assertTrue(any("cannot modify" in error for error in denied))
 
     def test_valid_standing_authorization_allows_facts_push(self) -> None:
         authorization = self.standing_authorization()
@@ -592,26 +592,26 @@ class AgentProtocolTests(unittest.TestCase):
             )
         )
 
-    def test_evidence_completed_cannot_be_available_or_admitted(self) -> None:
+    def test_multi_agent_lifecycle_requires_analysis_and_decision(self) -> None:
         self.assertEqual(
-            ["forbidden transition: evidence_completed -> admission_pending"],
+            ["forbidden transition: candidate -> analysis"],
             validator.validate_transition(
-                self.state_machine, "evidence_completed", "admission_pending"
+                self.state_machine, "candidate", "analysis"
             ),
         )
         self.assertNotIn(
             "available", self.state_machine["contribution_coordination"]["states"]
         )
         self.assertEqual(
-            ["forbidden transition: evidence_completed -> deep_audit"],
+            ["forbidden transition: evidence -> implementation"],
             validator.validate_transition(
-                self.state_machine, "evidence_completed", "deep_audit"
+                self.state_machine, "evidence", "implementation"
             ),
         )
         self.assertEqual(
-            [],
+            ["forbidden transition: analysis -> implementation"],
             validator.validate_transition(
-                self.state_machine, "evidence_completed", "target_repository_binding"
+                self.state_machine, "analysis", "implementation"
             ),
         )
 
@@ -670,15 +670,15 @@ class AgentProtocolTests(unittest.TestCase):
 
     def test_deep_audit_cannot_transition_directly_to_implementation(self) -> None:
         self.assertEqual(
-            ["forbidden transition: deep_audit -> implementation_ready"],
+            ["forbidden transition: analysis -> implementation"],
             validator.validate_transition(
-                self.state_machine, "deep_audit", "implementation_ready"
+                self.state_machine, "analysis", "implementation"
             ),
         )
         self.assertEqual(
-            ["forbidden transition: deep_audit -> admission_pending"],
+            [],
             validator.validate_transition(
-                self.state_machine, "deep_audit", "admission_pending"
+                self.state_machine, "decision", "implementation"
             ),
         )
 

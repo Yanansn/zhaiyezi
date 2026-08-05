@@ -2,8 +2,9 @@
 
 Task directories remain at `agent-work/tasks/<task-id>/`; changing state never moves a directory. Semantic ownership is per artifact:
 
-- Chat: `REQUEST.yaml`, `REVIEW.yaml`, `decisions/**`
-- Codex: `RESULT.yaml`, `REPORT.md`, `evidence/**`, `screenings/**`
+- Luna/Terra: bounded `REQUEST.yaml`, `RESULT.yaml`, `REPORT.md`, `evidence/**`, and `DECISION.yaml` artifacts permitted by their roles
+- Sol: escalation-only `DECISION.yaml` and `decisions/**` proposals
+- Historical Chat/Codex: schema v1 `REQUEST.yaml`, `REVIEW.yaml`, `RESULT.yaml`, `REPORT.md`, and `evidence/**`
 - User: `APPROVAL.yaml`
 - serialized: `HANDOFF.md`
 
@@ -11,7 +12,7 @@ Repository materialization is not semantic ownership. Codex may write Chat/User-
 
 Before editing, validate the protocol, derive the current state, verify the owned output paths, and check branch/HEAD/worktree. Stop when an owned artifact changed since the recorded input baseline.
 
-Never auto-merge, reinterpret, or overwrite another semantic author's artifact. Chat requests corrections in an immutable `REVIEW.yaml`; Codex responds with a higher `RESULT.revision` and keeps the Review as history. A materializer may correct transcription only from a new explicit instruction; scope ambiguity or an approved/rejected Review that would need rewriting is a blocker.
+Never auto-merge, reinterpret, or overwrite another semantic author's artifact. Current workflows record a correction or escalation in a new `DECISION.yaml`/result revision; schema v1 keeps its historic `REVIEW.yaml` mechanics. A materializer may correct transcription only from a new explicit instruction; scope ambiguity or a completed decision that would need rewriting is a blocker.
 
 Legacy queue directories are not active queues. Follow [migration.md](migration.md); preserve each artifact and stop on collisions.
 

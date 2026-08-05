@@ -1,10 +1,10 @@
-schema_version: 3
+schema_version: 4
 
 task_directory: agent-work/tasks/<task-id>
 
 request:
   filename: REQUEST.yaml
-  owner: chat
+  owner: agent
   required_fields:
     - schema_version
     - task_id
@@ -27,13 +27,14 @@ request:
     - priority
     - materialization
     - target_repository
+    - approval_required
   constraints:
     status: ready
     immutable_after_execution_starts: true
 
 result:
   filename: RESULT.yaml
-  owner: codex
+  owner: agent
   required_fields:
     - schema_version
     - task_id
@@ -51,9 +52,27 @@ result:
     - revision
     - supersedes_review
 
+decision:
+  filename: DECISION.yaml
+  owner: agent
+  required_fields:
+    - schema_version
+    - task_id
+    - created_by
+    - decision_author
+    - materialized_by
+    - status
+    - result_ref
+    - result_revision
+    - conclusion
+    - confidence
+    - evidence_refs
+    - risks
+    - next_action
+
 review:
   filename: REVIEW.yaml
-  owner: chat
+  owner: legacy-chat
   required_fields:
     - schema_version
     - task_id
@@ -130,12 +149,19 @@ enums:
     - publication
     - review
     - documentation-contract-update
-  created_by: [chat, codex, user]
-  decision_author: [chat, codex, user]
-  materialized_by: [chat, codex, user]
-  assigned_agent: [chat, codex]
+  created_by: [agent:luna, agent:terra, agent:sol, user]
+  decision_author: [agent:luna, agent:terra, agent:sol, user]
+  materialized_by: [agent:luna, agent:terra, agent:sol, user]
+  assigned_agent: [agent:luna, agent:terra, agent:sol]
+  legacy_created_by: [chat, codex, user]
+  legacy_decision_author: [chat, codex, user]
+  legacy_materialized_by: [chat, codex, user]
+  legacy_assigned_agent: [chat, codex]
   request_status: [ready]
-  result_status: [active, review, blocked, failed]
+  result_status: [active, decision, blocked, failed]
+  legacy_result_status: [active, review, blocked, failed]
+  decision_status: [completed, changes-requested, rejected]
+  decision_confidence: [low, medium, high]
   review_status: [completed, changes-requested, rejected]
   review_decision: [approved, changes-requested, rejected]
   approval_status: [approved, revoked]
@@ -181,20 +207,28 @@ target_repository_contract:
 artifact_state_derivation:
   request_ready_without_result: ready
   result_active: active
-  result_review: awaiting-review
+  result_decision: awaiting-decision
+  legacy_result_review: awaiting-review
   result_blocked: blocked
   result_failed: failed
-  review_approved_completed: completed
+  decision_completed: completed
+  legacy_review_approved_completed: completed
   review_changes_requested: changes-requested
   review_rejected: rejected
   newer_result_after_changes_requested: derive-from-newer-result
 
 completion_contract:
   required_fields: [criteria, validation, handoff]
-  completed_requires_approved_review: true
+  completed_requires_agent_decision: true
   protected_actions_require_task_or_valid_standing_authorization: true
 
 compatibility:
+  legacy_artifact_schema_version: 1
+  legacy_chat_review_is_supported: true
+  current_artifact_schema_version: 2
+  current_decision_artifact: DECISION.yaml
+  current_agents: [agent:luna, agent:terra, agent:sol]
+  approval_required_field: true
   coordination_status_is_not_screening_classification: true
   coordination_status_is_not_issue_status: true
   queue_completed_is_not_contribution_completed: true

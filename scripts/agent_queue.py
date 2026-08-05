@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inspect the fixed-path Chat/Codex task queue without mutating it."""
+"""Inspect the multi-agent task queue without mutating it."""
 
 from __future__ import annotations
 
@@ -124,17 +124,17 @@ def parse_args() -> argparse.Namespace:
     commands = parser.add_subparsers(dest="command", required=True)
 
     list_parser = commands.add_parser("list", help="list valid queue tasks")
-    list_parser.add_argument("--agent", choices=("chat", "codex"))
+    list_parser.add_argument("--agent", choices=("agent:luna", "agent:terra", "agent:sol", "chat", "codex"))
     list_parser.add_argument(
         "--status",
         choices=(
-            "ready", "active", "awaiting-review", "changes-requested",
+            "ready", "active", "awaiting-decision", "awaiting-review", "changes-requested",
             "blocked", "failed", "rejected", "completed",
         ),
     )
 
     next_parser = commands.add_parser("next", help="show the next ready task")
-    next_parser.add_argument("--agent", required=True, choices=("chat", "codex"))
+    next_parser.add_argument("--agent", required=True, choices=("agent:luna", "agent:terra", "agent:sol", "chat", "codex"))
 
     show_parser = commands.add_parser("show", help="show one real queue task")
     show_parser.add_argument("--task", required=True)

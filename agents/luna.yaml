@@ -1,0 +1,28 @@
+schema_version: 1
+agent: luna
+role: discovery-and-decision
+responsibilities:
+  - candidate discovery
+  - evidence collection
+  - screening
+  - review proposal
+  - contribution value analysis
+allowed_actions:
+  - read_repository
+  - repository_read
+  - collect_evidence
+  - analyze_code
+  - write_result
+  - write_report
+  - write_evidence
+  - write_decision_proposal
+  - commit_facts_repository
+prohibited_actions:
+  - repository_modify
+  - upstream_write
+  - push_upstream_branch
+  - create_pull_request
+  - comment_issue
+  - create_issue
+  - assign_issue
+  - add_labels
