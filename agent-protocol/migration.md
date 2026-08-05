@@ -15,4 +15,4 @@ If the destination exists, task IDs disagree, both locations contain different v
 
 Examples now live under `agent-protocol/examples/` and never participate in queue selection.
 
-Protocol v3 adds mandatory provenance to new REQUEST, RESULT, REVIEW, and APPROVAL artifacts. Historical artifacts without `decision_author` or `materialized_by` produce a clear validation error; they are never silently rewritten. A delegated artifact also requires `materialization.authority`, bounded scope, and a non-empty source summary. The real task queue was empty when v3 was introduced, so no live task required migration.
+Current protocol artifacts use schema version 2 and Agent-owned `DECISION.yaml`. The validator still understands schema version 1 as a read-only compatibility format, but no v1 task records remain in the repository. New tasks must not use `REVIEW.yaml`, Chat/Codex ownership, or the old movable queues.

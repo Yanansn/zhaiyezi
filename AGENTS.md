@@ -374,7 +374,7 @@ Codex 每个阶段完成后必须汇报：
 
 目标是在保持贡献质量的前提下节省额度。默认按“Luna 读和整理，Terra 做和修，Sol 判和审”执行。
 
-### 默认模型
+### 默认模型（推荐 profile，不是运行时自动路由）
 
 - `zhaiyezi` facts repository 的 VSCode Codex / Codex CLI 默认使用 `gpt-5.6-luna` + `medium` reasoning。
 - 上游代码实现阶段默认使用 `gpt-5.6-terra` + `medium` reasoning。
@@ -393,7 +393,7 @@ Codex 每个阶段完成后必须汇报：
 - 不得为了“更稳”默认提升 reasoning；先收窄上下文和任务边界，再考虑提高模型或 reasoning。
 - 启动任务前先声明最小读取集合；优先读取 `HANDOFF.md`、目标 Issue 的 `STATUS.yaml`、当前阶段文档、当前 diff 和相关测试输出，不默认扫描整个仓库。
 - `zhaiyezi` 只保存事实和交接记录；真实上游代码修改应在上游 clone 中执行，并按 profile 选择 Terra 或 Sol。
-- 如果当前 VSCode Codex 会话无法自动切换模型，必须报告建议使用的 profile 或模型，并继续通过收窄上下文降低用量。
+- 当前协议不负责运行时模型路由；如果会话无法自动切换模型，按下列 profile 手动选择，并通过收窄上下文降低用量。
 
 ### 推荐 profile
 

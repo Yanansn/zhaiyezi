@@ -27,6 +27,11 @@ def created_at(record: validator.TaskRecord) -> datetime:
     return parsed.astimezone(timezone.utc)
 
 
+def protocol_version(record: validator.TaskRecord) -> str:
+    """Return the artifact protocol generation shown in queue output."""
+    return f"v{record.request.get('schema_version', '?')}"
+
+
 def sort_records(
     records: list[validator.TaskRecord],
 ) -> list[validator.TaskRecord]:
@@ -86,6 +91,7 @@ def next_task(
 def print_record(record: validator.TaskRecord) -> None:
     request = record.request
     print(f"task_id: {request['task_id']}")
+    print(f"protocol_version: {protocol_version(record)}")
     print(f"status: {record.status}")
     print(f"assigned_agent: {request['assigned_agent']}")
     print(f"priority: {request.get('priority', 'normal')}")
@@ -100,13 +106,14 @@ def print_list(records: list[validator.TaskRecord]) -> None:
     if not records:
         print("No matching tasks.")
         return
-    print("TASK_ID\tSTATUS\tAGENT\tPRIORITY\tCREATED_AT")
+    print("TASK_ID\tPROTOCOL\tSTATUS\tAGENT\tPRIORITY\tCREATED_AT")
     for record in records:
         request = record.request
         print(
             "\t".join(
                 (
                     request["task_id"],
+                    protocol_version(record),
                     record.status,
                     request["assigned_agent"],
                     request.get("priority", "normal"),

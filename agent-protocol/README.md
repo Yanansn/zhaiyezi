@@ -34,9 +34,12 @@ evidence collection, and screening records are retained.
 
 ## Compatibility
 
-Version 1 Chat/Codex tasks remain valid historic records. Their `REVIEW.yaml`
-files continue to derive legacy queue states. New tasks must use version 2
-agent identities and `DECISION.yaml`.
+No version 1 task records are retained. The validator can read imported v1
+artifacts for diagnostics; see [legacy-v1.md](legacy-v1.md). New tasks must
+use version 2 agent identities and `DECISION.yaml`.
+
+`state-machine.yaml` is the authoritative lifecycle definition. This README
+and `lifecycle.md` explain it but do not introduce additional transitions.
 
 ## Commands
 

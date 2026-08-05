@@ -17,6 +17,9 @@ There is no mandatory Chat Review transition. A completed `DECISION.yaml`
 closes the corresponding task artifact; it does not by itself authorize a
 public action.
 
+`state-machine.yaml` is the source of truth for transitions and queue-state
+derivation. This document is explanatory only.
+
 Repository binding, evidence, screening, and the Candidate Admission boundary
-remain separate facts. Existing version 1 task records continue to derive
-their historic `REVIEW.yaml` states.
+remain separate facts. Imported version 1 records, if encountered, are
+diagnostic-only compatibility inputs and derive historic `REVIEW.yaml` states.
