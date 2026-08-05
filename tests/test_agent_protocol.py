@@ -31,7 +31,7 @@ def request(task_id: str = "test-task", agent: str = "agent:terra", **updates: o
         "allowed_actions": ["read_repository", "write_result", "write_report"],
         "prohibited_actions": ["upstream_write", "create_pull_request"],
         "expected_outputs": [f"agent-work/tasks/{task_id}/RESULT.yaml", f"agent-work/tasks/{task_id}/REPORT.md"],
-        "completion": {"criteria": ["The task validates."], "validation": [], "handoff": "Agent decision."},
+        "completion": {"criteria": ["The task validates."], "validation": [], "handoff": {"next_stage": "decision", "recommended_agent": "agent:luna", "message": "Switch to the recommended Agent before continuing."}},
         "approval_required": False,
         "target_repository": {"name": "example/example", "phase": "implementation", "fork": {"url": "git@example/fork.git"}, "local": {"path": "/tmp/example", "discovery": True}},
     }
@@ -111,6 +111,17 @@ class AgentProtocolTests(unittest.TestCase):
         errors: list[str] = []
         validator.validate_protocol_documents(self.schema, self.permissions, self.state_machine, errors)
         self.assertEqual([], errors)
+
+    def test_model_routing_is_manual_and_handoff_is_explicit(self) -> None:
+        self.assertEqual("manual", self.schema["model_routing"]["mode"])
+        self.assertFalse(self.schema["model_routing"]["automatic_switch"])
+        self.assertEqual("agent:terra", self.schema["model_routing"]["task_type_recommendations"]["deep-audit"])
+        self.assertTrue(self.state_machine["agent_handoff"]["completion_requirement"])
+
+    def test_handoff_without_recommended_agent_fails(self) -> None:
+        data = request(completion={"criteria": [], "validation": [], "handoff": {"next_stage": "analysis", "message": "Continue."}})
+        _, errors = self.inspect(self.write_task(data))
+        self.assertTrue(any("recommended_agent" in error for error in errors))
 
     def test_current_task_validates(self) -> None:
         record, errors = self.inspect(self.write_task(request(), result(), decision()))

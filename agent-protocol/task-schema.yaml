@@ -62,8 +62,27 @@ target_repository_contract:
 
 completion_contract:
   required_fields: [criteria, validation, handoff]
+  handoff:
+    required_fields: [next_stage, recommended_agent, message]
+    recommended_agents: [agent:luna, agent:terra, agent:sol, user]
   completed_requires_agent_decision: true
   protected_actions_require_user_approval: true
+
+model_routing:
+  mode: manual
+  automatic_switch: false
+  handoff_required: true
+  task_type_recommendations:
+    evidence-collection: agent:luna
+    deep-audit: agent:terra
+    screening-record: agent:luna
+    code-verification: agent:terra
+    ecosystem-analysis: agent:luna
+    code-map: agent:terra
+    plan: agent:terra
+    implementation: agent:terra
+    validation: agent:terra
+    publication: user
 
 compatibility:
   current_artifact_schema_version: 2

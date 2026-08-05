@@ -40,4 +40,17 @@ contribution_coordination:
     decision_to_implementation: {owner: agent:terra, rule: Implementation requires an accepted Agent decision and a bounded task.}
     implementation_to_pull_request: {owner: user, rule: Target fork Push, PR creation, and public GitHub actions require explicit User approval.}
 
+agent_handoff:
+  mode: manual
+  automatic_model_switch: false
+  rule: assigned_agent controls task ownership and permissions; it does not select or switch the underlying model.
+  completion_requirement: Every REQUEST completion.handoff names the next stage, recommended Agent or User, and a switch reminder.
+  recommendations:
+    candidate: agent:luna
+    evidence: agent:luna
+    analysis: agent:terra
+    decision: agent:luna
+    implementation: agent:terra
+    pull-request: user
+
 forbidden_shortcuts: [[candidate, analysis], [candidate, decision], [evidence, decision], [evidence, implementation], [analysis, implementation], [decision, pull-request]]

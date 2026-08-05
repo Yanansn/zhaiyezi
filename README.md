@@ -24,6 +24,8 @@ Candidate Admission 是独立 Gate，不是自动状态转换。`DECISION.yaml` 
 
 任务固定在 `agent-work/tasks/<task-id>/`，通过 `REQUEST.yaml`、`RESULT.yaml`、`DECISION.yaml` 和必要的 `APPROVAL.yaml` 推导队列状态。角色定义在 `agents/`，权限目录在 `agent-protocol/permissions.yaml`，协议约束在 `agent-protocol/`。
 
+模型切换是手动的：协议不会根据 `assigned_agent` 自动切换底层模型。每个 REQUEST 的 `completion.handoff` 必须记录下一阶段、推荐 Agent 和切换提示；使用 `agent_queue.py show/next` 时会显示该提醒。没有切换到推荐 Agent 时，不应执行下一阶段任务。
+
 仓库职责保持分离：`repositories/` 管理目标仓库绑定与发现；`screenings/` 保存轻量筛选记录；`issues/` 保存正式 Issue 研究事实；`agent-work/` 保存有界任务结果；`decisions/` 保存决策提案。上游源码不属于本仓库。
 
 ## 启动与验证

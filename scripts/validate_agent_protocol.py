@@ -26,6 +26,10 @@ PROTECTED_ACTIONS = {
 TARGET_PHASES = {"evidence", "deep-audit", "implementation"}
 RESULT_STATES = {"active": "active", "decision": "awaiting-decision", "blocked": "blocked", "failed": "failed"}
 DECISION_STATES = {"completed": "completed", "changes-requested": "changes-requested", "rejected": "rejected"}
+MODEL_RECOMMENDATIONS = {
+    "candidate": "agent:luna", "evidence": "agent:luna", "analysis": "agent:terra",
+    "decision": "agent:luna", "implementation": "agent:terra", "pull-request": "user",
+}
 
 
 @dataclass(frozen=True)
@@ -178,6 +182,14 @@ def validate_protocol_documents(schema: dict[str, Any], permissions: dict[str, A
         errors.append("task-schema.yaml: deep-audit is missing")
     if schema.get("target_repository_contract", {}).get("phases") != ["evidence", "deep-audit", "implementation"]:
         errors.append("task-schema.yaml: target repository phases are invalid")
+    routing = schema.get("model_routing", {})
+    if routing.get("mode") != "manual" or routing.get("automatic_switch") is not False or routing.get("handoff_required") is not True:
+        errors.append("task-schema.yaml: model routing must be manual with required handoffs")
+    if routing.get("task_type_recommendations", {}).get("deep-audit") != "agent:terra":
+        errors.append("task-schema.yaml: Deep Audit must recommend Terra")
+    handoff = state_machine.get("agent_handoff", {})
+    if handoff.get("mode") != "manual" or handoff.get("automatic_model_switch") is not False or handoff.get("recommendations") != MODEL_RECOMMENDATIONS:
+        errors.append("state-machine.yaml: manual Agent handoff recommendations are invalid")
     actors = permissions.get("actors", {})
     if set(actors) != AGENTS | {"user"}:
         errors.append("permissions.yaml: only current Agents and user may be actors")
@@ -279,6 +291,17 @@ def validate_request(request: dict[str, Any], schema: dict[str, Any], permission
         errors.append(f"{location}.completion: must be a mapping")
     else:
         require_fields(completion, schema.get("completion_contract", {}).get("required_fields", []), f"{location}.completion", errors)
+        handoff = completion.get("handoff")
+        if not isinstance(handoff, dict):
+            errors.append(f"{location}.completion.handoff: must name the next stage and recommended Agent")
+        else:
+            require_fields(handoff, schema.get("completion_contract", {}).get("handoff", {}).get("required_fields", []), f"{location}.completion.handoff", errors)
+            if handoff.get("recommended_agent") not in set(schema.get("completion_contract", {}).get("handoff", {}).get("recommended_agents", [])):
+                errors.append(f"{location}.completion.handoff.recommended_agent: invalid")
+            if not isinstance(handoff.get("next_stage"), str) or not handoff.get("next_stage", "").strip():
+                errors.append(f"{location}.completion.handoff.next_stage: must be non-empty")
+            if not isinstance(handoff.get("message"), str) or not handoff.get("message", "").strip():
+                errors.append(f"{location}.completion.handoff.message: must be non-empty")
 
 
 def validate_result(result: dict[str, Any], request: dict[str, Any], schema: dict[str, Any], location: str, errors: list[str]) -> None:

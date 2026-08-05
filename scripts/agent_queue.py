@@ -86,6 +86,11 @@ def print_record(record: validator.TaskRecord) -> None:
     print(f"repository: {request['repository']}")
     print(f"path: {record.path}")
     print(f"goal: {request['goal']}")
+    handoff = request.get("completion", {}).get("handoff", {})
+    if isinstance(handoff, dict):
+        print(f"next_stage: {handoff.get('next_stage', '-')}")
+        print(f"recommended_agent: {handoff.get('recommended_agent', '-')}")
+        print(f"model_switch: {handoff.get('message', '-')}")
 
 
 def print_list(records: list[validator.TaskRecord]) -> None:

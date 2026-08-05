@@ -27,6 +27,7 @@ candidate → evidence → analysis → decision → implementation → pull-req
 - `APPROVAL.yaml`：仅用于 User 已批准的受保护动作。
 
 当前协议不包含人工 Review 节点；决策统一记录在 `DECISION.yaml`。
+每个 REQUEST 的 `completion.handoff` 必须记录下一阶段、推荐 Agent 和切换提示。
 
 ## 权限边界
 
@@ -82,6 +83,7 @@ Luna、Terra、Sol 的 profile 是工作建议，不是运行时模型路由。�
 `assigned_agent` 自动切换真实底层模型；需要切换时由运行环境选择对应 profile。
 
 建议：记录/筛选使用 Luna，实现/测试使用 Terra，高风险架构和最终技术判断使用 Sol。
+阶段完成后必须查看 handoff 提示并按推荐 Agent 手动切换；协议不会自动切换真实底层模型。未切换到推荐 Agent 时，不得执行下一阶段。
 
 ## 公开沟通
 

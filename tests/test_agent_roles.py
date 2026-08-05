@@ -36,7 +36,7 @@ def current_request(task_id: str, assigned_agent: str, **updates: object) -> dic
             f"agent-work/tasks/{task_id}/REPORT.md",
             f"agent-work/tasks/{task_id}/DECISION.yaml",
         ],
-        "completion": {"criteria": ["A decision validates."], "validation": [], "handoff": "Agent decision."},
+        "completion": {"criteria": ["A decision validates."], "validation": [], "handoff": {"next_stage": "decision", "recommended_agent": "agent:luna", "message": "Switch to the recommended Agent before continuing."}},
         "approval_required": False,
     }
     value.update(updates)
