@@ -24,7 +24,7 @@ PROTECTED_ACTIONS = {
     "add_labels", "create_pull_request",
 }
 TARGET_PHASES = {"evidence", "deep-audit", "implementation"}
-RESULT_STATES = {"active": "active", "decision": "awaiting-decision", "blocked": "blocked", "failed": "failed"}
+RESULT_STATES = {"active": "active", "decision": "awaiting-decision", "completed": "completed", "blocked": "blocked", "failed": "failed"}
 DECISION_STATES = {"completed": "completed", "changes-requested": "changes-requested", "rejected": "rejected"}
 MODEL_RECOMMENDATIONS = {
     "candidate": "agent:luna", "evidence": "agent:luna", "analysis": "agent:terra",
@@ -183,13 +183,13 @@ def validate_protocol_documents(schema: dict[str, Any], permissions: dict[str, A
     if schema.get("target_repository_contract", {}).get("phases") != ["evidence", "deep-audit", "implementation"]:
         errors.append("task-schema.yaml: target repository phases are invalid")
     routing = schema.get("model_routing", {})
-    if routing.get("mode") != "manual" or routing.get("automatic_switch") is not False or routing.get("handoff_required") is not True:
-        errors.append("task-schema.yaml: model routing must be manual with required handoffs")
+    if routing.get("mode") != "manual" or routing.get("automatic_switch") is not False or routing.get("handoff_required") is not False:
+        errors.append("task-schema.yaml: model routing must be manual with optional handoffs")
     if routing.get("task_type_recommendations", {}).get("deep-audit") != "agent:terra":
         errors.append("task-schema.yaml: Deep Audit must recommend Terra")
     handoff = state_machine.get("agent_handoff", {})
-    if handoff.get("mode") != "manual" or handoff.get("automatic_model_switch") is not False or handoff.get("recommendations") != MODEL_RECOMMENDATIONS:
-        errors.append("state-machine.yaml: manual Agent handoff recommendations are invalid")
+    if handoff.get("mode") != "optional" or handoff.get("automatic_model_switch") is not False or handoff.get("recommendations") != MODEL_RECOMMENDATIONS:
+        errors.append("state-machine.yaml: optional Agent handoff recommendations are invalid")
     actors = permissions.get("actors", {})
     if set(actors) != AGENTS | {"user"}:
         errors.append("permissions.yaml: only current Agents and user may be actors")
@@ -287,9 +287,9 @@ def validate_request(request: dict[str, Any], schema: dict[str, Any], permission
     if not isinstance(request.get("goal"), str) or not request["goal"].strip():
         errors.append(f"{location}.goal: must be non-empty")
     completion = request.get("completion")
-    if not isinstance(completion, dict):
-        errors.append(f"{location}.completion: must be a mapping")
-    else:
+    if completion is not None and not isinstance(completion, dict):
+        errors.append(f"{location}.completion: must be a mapping when provided")
+    elif isinstance(completion, dict):
         require_fields(completion, schema.get("completion_contract", {}).get("required_fields", []), f"{location}.completion", errors)
         handoff = completion.get("handoff")
         if not isinstance(handoff, dict):
@@ -318,6 +318,19 @@ def validate_result(result: dict[str, Any], request: dict[str, Any], schema: dic
     for field in ("outputs", "actions_performed", "actions_not_performed", "validation", "limitations"):
         if not isinstance(result.get(field), list):
             errors.append(f"{location}.{field}: must be a list")
+    if request.get("task_type") == "screening-record":
+        contract = schema.get("task_type_contracts", {}).get("screening-record", {})
+        for field in contract.get("required_result_fields", []):
+            if field not in result:
+                errors.append(f"{location}.{field}: required for screening-record")
+        if result.get("confidence") not in schema.get("enums", {}).get("decision_confidence", []):
+            errors.append(f"{location}.confidence: invalid screening confidence")
+        if not isinstance(result.get("evidence_refs"), list) or not result.get("evidence_refs"):
+            errors.append(f"{location}.evidence_refs: screening-record requires a non-empty list")
+        if not isinstance(result.get("feasibility"), dict):
+            errors.append(f"{location}.feasibility: screening-record requires a mapping")
+        if not isinstance(result.get("next_action"), str) or not result.get("next_action", "").strip():
+            errors.append(f"{location}.next_action: screening-record requires a non-empty value")
     performed = set(string_items(result.get("actions_performed")))
     allowed = set(string_items(request.get("allowed_actions")))
     prohibited = set(string_items(request.get("prohibited_actions")))
@@ -391,14 +404,12 @@ def inspect_task_directory(task: Path, schema: dict[str, Any], permissions: dict
         errors.append(f"{task / 'REVIEW.yaml'}: removed; use DECISION.yaml")
     if result is not None:
         validate_result(result, request, schema, str(result_path), errors)
-        if not (task / "REPORT.md").exists():
-            errors.append(f"{task}: RESULT.yaml requires REPORT.md")
     if decision is not None:
         validate_decision(decision, request, result, schema, str(decision_path), errors)
     if approval is not None:
         validate_approval(approval, request, schema, str(approval_path), errors)
     status = derive_task_status(request, result, decision)
-    if status == "completed" and decision is None:
+    if status == "completed" and decision is None and request.get("task_type") != "screening-record":
         errors.append(f"{task}: completed task requires DECISION.yaml")
     allowed = set(string_items(request.get("allowed_actions")))
     if allowed & PROTECTED_ACTIONS:

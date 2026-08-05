@@ -22,12 +22,11 @@ candidate → evidence → analysis → decision → implementation → pull-req
 
 - `REQUEST.yaml`：任务边界、assigned agent、权限和 `approval_required`；
 - `RESULT.yaml`：Agent 执行结果；
-- `REPORT.md`：事实和验证报告；
-- `DECISION.yaml`：结论、confidence、evidence、risks 和 next action；
+- `REPORT.md`：可选的短摘要；
+- `DECISION.yaml`：仅用于独立决策 Gate 或升级审查；筛选结论直接写入 `RESULT.yaml`；
 - `APPROVAL.yaml`：仅用于 User 已批准的受保护动作。
 
-当前协议不包含人工 Review 节点；决策统一记录在 `DECISION.yaml`。
-每个 REQUEST 的 `completion.handoff` 必须记录下一阶段、推荐 Agent 和切换提示。
+当前协议不包含人工 Review 节点。`completion.handoff` 是可选元数据，不是模型切换门槛。
 
 ## 权限边界
 
@@ -62,7 +61,7 @@ commit、fork Push、PR 或公开行为都必须单独核验和单独获得用�
 3. 运行 `python3 scripts/validate_agent_protocol.py`。
 4. 运行 `python3 scripts/agent_queue.py next --agent <assigned-agent>`。
 5. 只执行一个 ready 任务，只写入当前 Agent 拥有的路径。
-6. 运行任务规定的测试和校验，写入 `RESULT.yaml`、`REPORT.md`，需要时写入 `DECISION.yaml`。
+6. 运行任务规定的测试和校验，写入 `RESULT.yaml`；只有任务契约要求时才写入 `REPORT.md` 或 `DECISION.yaml`。
 
 没有结构有效的 REQUEST、目标不清楚、权限越界、来源不明的本地修改或跨仓库
 范围冲突时，停止并记录阻塞，不自行扩大任务。
@@ -81,7 +80,7 @@ Repository binding、target repository、evidence 和 screening 是保留的独�
 
 `scripts/discover_github_issues.py` 默认读取并排除本地已知 Issue：正式记录的
 `issues/*/STATUS.yaml`、任务的 `agent-work/tasks/*/REQUEST.yaml` 以及
-`screenings/` 下的结构化证据。Evidence-only 只标记为 `known-evidence`，不等于
+历史 `screenings/` 下的结构化证据。Evidence-only 只标记为 `known-evidence`，不等于
 pass 或 not-actionable；已结束状态和明确终止分类才使用 terminal 排除原因。
 排除来源和原因必须写入发现结果。需要显式复查历史候选时使用
 `--include-known`，不得通过删除事实记录绕过去重规则。
@@ -99,7 +98,7 @@ Luna、Terra、Sol 的 profile 是工作建议，不是运行时模型路由。�
 `assigned_agent` 自动切换真实底层模型；需要切换时由运行环境选择对应 profile。
 
 建议：记录/筛选使用 Luna，实现/测试使用 Terra，高风险架构和最终技术判断使用 Sol。
-阶段完成后必须查看 handoff 提示并按推荐 Agent 手动切换；协议不会自动切换真实底层模型。未切换到推荐 Agent 时，不得执行下一阶段。
+阶段完成后可根据 `next_action` 创建下一份有界任务；协议不会自动切换真实底层模型，也不要求为每个筛选任务创建交接记录。
 
 ## 公开沟通
 

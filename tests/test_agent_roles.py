@@ -19,7 +19,7 @@ def current_request(task_id: str, assigned_agent: str, **updates: object) -> dic
     value = {
         "schema_version": 2,
         "task_id": task_id,
-        "task_type": "screening-record",
+        "task_type": "code-verification",
         "created_by": assigned_agent,
         "decision_author": assigned_agent,
         "materialized_by": assigned_agent,

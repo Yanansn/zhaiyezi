@@ -5,7 +5,7 @@ task_directory: agent-work/tasks/<task-id>
 request:
   filename: REQUEST.yaml
   owner: assigned-agent
-  required_fields: [schema_version, task_id, task_type, created_by, decision_author, materialized_by, assigned_agent, repository, issue, status, input_refs, goal, allowed_actions, prohibited_actions, expected_outputs, completion, approval_required]
+  required_fields: [schema_version, task_id, task_type, created_by, decision_author, materialized_by, assigned_agent, repository, issue, status, input_refs, goal, allowed_actions, prohibited_actions, expected_outputs, approval_required]
   optional_fields: [created_at, priority, target_repository, evidence_refs]
   constraints:
     schema_version: 2
@@ -36,7 +36,7 @@ enums:
   materialized_by: [agent:luna, agent:terra, agent:sol, user]
   assigned_agent: [agent:luna, agent:terra, agent:sol]
   request_status: [ready]
-  result_status: [active, decision, blocked, failed]
+  result_status: [active, decision, completed, blocked, failed]
   decision_status: [completed, changes-requested, rejected]
   decision_confidence: [low, medium, high]
   approval_status: [approved, revoked]
@@ -46,9 +46,17 @@ task_type_contracts:
   deep-audit:
     purpose: Analyze completed evidence and produce a contribution screening recommendation.
     input: [evidence collection result, related PR information, source facts]
-    output: [RESULT.yaml, REPORT.md, DECISION.yaml]
+    output: [RESULT.yaml]
+    optional_artifacts: [REPORT.md, DECISION.yaml]
     required_request_fields: [evidence_refs]
     prohibited_allowed_actions: [modify_upstream_code, upstream_write, push_upstream_branch, create_pull_request]
+    does_not_authorize: [admission, implementation authorization, upstream contribution]
+  screening-record:
+    purpose: Decide whether an Issue merits bounded further investigation or contribution work.
+    input: [Issue metadata, public related-work signals, source or runtime facts when available]
+    output: [RESULT.yaml]
+    required_result_fields: [classification, confidence, evidence_refs, feasibility, next_action]
+    optional_artifacts: [REPORT.md]
     does_not_authorize: [admission, implementation authorization, upstream contribution]
   implementation:
     required_request_fields: [target_repository]
@@ -65,13 +73,13 @@ completion_contract:
   handoff:
     required_fields: [next_stage, recommended_agent, message]
     recommended_agents: [agent:luna, agent:terra, agent:sol, user]
-  completed_requires_agent_decision: true
+  completed_requires_agent_decision: false
   protected_actions_require_user_approval: true
 
 model_routing:
   mode: manual
   automatic_switch: false
-  handoff_required: true
+  handoff_required: false
   task_type_recommendations:
     evidence-collection: agent:luna
     deep-audit: agent:terra

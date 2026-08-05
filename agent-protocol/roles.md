@@ -19,5 +19,6 @@ Current artifacts use `schema_version: 2` and identify semantic ownership as
 `decision_author: agent:luna`, `agent:terra`, `agent:sol`, or `user`.
 `materialized_by` is the same internal agent for current artifacts.
 
-There is one current artifact format: schema version 2 with Agent ownership
-and `DECISION.yaml`.
+The minimum artifact format is schema version 2 with Agent ownership,
+`REQUEST.yaml`, and `RESULT.yaml`. `REPORT.md` and `DECISION.yaml` are optional
+when the task contract requires them.

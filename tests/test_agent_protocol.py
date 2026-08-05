@@ -116,7 +116,7 @@ class AgentProtocolTests(unittest.TestCase):
         self.assertEqual("manual", self.schema["model_routing"]["mode"])
         self.assertFalse(self.schema["model_routing"]["automatic_switch"])
         self.assertEqual("agent:terra", self.schema["model_routing"]["task_type_recommendations"]["deep-audit"])
-        self.assertTrue(self.state_machine["agent_handoff"]["completion_requirement"])
+        self.assertIn("optional", self.state_machine["agent_handoff"]["completion_requirement"])
 
     def test_handoff_without_recommended_agent_fails(self) -> None:
         data = request(completion={"criteria": [], "validation": [], "handoff": {"next_stage": "analysis", "message": "Continue."}})
@@ -125,6 +125,32 @@ class AgentProtocolTests(unittest.TestCase):
 
     def test_current_task_validates(self) -> None:
         record, errors = self.inspect(self.write_task(request(), result(), decision()))
+        self.assertEqual([], errors)
+        self.assertEqual("completed", record.status)
+
+    def test_screening_task_needs_only_request_and_result(self) -> None:
+        task_id = "light-screening"
+        screening_request = request(
+            task_id,
+            "agent:luna",
+            task_type="screening-record",
+            issue="example/example#1",
+            expected_outputs=[f"agent-work/tasks/{task_id}/RESULT.yaml"],
+            completion=None,
+        )
+        screening_result = result(
+            task_id,
+            "agent:luna",
+            status="completed",
+            classification="needs-more-investigation",
+            confidence="medium",
+            evidence_refs=["https://github.com/example/example/issues/1"],
+            feasibility={"reproducible": "unknown", "test_entry": "unknown", "change_scope": "unknown", "risk": "medium"},
+            next_action="Run a bounded source audit.",
+        )
+        task = self.write_task(screening_request, screening_result)
+        (task / "REPORT.md").unlink()
+        record, errors = self.inspect(task)
         self.assertEqual([], errors)
         self.assertEqual("completed", record.status)
 

@@ -10,7 +10,7 @@ queue_artifact_state:
     blocked: {rule: RESULT.status is blocked and limitations contains a blocker.}
     failed: {rule: RESULT.status is failed.}
     rejected: {rule: DECISION.status is rejected.}
-    completed: {rule: DECISION.status is completed.}
+    completed: {rule: DECISION.status is completed, or screening-record RESULT.status is completed.}
   transitions:
     ready: [active, awaiting-decision, blocked, failed]
     active: [awaiting-decision, blocked, failed]
@@ -23,7 +23,7 @@ queue_artifact_state:
   rules:
     fixed_task_directory: true
     directory_moves_prohibited: true
-    current_decision_required: true
+    current_decision_required: false
 
 contribution_coordination:
   states: [candidate, evidence, analysis, decision, implementation, pull-request]
@@ -41,10 +41,10 @@ contribution_coordination:
     implementation_to_pull_request: {owner: user, rule: Target fork Push, PR creation, and public GitHub actions require explicit User approval.}
 
 agent_handoff:
-  mode: manual
+  mode: optional
   automatic_model_switch: false
   rule: assigned_agent controls task ownership and permissions; it does not select or switch the underlying model.
-  completion_requirement: Every REQUEST completion.handoff names the next stage, recommended Agent or User, and a switch reminder.
+  completion_requirement: Handoff metadata is optional; create a new task only when the next stage is authorized.
   recommendations:
     candidate: agent:luna
     evidence: agent:luna

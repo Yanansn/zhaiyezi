@@ -7,14 +7,15 @@ candidate → evidence → analysis → decision → implementation → pull-req
 - `candidate`: Luna locates and values potential work.
 - `evidence`: Luna records raw upstream and repository facts.
 - `analysis`: Terra verifies source behavior, feasibility, and scope.
-- `decision`: Luna, Terra, or Sol writes `DECISION.yaml` with conclusion,
-  confidence, evidence references, risks, and next action.
+- `decision`: a separate `DECISION.yaml` is created only when an independent
+  decision gate or escalation is needed. Screening conclusions live in
+  `RESULT.yaml`.
 - `implementation`: Terra performs bounded local code changes and tests.
 - `pull-request`: target-fork push, PR creation, and every public action
   require explicit User approval.
 
-`DECISION.yaml` closes the corresponding task artifact; it does not by itself
-authorize a public action.
+`DECISION.yaml` may close a task but does not by itself authorize a public
+action. A screening task may close with `RESULT.yaml` alone.
 
 `state-machine.yaml` is the source of truth for transitions and queue-state
 derivation. This document is explanatory only.

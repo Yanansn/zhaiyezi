@@ -1,0 +1,37 @@
+schema_version: 2
+task_id: lmcache-4133-screening
+task_type: screening-record
+created_by: agent:luna
+decision_author: agent:luna
+materialized_by: agent:luna
+assigned_agent: agent:luna
+repository: LMCache/LMCache
+issue: LMCache/LMCache#4133
+status: ready
+input_refs:
+  - discovery/LMCache-LMCache/INDEX.yaml
+  - README.md
+  - AGENTS.md
+goal: >-
+  Perform a bounded candidate screening of LMCache/LMCache#4133 using public
+  Issue, Timeline, comments, related PR, ownership, and feasibility signals;
+  recommend the next bounded stage without performing admission or implementation.
+allowed_actions:
+  - read_repository
+  - repository_read
+  - collect_evidence
+  - write_result
+prohibited_actions:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+expected_outputs:
+  - agent-work/tasks/lmcache-4133-screening/RESULT.yaml
+approval_required: false

@@ -12,8 +12,9 @@ Current tasks use `schema_version: 2` and are assigned to `agent:luna`,
 - Luna produces discovery, evidence, screening, and decision proposals.
 - Terra produces deep audits, plans, implementation changes, and tests.
 - Sol provides escalation-only architecture/concurrency/debug review.
-- `DECISION.yaml` contains conclusion, confidence, evidence references, risks,
-  and the next action.
+- Screening tasks use only `REQUEST.yaml` and `RESULT.yaml`; `REPORT.md` is an
+  optional short human summary. `DECISION.yaml` is reserved for independent
+  decision gates or escalation.
 - `approval_required` is mandatory for current REQUESTs. It records whether
   a task expects protected actions; it never grants them.
 
@@ -28,9 +29,11 @@ default.
 candidate → evidence → analysis → decision → implementation → pull-request
 ```
 
-The `decision` stage must be materialized in `DECISION.yaml` as a first-class
-Agent artifact. Repository binding, target repository discovery, evidence
-collection, and screening records are retained.
+Decision gates may be materialized in `DECISION.yaml` as a first-class Agent
+artifact. Repository binding, target repository discovery, and evidence
+collection remain available; screening no longer requires a parallel
+历史 `screenings/` records remain readable, but new screening tasks are not
+duplicated there.
 
 `state-machine.yaml` is the authoritative lifecycle definition. This README
 and `lifecycle.md` explain it but do not introduce additional transitions.

@@ -22,15 +22,14 @@ Candidate Admission 是独立 Gate，不是自动状态转换。`DECISION.yaml` 
 
 ## 任务与事实
 
-任务固定在 `agent-work/tasks/<task-id>/`，通过 `REQUEST.yaml`、`RESULT.yaml`、`DECISION.yaml` 和必要的 `APPROVAL.yaml` 推导队列状态。角色定义在 `agents/`，权限目录在 `agent-protocol/permissions.yaml`，协议约束在 `agent-protocol/`。
+任务固定在 `agent-work/tasks/<task-id>/`。最小任务只需 `REQUEST.yaml` 和 `RESULT.yaml`；`REPORT.md`、`DECISION.yaml` 和 `APPROVAL.yaml` 按任务需要生成。角色定义在 `agents/`，权限目录在 `agent-protocol/permissions.yaml`，协议约束在 `agent-protocol/`。
 
-模型切换是手动的：协议不会根据 `assigned_agent` 自动切换底层模型。每个 REQUEST 的 `completion.handoff` 必须记录下一阶段、推荐 Agent 和切换提示；使用 `agent_queue.py show/next` 时会显示该提醒。没有切换到推荐 Agent 时，不应执行下一阶段任务。
+模型不会自动切换。`assigned_agent` 只表示权限和任务归属；下一阶段必须创建新的有界任务，不要求额外交接文件。
 
-仓库职责保持分离：`repositories/` 管理目标仓库绑定与发现；`screenings/` 保存轻量筛选记录；`issues/` 保存正式 Issue 研究事实；`agent-work/` 保存有界任务结果；`decisions/` 保存决策提案。上游源码不属于本仓库。
+仓库职责保持分离：`repositories/` 管理目标仓库绑定与发现；`discovery/` 保存扫描缓存；`issues/` 保存正式 Issue 研究事实；`agent-work/` 保存有界任务结果。新的 screening 不再复制到 `screenings/`。上游源码不属于本仓库。
 
 Discovery Ledger 与 Issue 分析状态也保持分离。Ledger 只回答“脚本何时扫描了
-什么、远端是否变化、审计结果能否复用”；`issues/`、`screenings/` 和
-`agent-work/` 才回答“是否正在分析、是否已排除、下一步是什么”。Discovery 只
+什么、远端是否变化、审计结果能否复用”；`agent-work/` 和正式 `issues/` 才回答“是否正在分析、是否已排除、下一步是什么”。Discovery 只
 单向读取这些本地记录来跳过已知 Issue，不把 Ledger 结果同步回正式状态，也不把
 `no_known_related_pr` 自动解释为可贡献或已通过筛选。
 
