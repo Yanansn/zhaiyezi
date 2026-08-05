@@ -152,6 +152,34 @@ class AgentProtocolTests(unittest.TestCase):
         self.assertEqual([], errors)
         self.assertEqual("completed", record.status)
 
+    def test_deep_audit_task_needs_only_request_and_result(self) -> None:
+        task_id = "light-deep-audit"
+        audit_request = request(
+            task_id,
+            "agent:terra",
+            task_type="deep-audit",
+            issue="example/example#1",
+            evidence_refs=["evidence.yaml"],
+            target_repository={"name": "example/example", "phase": "deep-audit"},
+            expected_outputs=[f"agent-work/tasks/{task_id}/RESULT.yaml"],
+            completion=None,
+        )
+        audit_result = result(
+            task_id,
+            "agent:terra",
+            status="completed",
+            classification="needs-more-investigation",
+            confidence="medium",
+            evidence_refs=["evidence.yaml"],
+            feasibility={"reproducible": "unknown", "test_entry": "pending", "change_scope": "unknown", "risk": "medium"},
+            next_action="Await a bounded implementation task.",
+        )
+        task = self.write_task(audit_request, audit_result)
+        (task / "REPORT.md").unlink()
+        record, errors = self.inspect(task)
+        self.assertEqual([], errors)
+        self.assertEqual("completed", record.status)
+
     def test_luna_can_produce_decision(self) -> None:
         task_id = "luna-decision"
         record, errors = self.inspect(self.write_task(request(task_id, "agent:luna", task_type="deep-audit", repository="example/example", issue="example/example#1", evidence_refs=["evidence.yaml"], target_repository={"name": "example/example", "phase": "deep-audit"}), result(task_id, "agent:luna"), decision(task_id, "agent:luna")))

@@ -1,0 +1,129 @@
+schema_version: 2
+task_id: lmcache-4133-deep-audit
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+status: completed
+revision: 1
+request_ref: REQUEST.yaml
+
+outputs:
+  - RESULT.yaml
+actions_performed:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - run_tests
+  - write_result
+actions_not_performed:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+validation:
+  - python3 scripts/validate_agent_protocol.py
+  - "python3 -m pytest -q tests/v1/test_cache_engine_cleanup.py tests/v1/test_vllm_layerwise_wait_for_save.py tests/v1/test_memory_management.py (blocked: pytest is not installed in the target environment)"
+limitations:
+  - no runtime reproduction
+  - no GPU validation
+  - no vLLM integration test execution
+  - no maintainer confirmation
+  - no upstream fetch or public GitHub refresh in this stage
+
+issue: LMCache/LMCache#4133
+classification: needs-more-investigation
+confidence: medium
+evidence_refs:
+  - agent-work/tasks/lmcache-4133-screening/RESULT.yaml
+  - agent-work/bindings/LMCache-LMCache.yaml
+  - https://github.com/LMCache/LMCache/issues/4133
+  - https://github.com/LMCache/LMCache/issues/2954
+  - https://github.com/LMCache/LMCache/issues/3650
+
+baseline:
+  repository: LMCache/LMCache
+  local_path: /home/sun/py/LMCache
+  branch: dev
+  commit: f625b9733ad38c6b1bb3ba3d5083998ab5307ffb
+  worktree: clean
+
+issue_validity:
+  reported_behavior:
+    - "The reporter describes lookup promising more tokens than layerwise retrieve stages under CPU-cache eviction pressure."
+    - "The reporter describes a mismatch reaching process_qkv and an exception escaping vLLM start_load_kv, followed by engine termination."
+    - "The reporter states the workload uses layerwise retrieval, blending, LocalCPU cache pressure, and can reproduce in approximately ten minutes."
+  source_confirmed_behavior:
+    - "The vLLM adapter performs a pin=True lookup through the lookup client before the worker-side start_load_kv path."
+    - "Layerwise lookup checks all layer keys with batched_contains and records pinned keys in lookup_pins when pin=True."
+    - "The layerwise retrieve path checks only the first layer with storage_manager.contains(..., pin=False), then retrieves each layer through layerwise_batched_get."
+    - "LocalCPUBackend.contains(..., pin=True) increments MemoryObj.pin_count, while LocalCPUBackend.batched_get_non_blocking increments ref_count without pinning."
+    - "The blender is cached in a class-level dictionary keyed by ENGINE_NAME and is returned again by get_or_create."
+    - "LMCBlender carries mutable per-operation metadata and clears it only at the normal end of blend_layer."
+    - "The vLLM layerwise blending branch calls blender.blend without receiving a retrieval mask or checking a partial-retrieve result."
+  runtime_confirmed_behavior: []
+
+existing_work:
+  explicit_implementation_pr: empty-observation
+  related_work:
+    - issue: LMCache/LMCache#2954
+      relationship: partial-overlap
+      fact: "Historical double-unpin and negative pin-count report in layerwise LocalCPU retrieval."
+    - issue: LMCache/LMCache#3650
+      relationship: related-evidence
+      fact: "Open report of negative pin-count warnings in a vLLM plugin using layerwise LocalCPU behavior."
+  source_history: "No commit message matching #4133, TOCTOU, or the reported lookup/retrieve failure was found in the inspected local history."
+
+code_path_map:
+  - file: lmcache/v1/compute/blend/utils.py
+    symbols: [LMCBlenderBuilder.get_or_create, LMCBlenderBuilder._blenders]
+    relationship: "Class-level singleton cache keyed by instance_id; repeated calls return the original blender without reset or removal."
+  - file: lmcache/v1/compute/blend/blender.py
+    symbols: [LMCBlender, LMCBlender.blend, LMCBlender.blend_layer, LMCBlender.process_qkv]
+    relationship: "blend drives a generator across layers; process_qkv reads connector KV and shared metadata; blend_layer cleans metadata only after the generator reaches its normal final steps."
+  - file: lmcache/v1/compute/blend/metadata.py
+    symbols: [LMCBlendMetadata, LMCBlendMetadata.clean]
+    relationship: "Mutable tensors imp_indices, attn_mask, and positions are stored on the blender instance and cleared by clean()."
+  - file: lmcache/v1/cache_engine.py
+    symbols: [LMCacheEngine.lookup, LMCacheEngine.retrieve_layer, LMCacheEngine.lookup_unpin]
+    relationship: "lookup can pin layer keys under lookup_pins; retrieve_layer discovers by first-layer contains without pin, asynchronously obtains each layer, and unpins staging objects only after device synchronization; lookup_unpin later releases lookup pins."
+  - file: lmcache/v1/storage_backend/storage_manager.py
+    symbols: [StorageManager.batched_contains, StorageManager.layerwise_batched_get, StorageManager.batched_unpin]
+    relationship: "Batched lookup aggregates backend hits and pins when requested; layerwise get delegates per-layer async reads to the selected backend."
+  - file: lmcache/v1/storage_backend/local_cpu_backend.py
+    symbols: [LocalCPUBackend.contains, LocalCPUBackend.batched_get_non_blocking, LocalCPUBackend.unpin]
+    relationship: "The LocalCPU hot cache is protected by cpu_lock; contains(pin=True) pins, batched get increments references, and unpin decrements pin_count."
+  - file: lmcache/integration/vllm/vllm_v1_adapter.py
+    symbols: [LMCacheConnectorV1Impl._init_connector_state, LMCacheConnectorV1Impl.start_load_kv, LMCacheConnectorV1Impl.wait_for_save]
+    relationship: "The connector creates or reuses the blender, invokes blending in the layerwise load path, and later calls lookup_unpin during save finalization."
+  - file: lmcache/v1/gpu_connector/gpu_connectors.py
+    symbols: [GPUConnector.batched_to_gpu]
+    relationship: "The layerwise generator stages per-layer memory objects into GPU KV cache and advances through generator synchronization points; the inspected path documents persistent/lazy staging behavior."
+  - file: lmcache/v1/compute/models/base.py
+    symbols: [LMCBaseModel.compute_layer]
+    relationship: "The model executor calls blender.process_qkv for every layer and then reshapes the returned q/k/v tensors for attention."
+
+feasibility:
+  reproducibility: "Reportedly reliable under a sustained RAG replay with CPU-cache eviction pressure; not independently reproduced."
+  test_entry: "Existing unit tests: tests/v1/test_cache_engine_cleanup.py and tests/v1/test_vllm_layerwise_wait_for_save.py; new regression coverage would need a controlled layerwise retrieve/eviction scenario."
+  change_scope: "Likely single repository; probable areas are cache-engine pin/retrieve lifecycle, blender request state, vLLM adapter defensive handling, and focused tests."
+  hardware: "CPU tests can cover pin and lifecycle invariants; full blending and vLLM behavior require GPU plus vLLM/model dependencies."
+  risk: "medium-high: changes cross generator timing, cache eviction, asynchronous staging, shared blender state, and vLLM request lifecycle."
+  overall: medium
+
+risks:
+  - "The source facts show a lookup/retrieve lifecycle gap, but do not prove that it is the sole cause of the reported crash."
+  - "The class-level blender and mutable metadata are shared by an engine instance, but request concurrency and generator scheduling need runtime confirmation before assigning them as the root cause."
+  - "A defensive fallback must preserve vLLM request isolation and avoid masking partial retrieval or leaking pins."
+
+next_action: >-
+  Keep the recommendation at needs-more-investigation. Before implementation,
+  obtain a runnable pytest/vLLM environment or reporter replay, add a focused
+  regression test for eviction between lookup and layerwise retrieve, and
+  confirm the intended failure policy with maintainers. No implementation or
+  upstream action is authorized by this result.

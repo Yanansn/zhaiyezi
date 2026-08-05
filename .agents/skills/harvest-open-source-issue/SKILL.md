@@ -55,6 +55,22 @@ them. Do not create placeholder documents merely to satisfy a checklist.
 
 ## Stage rules
 
+### Environment feasibility before analysis or implementation
+
+Before a Deep Audit, plan, or implementation task, confirm the minimum runtime
+and dependency path needed for the Issue. Record available hardware, model,
+framework, integration, external-service, and cross-repository requirements.
+If the required environment is unavailable, use the cheapest meaningful
+alternative (source facts, CPU/unit tests, or public CI evidence) only when it
+can answer the bounded question. Otherwise stop before implementation and
+record the limitation; do not spend a full reproduction or implementation
+budget merely to discover that validation is impossible.
+
+CI-only continuation is allowed only when the task explicitly accepts that risk
+or maintainer/upstream evidence makes the boundary sufficiently clear. Missing
+environment must lower feasibility or remain a limitation; it must not be
+silently treated as Issue invalidity or implementation authorization.
+
 ### Ecosystem and discussion
 
 Create or refresh `ECOSYSTEM.md` when the Issue is active and ecosystem facts

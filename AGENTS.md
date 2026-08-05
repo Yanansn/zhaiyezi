@@ -76,6 +76,29 @@ Evidence completed 不等于 admission、selected 或 implementation authorizati
 Repository binding、target repository、evidence 和 screening 是保留的独立能力，
 不改变公开操作权限。
 
+## Pre-Deep-Audit Gate
+
+Deep Audit 前必须先完成一次低成本、实时的继续性检查。至少确认：
+
+1. Issue 有可引用的具体症状、受影响组件或行为边界；
+2. Issue、评论、Timeline/Development 和相关 PR 的公开信息可读取到足以
+   判断范围的程度；
+3. target repository binding 有效，源码基线、branch、HEAD 和 worktree 可核验；
+4. 至少存在一种可验证路径：本地单元/CPU 测试、静态代码事实、CI/维护者证据，
+   或明确的低成本复现步骤；
+5. 已知的 GPU、模型、vLLM、CUDA、外部服务或跨仓库依赖已记录，并能判断
+   缺失环境是否会阻断结论；
+6. 预期修改范围和验证成本仍在当前任务的时间、token 和环境预算内。
+
+任一最低条件不满足时，不进入 Deep Audit；在轻量筛选结果中记录
+`needs-more-investigation`、`watchlist` 或相应的阻塞原因，并停止继续消耗
+高成本调查资源。没有 GPU 或关键运行时环境时，只能进行有界源码/CPU/公开 CI
+核验；若这些路径无法支持有意义的结论，则停止，不进入实现评估。
+
+环境缺失是 feasibility limitation，不等于 Issue 无效、重复或已解决。只有在
+存在可执行的替代验证路径、用户明确接受 CI-only 风险，或维护者/上游证据已经
+足够收敛时，才可例外继续；该例外必须写入任务结果。
+
 ## Candidate Discovery 去重
 
 `scripts/discover_github_issues.py` 默认读取并排除本地已知 Issue：正式记录的

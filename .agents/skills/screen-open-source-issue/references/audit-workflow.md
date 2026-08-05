@@ -7,6 +7,27 @@ candidates completing every stage may be `available`.
 
 This order applies only to explicitly authorized complete `issue-screening`. `issue-evidence-collection` may gather the raw inputs for metadata, comments, Timeline/Development, searches, ownership signals, and related items, but stops before judgment: it does not run classification or Admission stages and stores no `RESULTS.yaml`.
 
+## Pre-Deep-Audit Gate
+
+Before Stage 3, run a low-cost current check. Deep Audit may proceed only when
+all of the following are true:
+
+- the Issue states a concrete symptom, affected component, or behavior boundary;
+- the public Issue/PR evidence is readable enough to define the bounded scope;
+- the target repository binding and source baseline are independently valid;
+- at least one useful verification route is available (local CPU/unit test,
+  source fact, public CI/maintainer evidence, or bounded reproduction);
+- required hardware, model, integration, and external-service dependencies are
+  known; and
+- the expected effort fits the task's time, token, and environment budget.
+
+If a required runtime such as GPU, CUDA, vLLM, or a target model is unavailable
+and no useful low-cost alternative exists, stop before Deep Audit. Record the
+limitation and a non-admission recommendation such as `needs-more-investigation`
+or `watchlist`. This is an execution-feasibility decision, not a claim that the
+Issue is invalid or fixed. An exception requires an explicit task constraint
+accepting CI-only or upstream-evidence-only validation.
+
 ## Stage 1 — Candidate Discovery
 
 - Input: repository, bounded scope, include/exclude labels, scan time.

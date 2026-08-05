@@ -36,6 +36,26 @@ Target binding never grants upstream write or public-action permission.
 
 ## Modes
 
+### Pre-Deep-Audit Gate
+
+Before creating or running a Deep Audit, perform a cheap, current gate. Confirm
+that the Issue has a concrete symptom or affected boundary, public evidence is
+readable enough to define scope, target binding and source baseline are valid,
+and at least one meaningful verification route exists: local unit/CPU tests,
+source facts, public CI/maintainer evidence, or a bounded reproduction path.
+
+Also record required runtime dependencies and whether the local environment has
+them. Missing GPU, model, vLLM, CUDA, external service, or cross-repository
+access is a feasibility limitation. If no low-cost alternative can support a
+useful conclusion, stop before Deep Audit and record `needs-more-investigation`
+or `watchlist` with the blocker. Do not spend a full audit budget to discover a
+known environment blocker.
+
+The gate must also check that expected effort fits the task's time, token, and
+environment budget. Continuing without the required runtime is allowed only
+when the task explicitly accepts CI-only risk or reliable upstream/maintainer
+evidence makes the remaining question bounded; record that exception.
+
 ### Candidate / screening record — Luna
 
 Use the task's smallest record set:

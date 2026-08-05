@@ -38,6 +38,14 @@ duplicated there.
 `state-machine.yaml` is the authoritative lifecycle definition. This README
 and `lifecycle.md` explain it but do not introduce additional transitions.
 
+Before `analysis`/Deep Audit, agents run a lightweight Pre-Deep-Audit Gate:
+check concrete Issue scope, readable evidence, valid target binding and source
+baseline, at least one useful verification route, required runtime dependencies,
+and bounded time/token/environment cost. A missing GPU or integration runtime
+stops high-cost investigation when no meaningful low-cost alternative exists;
+the result records a feasibility limitation and does not claim the Issue is
+invalid. Deep Audit is not started merely because a candidate exists.
+
 ## Commands
 
 ```bash

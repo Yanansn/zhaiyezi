@@ -397,7 +397,7 @@ def inspect_task_directory(task: Path, schema: dict[str, Any], permissions: dict
     if approval is not None:
         validate_approval(approval, request, schema, str(approval_path), errors)
     status = derive_task_status(request, result, decision)
-    if status == "completed" and decision is None and request.get("task_type") != "screening-record":
+    if status == "completed" and decision is None and request.get("task_type") not in {"screening-record", "deep-audit"}:
         errors.append(f"{task}: completed task requires DECISION.yaml")
     allowed = set(string_items(request.get("allowed_actions")))
     if allowed & PROTECTED_ACTIONS:

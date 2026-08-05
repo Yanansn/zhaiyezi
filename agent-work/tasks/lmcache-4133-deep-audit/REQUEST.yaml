@@ -1,0 +1,52 @@
+schema_version: 2
+task_id: lmcache-4133-deep-audit
+task_type: deep-audit
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+assigned_agent: agent:terra
+repository: LMCache/LMCache
+issue: LMCache/LMCache#4133
+status: ready
+input_refs:
+  - agent-work/tasks/lmcache-4133-screening/RESULT.yaml
+  - agent-work/bindings/LMCache-LMCache.yaml
+  - https://github.com/LMCache/LMCache/issues/4133
+evidence_refs:
+  - agent-work/tasks/lmcache-4133-screening/RESULT.yaml
+  - https://github.com/LMCache/LMCache/issues/4133
+  - https://github.com/LMCache/LMCache/issues/2954
+  - https://github.com/LMCache/LMCache/issues/3650
+goal: >-
+  Perform a bounded Deep Audit of LMCache/LMCache#4133 at the bound local
+  baseline. Verify the reported lookup/retrieve mismatch against source facts,
+  map pin lifecycle, layerwise blender, GPU connector staging, and vLLM
+  start_load_kv paths; identify tests, reproducibility conditions, likely
+  change surface, and risks. Produce a recommendation only.
+allowed_actions:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - run_tests
+  - write_result
+  - write_report
+prohibited_actions:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+expected_outputs:
+  - agent-work/tasks/lmcache-4133-deep-audit/RESULT.yaml
+approval_required: false
+target_repository:
+  name: LMCache/LMCache
+  phase: deep-audit
+  local:
+    path: /home/sun/py/LMCache
+    discovery: true
