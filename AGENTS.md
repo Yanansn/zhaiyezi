@@ -77,6 +77,15 @@ Candidate Admission、registry mutation、正式 Issue 初始化和 implementati
 Repository binding、target repository、evidence 和 screening 是保留的独立能力，
 不改变公开操作权限。
 
+## Candidate Discovery 去重
+
+`scripts/discover_github_issues.py` 默认读取并排除本地已知 Issue：正式记录的
+`issues/*/STATUS.yaml`、任务的 `agent-work/tasks/*/REQUEST.yaml` 以及
+`screenings/` 下的结构化证据。Evidence-only 只标记为 `known-evidence`，不等于
+pass 或 not-actionable；已结束状态和明确终止分类才使用 terminal 排除原因。
+排除来源和原因必须写入发现结果。需要显式复查历史候选时使用
+`--include-known`，不得通过删除事实记录绕过去重规则。
+
 ## 模型 profile
 
 Luna、Terra、Sol 的 profile 是工作建议，不是运行时模型路由。当前会话不会因为

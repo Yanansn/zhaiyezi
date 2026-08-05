@@ -54,3 +54,6 @@ facts repository 的本地 Commit 与上游代码仓库的 Commit 是两个独�
 - [agents/](agents/)：Agent 角色；
 - [repositories/](repositories/)：目标仓库 Registry、Discovery 和 Binding；
 - [scripts/discover_github_issues.py](scripts/discover_github_issues.py)：只读候选发现。
+
+候选发现默认会读取正式 Issue、任务和筛选 Evidence，排除已经知道或正在处理的
+Issue，并在输出中保留排除来源。使用 `--include-known` 才会进行显式历史复查。

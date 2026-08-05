@@ -188,6 +188,42 @@ class DiscoveryTests(unittest.TestCase):
         search_calls = [call for call in api.calls if call[1] == "/search/issues"]
         self.assertEqual([3, 3], [call[2]["per_page"] for call in search_calls])
 
+    def test_discovery_excludes_locally_known_issue_and_reports_source(self) -> None:
+        api = FakeAPI()
+        api.issue_search_pages[1] = {
+            "total_count": 2,
+            "incomplete_results": False,
+            "items": [issue(1), issue(2)],
+        }
+        known = {
+            1: discovery.KnownIssue(
+                issue=f"{REPOSITORY}#1",
+                reasons={"active-task"},
+                sources={"agent-work/tasks/example/REQUEST.yaml"},
+            )
+        }
+        result = discovery.run_discovery(api, REPOSITORY, 2, [], [], local_exclusions=known)
+        self.assertEqual([f"{REPOSITORY}#2"], [item["issue"] for item in result["issues"]])
+        self.assertEqual(1, result["local_exclusion"]["excluded_total"])
+        self.assertEqual("active-task", result["local_exclusion"]["excluded"][0]["reasons"][0])
+
+    def test_local_issue_index_distinguishes_evidence_from_terminal_screening(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            evidence = root / "screenings" / "example-project" / "evidence"
+            evidence.mkdir(parents=True)
+            (evidence / "evidence.yaml").write_text(
+                "issue: example/project#7\n", encoding="utf-8"
+            )
+            issue_status = root / "issues" / "example-project-8"
+            issue_status.mkdir(parents=True)
+            (issue_status / "STATUS.yaml").write_text(
+                "issue: example/project#8\nstatus: superseded\n", encoding="utf-8"
+            )
+            index = discovery.build_index(root, REPOSITORY)
+            self.assertEqual({"known-evidence"}, index["example/project#7"].reasons)
+            self.assertEqual({"formal-issue-terminal"}, index["example/project#8"].reasons)
+
     def test_cross_reference_is_resolved_and_pr_state_is_recorded(self) -> None:
         api = FakeAPI()
         api.add_pr(REPOSITORY, 44, merged=True)

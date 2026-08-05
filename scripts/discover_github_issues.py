@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Discover unassigned GitHub issues and collect known related-PR evidence."""
+"""Discover new unassigned Issues and collect known related-PR evidence."""
 
 from __future__ import annotations
 
@@ -18,6 +18,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from threading import Lock
 from typing import Any, Callable, Iterable, Protocol
+
+from scripts.local_issue_index import KnownIssue, build_index, exclusion_map
 
 
 API_VERSION = "2026-03-10"
@@ -261,6 +263,7 @@ def discover_issues(
     limit: int,
     include_labels: list[str],
     exclude_labels: list[str],
+    local_exclusions: dict[int, KnownIssue] | None = None,
 ) -> tuple[list[dict[str, Any]], int, list[str]]:
     query = _build_discovery_query(repository, include_labels, exclude_labels)
     issues: list[dict[str, Any]] = []
@@ -290,7 +293,9 @@ def discover_issues(
         batch = [
             item
             for item in data["items"]
-            if "pull_request" not in item and not item.get("assignees")
+            if "pull_request" not in item
+            and not item.get("assignees")
+            and item.get("number") not in (local_exclusions or {})
         ]
         issues.extend(batch[: limit - len(issues)])
         if len(data["items"]) == 0 or seen >= total_count:
@@ -654,13 +659,16 @@ def run_discovery(
     exclude_labels: list[str],
     progress: Callable[[str], None] | None = None,
     workers: int = DEFAULT_WORKERS,
+    local_exclusions: dict[int, KnownIssue] | None = None,
 ) -> dict[str, Any]:
     notify = progress or (lambda _: None)
     notify(f"Checking read access to {repository}...")
     verify_repository_access(api, repository)
     notify(f"Searching for up to {limit} open, unassigned Issues...")
+    if local_exclusions:
+        notify(f"Excluding {len(local_exclusions)} locally known Issues.")
     issues, total_count, scan_limitations = discover_issues(
-        api, repository, limit, include_labels, exclude_labels
+        api, repository, limit, include_labels, exclude_labels, local_exclusions
     )
     notify(f"Found {len(issues)} candidates ({total_count} total query matches).")
     resolver = ReferenceResolver(api)
@@ -714,6 +722,7 @@ def run_discovery(
             "candidate_limit": limit,
             "include_labels": include_labels,
             "exclude_labels": exclude_labels,
+            "local_exclusion_enabled": local_exclusions is not None,
         },
         "summary": {
             "matched_total": total_count,
@@ -722,6 +731,18 @@ def run_discovery(
         },
         "limitations": scan_limitations,
         "issues": completed_results,
+        "local_exclusion": {
+            "enabled": local_exclusions is not None,
+            "excluded_total": len(local_exclusions or {}),
+            "excluded": [
+                {
+                    "issue": entry.issue,
+                    "reasons": sorted(entry.reasons),
+                    "sources": sorted(entry.sources),
+                }
+                for entry in sorted((local_exclusions or {}).values(), key=lambda item: item.issue.casefold())
+            ],
+        },
     }
     rate_limit = getattr(api, "rate_limit", None)
     if rate_limit:
@@ -749,6 +770,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--summary-output",
         help="compact candidate Markdown path, or - for standard output",
+    )
+    parser.add_argument(
+        "--include-known",
+        action="store_true",
+        help="include Issues already recorded locally (explicit re-check)",
     )
     parser.add_argument("--timeout", type=float, default=20.0, help="request timeout seconds")
     parser.add_argument("--max-retries", type=int, default=2, help="bounded retry count")
@@ -817,6 +843,7 @@ def render_candidate_summary(output: dict[str, Any]) -> str:
             f"{summary['related_pr_found']} with PR evidence; "
             f"{summary['insufficient_evidence']} insufficient-evidence"
         ),
+        f"- Local known-Issue exclusions: {output.get('local_exclusion', {}).get('excluded_total', 0)}",
         "",
         f"## Candidate Issues ({len(candidates)})",
         "",
@@ -889,6 +916,10 @@ def main(argv: list[str] | None = None) -> int:
             args.exclude_label,
             progress,
             args.workers,
+            None if args.include_known else exclusion_map(
+                build_index(Path(__file__).resolve().parents[1], args.repository),
+                args.repository,
+            ),
         )
         _write_output(output, args.output)
         if args.summary_output:
