@@ -1,0 +1,54 @@
+schema_version: 1
+task_id: lmcache-4132-scope-clarification
+task_type: ecosystem-analysis
+created_by: chat
+decision_author: chat
+materialized_by: codex
+materialization:
+  authority: user-instruction
+  scope: bounded
+  source_summary: Chat authorized continuation of the bounded Scope Clarification requested by the reviewed LMCache/LMCache#4132 Deep Audit.
+assigned_agent: codex
+repository: LMCache/LMCache
+issue: LMCache/LMCache#4132
+status: ready
+priority: normal
+input_refs:
+  - agent-work/tasks/lmcache-4132-deep-audit/RESULT.yaml
+  - agent-work/tasks/lmcache-4132-deep-audit/REVIEW.yaml
+  - agent-work/bindings/LMCache-LMCache.yaml
+goal: Determine whether the layerwise blender and CacheBlend paths involved in LMCache/LMCache#4132 remain active, supported, and maintainer-accepted contribution paths, using a freshly fetched upstream baseline and targeted ecosystem evidence.
+allowed_actions:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - fetch_official_upstream
+  - run_tests
+  - write_result
+  - write_report
+prohibited_actions:
+  - repository_modify
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+expected_outputs:
+  - agent-work/tasks/lmcache-4132-scope-clarification/REQUEST.yaml
+  - agent-work/tasks/lmcache-4132-scope-clarification/RESULT.yaml
+  - agent-work/tasks/lmcache-4132-scope-clarification/REPORT.md
+completion:
+  criteria:
+    - Fresh upstream baseline and exact commit are recorded.
+    - Current layerwise blender and CacheBlend code paths are checked.
+    - Recent relevant commits, Issues, PRs, documentation, deprecation or replacement signals, and maintainer-authored comments are recorded.
+    - The result returns to Chat Review without Candidate Admission or implementation authorization.
+  validation:
+    - python3 scripts/validate_agent_protocol.py
+    - git diff --check
+  handoff: Chat reviews the scope clarification before any Candidate Admission decision.

@@ -1,0 +1,81 @@
+schema_version: 1
+task_id: lmcache-4132-scope-clarification
+created_by: codex
+decision_author: codex
+materialized_by: codex
+status: review
+revision: 1
+request_ref: REQUEST.yaml
+outputs:
+  - RESULT.yaml
+  - REPORT.md
+actions_performed:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - fetch_official_upstream
+  - write_result
+  - write_report
+actions_not_performed:
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - initialize_formal_issue
+  - create_issue
+  - comment_issue
+  - create_pull_request
+  - candidate_admission
+  - implementation_authorization
+validation:
+  - "Fresh upstream fetch completed without checkout, merge, rebase, reset, or source modification."
+  - "Upstream baseline recorded as refs/remotes/upstream/dev at a7afadebb9248b62b5c533ce2c12297e9d94fc4a."
+  - "Target repository working tree remained clean."
+  - "Public Issue, PR, documentation, source, and recent-history evidence was inspected."
+limitations:
+  - "No GPU runtime reproduction or maintainer response directly on Issue #4132 was obtained."
+  - "The deprecation statement was found in upstream documentation and a contributor comment on related Issue/PR #4131/#4157; it is not a direct maintainer decision on Issue #4132."
+  - "The old in-process path remains in source, so source presence alone cannot establish contribution acceptance."
+scope_status: clarified-boundary
+target_repository:
+  name: LMCache/LMCache
+  local_path: /home/sun/py/LMCache
+  local_branch: dev
+  local_head: f625b9733ad38c6b1bb3ba3d5083998ab5307ffb
+  upstream_branch: dev
+  upstream_head: a7afadebb9248b62b5c533ce2c12297e9d94fc4a
+  local_ahead: 0
+  local_behind: 12
+scope_facts:
+  legacy_in_process_path: present-but-deprecated
+  current_mp_cacheblend_path: active-in-source-and-documentation
+  maintainer_acceptance_for_4132_path: unconfirmed
+  candidate_admission: not-approved
+  implementation: not-authorized
+current_path_evidence:
+  - file: lmcache/v1/compute/blend/utils.py
+    symbols: [LMCBlenderBuilder.get_or_create, LMCBlenderBuilder._blenders]
+    fact: "The upstream dev tree still contains a class-level blender mapping keyed by instance_id."
+  - file: lmcache/v1/compute/blend/blender.py
+    symbols: [LMCBlender.process_qkv, LMCBlender.blend_layer, LMCBlender.blend]
+    fact: "The upstream dev tree still contains the legacy layerwise blender and its mutable metadata flow."
+  - file: lmcache/integration/vllm/vllm_v1_adapter.py
+    symbols: [LMCacheConnectorV1Impl.start_load_kv, LMCacheConnectorV1Impl._init_connector_state]
+    fact: "The upstream dev tree still wires the legacy blender into the vLLM V1 connector path."
+  - file: lmcache/v1/multiprocess/modules/blend_v3.py
+    symbols: [BlendV3Module]
+    fact: "The upstream dev tree contains a separate MP CacheBlend V3 module."
+ecosystem_evidence:
+  - item: LMCache/LMCache#4131
+    fact: "ApostaC commented that the code path is deprecated and that edits would not be accepted."
+  - item: LMCache/LMCache#4157
+    fact: "The open PR addresses the startup registration companion issue and does not implement the three #4132 failure modes; its discussion repeats the deprecated-path signal."
+  - item: LMCache/LMCache#3217
+    fact: "An open PR addresses a process_qkv tensor alignment bug and includes CPU regression tests plus reported GPU validation, but it is not a fix for the full #4132 singleton/reentrancy/staging-buffer scope."
+  - item: LMCache/LMCache#3228
+    fact: "An open PR addresses a CacheBlend separator-token bug and states that a cleaner CacheBlend implementation was being developed."
+  - item: LMCache/LMCache#4162
+    fact: "An open PR addresses packed KV layout support in CacheBlend V3."
+  - item: LMCache/LMCache#4172
+    fact: "A CacheBlend coordinator change is merged, indicating active development of the MP/CacheBlend ecosystem."
+recommendation: "Do not advance Issue #4132 to Candidate Admission yet. First obtain explicit scope confirmation on whether the reported legacy in-process layerwise path should be replaced by, redirected to, or excluded in favor of MP CacheBlend V3."
+next_action: "Chat Review of this Scope Clarification result."

@@ -1,0 +1,26 @@
+schema_version: 1
+task_id: lmcache-4132-scope-clarification
+created_by: chat
+decision_author: chat
+materialized_by: codex
+materialization:
+  authority: user-instruction
+  scope: bounded
+  source_summary: Chat reviewed the LMCache/LMCache#4132 Scope Clarification and authorized Codex to materialize the decision to stop this issue analysis round.
+status: completed
+result_ref: RESULT.yaml
+result_revision: 1
+decision: approved
+findings:
+  - The Scope Clarification confirms that the legacy in-process layerwise blender path remains in source but is documented as deprecated.
+  - The visible discussion on companion Issue #4131 and PR #4157 states that edits to this deprecated path will not be accepted.
+  - Current upstream CacheBlend development is centered on the MP CacheBlend V3 path, which is not the implementation path described by Issue #4132.
+  - The evidence is sufficient to stop pursuing LMCache/LMCache#4132 as a contribution candidate in its current scope.
+  - This decision ends the current Issue analysis round and does not claim that the upstream Issue is closed.
+  - Candidate Admission is not approved.
+  - Implementation, target repository modification, branch creation, commit, push, Issue interaction, and Pull Request creation are not authorized for LMCache.
+next_actions:
+  - Stop further investigation and contribution work for LMCache/LMCache#4132 in the current legacy-path scope.
+  - Retain the Evidence Collection, Deep Audit, Scope Clarification, and binding records as historical facts.
+  - Do not create a Candidate Admission task or Implementation task for #4132.
+  - Reconsider only if maintainers later establish an accepted supported-path scope that materially changes the current evidence.
