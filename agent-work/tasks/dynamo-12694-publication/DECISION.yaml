@@ -1,0 +1,18 @@
+schema_version: 2
+task_id: dynamo-12694-publication
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+status: completed
+result_ref: RESULT.yaml
+result_revision: 2
+conclusion: "The DCO-signed change is published on the target fork and user-created PR #12739 is open; it is currently blocked pending required checks and maintainer review."
+confidence: high
+evidence_refs:
+  - RESULT.yaml
+  - PR.md
+  - agent-work/tasks/dynamo-12694-implementation/RESULT.yaml
+risks:
+  - "The failure path still requires trusted repository CI with Kubernetes/vCluster."
+  - "The open Pull Request remains dependent on required checks and maintainer review."
+next_action: "Await required checks and maintainer review on PR #12739."

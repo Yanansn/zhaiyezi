@@ -1,0 +1,55 @@
+schema_version: 2
+task_id: dynamo-12694-publication
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+status: completed
+revision: 2
+request_ref: REQUEST.yaml
+outputs:
+  - PR.md
+  - RESULT.yaml
+  - DECISION.yaml
+actions_performed:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - run_tests
+  - write_result
+  - write_report
+  - push_upstream_branch
+actions_not_performed:
+  - modify_registry
+  - initialize_formal_issue
+  - fetch_official_upstream
+  - modify_upstream_code
+  - upstream_write
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+validation:
+  - "The target branch was based on current upstream main 3de5663e9efdb60bedcb042e3b6c1d8427b148a2."
+  - "Issue #12694 remained open with no comments, closing PR, or PR search hit before Push."
+  - "GitHub and Git identities were both bzsuni; origin resolved to git@github.com:bzsuni/dynamo.git and upstream to ai-dynamo/dynamo."
+  - "The amended local commit ed60d3e2f0c2ce68d80a5de6bf1d2d056cbb73b1 retained the required matching Signed-off-by trailer and contained only the two deploy-gate changes."
+  - "Targeted pre-commit hooks, YAML timeout/gate assertions, and git diff --check passed before the amend and Push."
+  - "The public PR head was independently observed as 0c9d863e4983b8dd06e9bcc27ae3dd02a4def28c after the user's rebase."
+  - "GitHub reports PR #12739 open, mergeable, and blocked pending required checks/review."
+limitations:
+  - "No Kubernetes/vCluster or GitHub Actions end-to-end run has validated the failure path."
+  - "The snapshot end-to-end path was not validated locally; current required checks/review remain an upstream PR concern."
+publication:
+  target: bzsuni/dynamo
+  branch: fix/ci-checkpoint-gate-12694
+  commit: 0c9d863e4983b8dd06e9bcc27ae3dd02a4def28c
+  pull_request:
+    number: 12739
+    url: https://github.com/ai-dynamo/dynamo/pull/12739
+    state: open
+    mergeable: true
+    mergeable_state: blocked
+    observed_at: "2026-08-06T14:24:22+08:00"
+  draft_ref: PR.md
+next_action: "Await required checks and maintainer review on PR #12739; no further public action is authorized by this status refresh."
+boundary: "The target-fork branch was pushed and the user-created Pull Request is now recorded. No Issue comment, label, assignment, or upstream source modification was performed by this task."
