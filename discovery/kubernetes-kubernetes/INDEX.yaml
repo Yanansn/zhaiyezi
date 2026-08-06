@@ -1,0 +1,590 @@
+schema_version: 1
+repository: kubernetes/kubernetes
+issues:
+  kubernetes/kubernetes#141216:
+    remote_updated_at: '2026-08-06T07:03:57Z'
+    last_scanned_at: '2026-08-06T08:04:26.909585Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141216
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141214:
+    remote_updated_at: '2026-08-06T05:50:10Z'
+    last_scanned_at: '2026-08-06T08:04:28.162595Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141214
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141212:
+    remote_updated_at: '2026-08-06T03:34:47Z'
+    last_scanned_at: '2026-08-06T08:04:30.894403Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141212
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141200:
+    remote_updated_at: '2026-08-05T17:22:25Z'
+    last_scanned_at: '2026-08-06T08:04:35.020338Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141200
+      url: https://github.com/kubernetes/kubernetes/issues/141200
+      title: '[Flaking Test] [sig-node] [Feature:GPUDevicePlugin] Sanity test using
+        nvidia-smi [Provider:aws,gce] should run nvidia-smi and cuda-demo-suite [Serial]'
+      created_at: '2026-08-05T15:54:52Z'
+      updated_at: '2026-08-05T17:22:25Z'
+      labels:
+      - sig/node
+      - kind/flake
+      - needs-triage
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+      discovery_exclusion:
+        enabled: true
+        reason: triaged-stable
+        evidence:
+        - https://github.com/kubernetes/kubernetes/issues/141200
+        observed_at: '2026-08-06T08:25:00Z'
+        recheck: explicit --include-known
+  kubernetes/kubernetes#141210:
+    remote_updated_at: '2026-08-06T01:14:46Z'
+    last_scanned_at: '2026-08-06T08:04:38.285743Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141210
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141198:
+    remote_updated_at: '2026-08-05T15:42:17Z'
+    last_scanned_at: '2026-08-06T08:04:38.318059Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141198
+      url: https://github.com/kubernetes/kubernetes/issues/141198
+      title: '[Flaking Test] [sig-apps] Deployment should not disrupt a cloud load-balancer''s
+        connectivity during rollout [Provider:aws,azure,gce]'
+      created_at: '2026-08-05T15:41:37Z'
+      updated_at: '2026-08-05T15:42:17Z'
+      labels:
+      - kind/flake
+      - sig/apps
+      - needs-triage
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+      discovery_exclusion:
+        enabled: true
+        reason: environment-blocked
+        evidence:
+        - https://github.com/kubernetes/kubernetes/issues/141198
+        observed_at: '2026-08-06T08:25:00Z'
+        recheck: explicit --include-known
+  kubernetes/kubernetes#141193:
+    remote_updated_at: '2026-08-06T07:38:23Z'
+    last_scanned_at: '2026-08-06T08:04:41.315003Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141193
+      url: https://github.com/kubernetes/kubernetes/issues/141193
+      title: Security implications of named ports in NetworkPolicy
+      created_at: '2026-08-05T13:45:48Z'
+      updated_at: '2026-08-06T07:38:23Z'
+      labels:
+      - sig/network
+      - needs-triage
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  kubernetes/kubernetes#141186:
+    remote_updated_at: '2026-08-05T13:01:37Z'
+    last_scanned_at: '2026-08-06T08:04:44.217465Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141186
+      url: https://github.com/kubernetes/kubernetes/issues/141186
+      title: '[Flaking Test] [sig-k8s-infra] ci-kubernetes-e2e-gci-gce-alpha-features
+        kubetest.Timeout / TearDown / Test / Up [ci-kubernetes-e2e-gci-gce-alpha-features]'
+      created_at: '2026-08-05T09:26:07Z'
+      updated_at: '2026-08-05T13:01:37Z'
+      labels:
+      - kind/flake
+      - sig/testing
+      - needs-triage
+      - sig/k8s-infra
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+      discovery_exclusion:
+        enabled: true
+        reason: triaged-infrastructure
+        evidence:
+        - https://github.com/kubernetes/kubernetes/issues/141186
+        observed_at: '2026-08-06T08:25:00Z'
+        recheck: explicit --include-known
+  kubernetes/kubernetes#141178:
+    remote_updated_at: '2026-08-05T12:41:11Z'
+    last_scanned_at: '2026-08-06T08:04:49.397391Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141178
+      url: https://github.com/kubernetes/kubernetes/issues/141178
+      title: '[Flake][sig-api-machinery]k8s.io/apiextensions-apiserver/test/integration.conversion'
+      created_at: '2026-08-05T06:58:51Z'
+      updated_at: '2026-08-05T12:41:11Z'
+      labels:
+      - sig/api-machinery
+      - kind/flake
+      - needs-triage
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+      discovery_exclusion:
+        enabled: true
+        reason: triaged-infrastructure
+        evidence:
+        - https://github.com/kubernetes/kubernetes/issues/141178
+        observed_at: '2026-08-06T08:25:00Z'
+        recheck: explicit --include-known
+  kubernetes/kubernetes#141162:
+    remote_updated_at: '2026-08-05T19:05:49Z'
+    last_scanned_at: '2026-08-06T08:04:53.379215Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141162
+      url: https://github.com/kubernetes/kubernetes/issues/141162
+      title: '[Feature request] Single API endpoint for feature gates values'
+      created_at: '2026-08-04T13:39:18Z'
+      updated_at: '2026-08-05T19:05:49Z'
+      labels:
+      - sig/api-machinery
+      - kind/feature
+      - sig/architecture
+      - needs-triage
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+      discovery_exclusion:
+        enabled: true
+        reason: needs-kep
+        evidence:
+        - https://github.com/kubernetes/kubernetes/issues/141162
+        observed_at: '2026-08-06T08:25:00Z'
+        recheck: explicit --include-known
+  kubernetes/kubernetes#141155:
+    remote_updated_at: '2026-08-06T01:49:58Z'
+    last_scanned_at: '2026-08-06T08:05:02.430420Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141155
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141153:
+    remote_updated_at: '2026-08-04T05:38:29Z'
+    last_scanned_at: '2026-08-06T08:05:11.278735Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141153
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141152:
+    remote_updated_at: '2026-08-05T02:38:50Z'
+    last_scanned_at: '2026-08-06T08:05:14.751294Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141152
+      url: https://github.com/kubernetes/kubernetes/issues/141152
+      title: 'sig/network: API Server validation error message leaks full ClusterIP
+        CIDR range to low-privileged users'
+      created_at: '2026-08-04T04:03:25Z'
+      updated_at: '2026-08-05T02:38:50Z'
+      labels:
+      - kind/bug
+      - sig/network
+      - needs-triage
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+      discovery_exclusion:
+        enabled: true
+        reason: maintainer-concern
+        evidence:
+        - https://github.com/kubernetes/kubernetes/issues/141152
+        observed_at: '2026-08-06T08:25:00Z'
+        recheck: explicit --include-known
+  kubernetes/kubernetes#141151:
+    remote_updated_at: '2026-08-06T00:57:49Z'
+    last_scanned_at: '2026-08-06T08:05:23.243974Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141151
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141144:
+    remote_updated_at: '2026-08-03T13:58:15Z'
+    last_scanned_at: '2026-08-06T08:05:29.313892Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141144
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141138:
+    remote_updated_at: '2026-08-04T10:48:54Z'
+    last_scanned_at: '2026-08-06T08:05:32.926776Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141138
+      url: https://github.com/kubernetes/kubernetes/issues/141138
+      title: '[Flaking Test] [sig-network] LoadBalancers ExternalTrafficPolicy: Local
+        [Feature:LoadBalancer] should work for type=LoadBalancer [Slow]'
+      created_at: '2026-08-03T08:36:50Z'
+      updated_at: '2026-08-04T10:48:54Z'
+      labels:
+      - sig/network
+      - kind/flake
+      - needs-triage
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+      discovery_exclusion:
+        enabled: true
+        reason: environment-blocked
+        evidence:
+        - https://github.com/kubernetes/kubernetes/issues/141138
+        observed_at: '2026-08-06T08:25:00Z'
+        recheck: explicit --include-known
+  kubernetes/kubernetes#141136:
+    remote_updated_at: '2026-08-03T06:54:00Z'
+    last_scanned_at: '2026-08-06T08:05:36.252715Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141136
+      url: https://github.com/kubernetes/kubernetes/issues/141136
+      title: '[Flaking Test] [sig-network] LoadBalancers ExternalTrafficPolicy: Local
+        [Feature:LoadBalancer] should only target nodes with endpoints [Slow]'
+      created_at: '2026-08-03T06:53:52Z'
+      updated_at: '2026-08-03T06:54:00Z'
+      labels:
+      - sig/network
+      - kind/flake
+      - needs-triage
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+      discovery_exclusion:
+        enabled: true
+        reason: environment-blocked
+        evidence:
+        - https://github.com/kubernetes/kubernetes/issues/141136
+        observed_at: '2026-08-06T08:25:00Z'
+        recheck: explicit --include-known
+  kubernetes/kubernetes#141133:
+    remote_updated_at: '2026-08-03T04:36:13Z'
+    last_scanned_at: '2026-08-06T08:05:40.319852Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141133
+      url: https://github.com/kubernetes/kubernetes/issues/141133
+      title: '[Flaking Test] [sig-network] LoadBalancers [Feature:LoadBalancer] should
+        be able to change the type and ports of a UDP service [Slow]'
+      created_at: '2026-08-03T04:35:54Z'
+      updated_at: '2026-08-03T04:36:13Z'
+      labels:
+      - sig/network
+      - kind/flake
+      - needs-triage
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+      discovery_exclusion:
+        enabled: true
+        reason: environment-blocked
+        evidence:
+        - https://github.com/kubernetes/kubernetes/issues/141133
+        observed_at: '2026-08-06T08:25:00Z'
+        recheck: explicit --include-known
+  kubernetes/kubernetes#141121:
+    remote_updated_at: '2026-08-02T17:46:45Z'
+    last_scanned_at: '2026-08-06T08:05:49.397709Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141121
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141166:
+    remote_updated_at: '2026-08-05T15:15:20Z'
+    last_scanned_at: '2026-08-06T08:06:06.640549Z'
+    last_scan_id: 2026-08-06T08-04-15.647406Z
+    result:
+      issue: kubernetes/kubernetes#141166
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141117:
+    remote_updated_at: '2026-08-02T16:25:31Z'
+    last_scanned_at: '2026-08-06T08:08:26.637868Z'
+    last_scan_id: 2026-08-06T08-08-15.026578Z
+    result:
+      issue: kubernetes/kubernetes#141117
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141095:
+    remote_updated_at: '2026-08-01T16:06:27Z'
+    last_scanned_at: '2026-08-06T08:08:29.044682Z'
+    last_scan_id: 2026-08-06T08-08-15.026578Z
+    result:
+      issue: kubernetes/kubernetes#141095
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141085:
+    remote_updated_at: '2026-08-01T20:23:05Z'
+    last_scanned_at: '2026-08-06T08:08:29.994465Z'
+    last_scan_id: 2026-08-06T08-08-15.026578Z
+    result:
+      issue: kubernetes/kubernetes#141085
+      url: https://github.com/kubernetes/kubernetes/issues/141085
+      title: sig-windows-gce Security Context test are failing
+      created_at: '2026-07-31T20:01:46Z'
+      updated_at: '2026-08-01T20:23:05Z'
+      labels:
+      - sig/windows
+      - kind/failing-test
+      - needs-triage
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+      discovery_exclusion:
+        enabled: true
+        reason: environment-blocked
+        evidence:
+        - https://github.com/kubernetes/kubernetes/issues/141085
+        observed_at: '2026-08-06T08:25:00Z'
+        recheck: explicit --include-known
+  kubernetes/kubernetes#141064:
+    remote_updated_at: '2026-08-05T17:05:30Z'
+    last_scanned_at: '2026-08-06T08:08:37.965820Z'
+    last_scan_id: 2026-08-06T08-08-15.026578Z
+    result:
+      issue: kubernetes/kubernetes#141064
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141046:
+    remote_updated_at: '2026-07-30T13:06:04Z'
+    last_scanned_at: '2026-08-06T08:08:38.418884Z'
+    last_scan_id: 2026-08-06T08-08-15.026578Z
+    result:
+      issue: kubernetes/kubernetes#141046
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141036:
+    remote_updated_at: '2026-08-02T07:48:37Z'
+    last_scanned_at: '2026-08-06T08:08:44.345238Z'
+    last_scan_id: 2026-08-06T08-08-15.026578Z
+    result:
+      issue: kubernetes/kubernetes#141036
+      url: https://github.com/kubernetes/kubernetes/issues/141036
+      title: ci-kubernetes-node-arm64-ubuntu-serial periodically doesn't come up
+      created_at: '2026-07-29T17:16:40Z'
+      updated_at: '2026-08-02T07:48:37Z'
+      labels:
+      - sig/node
+      - kind/flake
+      - priority/important-longterm
+      - triage/accepted
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+      discovery_exclusion:
+        enabled: true
+        reason: author-active
+        evidence:
+        - https://github.com/kubernetes/kubernetes/issues/141036
+        observed_at: '2026-08-06T08:25:00Z'
+        recheck: explicit --include-known
+  kubernetes/kubernetes#141022:
+    remote_updated_at: '2026-07-29T16:56:26Z'
+    last_scanned_at: '2026-08-06T08:08:51.011032Z'
+    last_scan_id: 2026-08-06T08-08-15.026578Z
+    result:
+      issue: kubernetes/kubernetes#141022
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141025:
+    remote_updated_at: '2026-07-31T01:08:12Z'
+    last_scanned_at: '2026-08-06T08:08:51.733625Z'
+    last_scan_id: 2026-08-06T08-08-15.026578Z
+    result:
+      issue: kubernetes/kubernetes#141025
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#141007:
+    remote_updated_at: '2026-08-01T09:38:33Z'
+    last_scanned_at: '2026-08-06T08:09:00.150548Z'
+    last_scan_id: 2026-08-06T08-08-15.026578Z
+    result:
+      issue: kubernetes/kubernetes#141007
+      related_pr_status: related_pr_found
+      related_prs: []
+  kubernetes/kubernetes#140984:
+    remote_updated_at: '2026-08-01T17:50:41Z'
+    last_scanned_at: '2026-08-06T08:09:02.072731Z'
+    last_scan_id: 2026-08-06T08-08-15.026578Z
+    result:
+      issue: kubernetes/kubernetes#140984
+      url: https://github.com/kubernetes/kubernetes/issues/140984
+      title: DaemonSet pod can be permanently stuck Pending when its target node is
+        saturated by equal-priority pods during mass rescheduling
+      created_at: '2026-07-28T09:30:45Z'
+      updated_at: '2026-08-01T17:50:41Z'
+      labels:
+      - kind/bug
+      - sig/scheduling
+      - needs-triage
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+      discovery_exclusion:
+        enabled: true
+        reason: author-active
+        evidence:
+        - https://github.com/kubernetes/kubernetes/issues/140984
+        observed_at: '2026-08-06T08:25:00Z'
+        recheck: explicit --include-known
+  kubernetes/kubernetes#140979:
+    remote_updated_at: '2026-07-28T01:53:31Z'
+    last_scanned_at: '2026-08-06T08:18:32.251171Z'
+    last_scan_id: 2026-08-06T08-18-18.294676Z
+    result:
+      issue: kubernetes/kubernetes#140979
+      related_pr_status: related_pr_found
+      related_prs:
+      - kubernetes/kubernetes#140981
+  kubernetes/kubernetes#140957:
+    remote_updated_at: '2026-07-31T20:23:47Z'
+    last_scanned_at: '2026-08-06T08:18:41.080044Z'
+    last_scan_id: 2026-08-06T08-18-18.294676Z
+    result:
+      issue: kubernetes/kubernetes#140957
+      related_pr_status: related_pr_found
+      related_prs:
+      - kubernetes/kubernetes#141086
+  kubernetes/kubernetes#140956:
+    remote_updated_at: '2026-07-27T14:29:24Z'
+    last_scanned_at: '2026-08-06T08:18:48.118827Z'
+    last_scan_id: 2026-08-06T08-18-18.294676Z
+    result:
+      issue: kubernetes/kubernetes#140956
+      related_pr_status: related_pr_found
+      related_prs:
+      - kubernetes/kubernetes#140958
+  kubernetes/kubernetes#140978:
+    remote_updated_at: '2026-07-29T16:01:24Z'
+    last_scanned_at: '2026-08-06T08:18:48.361054Z'
+    last_scan_id: 2026-08-06T08-18-18.294676Z
+    result:
+      issue: kubernetes/kubernetes#140978
+      related_pr_status: related_pr_found
+      related_prs:
+      - kubernetes/kubernetes#130487
+      - kubernetes/kubernetes#140882
+      - kubernetes/kubernetes#140980
+  kubernetes/kubernetes#140937:
+    remote_updated_at: '2026-07-25T18:38:06Z'
+    last_scanned_at: '2026-08-06T08:18:53.445061Z'
+    last_scan_id: 2026-08-06T08-18-18.294676Z
+    result:
+      issue: kubernetes/kubernetes#140937
+      url: https://github.com/kubernetes/kubernetes/issues/140937
+      title: 'kubelet: support version emulation for CPU and Topology Manager policy
+        options'
+      created_at: '2026-07-25T15:43:26Z'
+      updated_at: '2026-07-25T18:38:06Z'
+      labels:
+      - sig/node
+      - kind/feature
+      - needs-triage
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+      discovery_exclusion:
+        enabled: true
+        reason: needs-kep
+        evidence:
+        - https://github.com/kubernetes/kubernetes/issues/140937
+        observed_at: '2026-08-06T08:25:00Z'
+        recheck: explicit --include-known
+  kubernetes/kubernetes#140940:
+    remote_updated_at: '2026-07-26T06:28:59Z'
+    last_scanned_at: '2026-08-06T08:18:54.108291Z'
+    last_scan_id: 2026-08-06T08-18-18.294676Z
+    result:
+      issue: kubernetes/kubernetes#140940
+      related_pr_status: related_pr_found
+      related_prs:
+      - kubernetes/kubernetes#140941
+  kubernetes/kubernetes#140936:
+    remote_updated_at: '2026-08-03T16:13:52Z'
+    last_scanned_at: '2026-08-06T08:19:08.825342Z'
+    last_scan_id: 2026-08-06T08-18-18.294676Z
+    result:
+      issue: kubernetes/kubernetes#140936
+      related_pr_status: related_pr_found
+      related_prs:
+      - kubernetes/kubernetes#123877
+      - kubernetes/kubernetes#124596
+  kubernetes/kubernetes#140924:
+    remote_updated_at: '2026-07-24T21:20:01Z'
+    last_scanned_at: '2026-08-06T08:19:09.424447Z'
+    last_scan_id: 2026-08-06T08-18-18.294676Z
+    result:
+      issue: kubernetes/kubernetes#140924
+      related_pr_status: related_pr_found
+      related_prs:
+      - kubernetes/kubernetes#140925
+      - kubernetes/kubernetes#140983
+      - kubernetes/kubernetes#141051
+  kubernetes/kubernetes#140903:
+    remote_updated_at: '2026-07-24T19:57:06Z'
+    last_scanned_at: '2026-08-06T08:19:19.405519Z'
+    last_scan_id: 2026-08-06T08-18-18.294676Z
+    result:
+      issue: kubernetes/kubernetes#140903
+      related_pr_status: related_pr_found
+      related_prs:
+      - kubernetes/kubernetes#140629
+      - kubernetes/kubernetes#140775
+  kubernetes/kubernetes#140900:
+    remote_updated_at: '2026-07-24T15:33:54Z'
+    last_scanned_at: '2026-08-06T08:19:43.697437Z'
+    last_scan_id: 2026-08-06T08-18-18.294676Z
+    result:
+      issue: kubernetes/kubernetes#140900
+      related_pr_status: related_pr_found
+      related_prs:
+      - kubernetes/kubernetes#134639
+      - kubernetes/kubernetes#138184
+      - kubernetes/kubernetes#139277
+      - kubernetes/kubernetes#139933
+      - kubernetes/kubernetes#140629
+      - kubernetes/kubernetes#140880
+      - kubernetes/kubernetes#140882
+      - kubernetes/kubernetes#140883
+      - kubernetes/kubernetes#140889
+      - kubernetes/kubernetes#140904
+      - kubernetes-sigs/windows-testing#585

@@ -1,0 +1,1036 @@
+{
+  "schema_version": 1,
+  "repository": "kubernetes/kubernetes",
+  "generated_at": "2026-08-06T08:19:43.752230Z",
+  "query": {
+    "state": "open",
+    "assignee": "none",
+    "candidate_limit": 40,
+    "include_labels": [],
+    "exclude_labels": [],
+    "local_exclusion_enabled": true
+  },
+  "execution": {
+    "audit_workers": 2,
+    "api_request_pacing": "global"
+  },
+  "summary": {
+    "matched_total": 862,
+    "inspected": 40,
+    "audited_now": 10,
+    "reused_results": 30,
+    "related_pr_found": 26,
+    "no_known_related_pr": 14,
+    "insufficient_evidence": 0
+  },
+  "limitations": [],
+  "issues": [
+    {
+      "issue": "kubernetes/kubernetes#141216",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141214",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141212",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141210",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141200",
+      "url": "https://github.com/kubernetes/kubernetes/issues/141200",
+      "title": "[Flaking Test] [sig-node] [Feature:GPUDevicePlugin] Sanity test using nvidia-smi [Provider:aws,gce] should run nvidia-smi and cuda-demo-suite [Serial]",
+      "created_at": "2026-08-05T15:54:52Z",
+      "updated_at": "2026-08-05T17:22:25Z",
+      "labels": [
+        "sig/node",
+        "kind/flake",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141198",
+      "url": "https://github.com/kubernetes/kubernetes/issues/141198",
+      "title": "[Flaking Test] [sig-apps] Deployment should not disrupt a cloud load-balancer's connectivity during rollout [Provider:aws,azure,gce]",
+      "created_at": "2026-08-05T15:41:37Z",
+      "updated_at": "2026-08-05T15:42:17Z",
+      "labels": [
+        "kind/flake",
+        "sig/apps",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141193",
+      "url": "https://github.com/kubernetes/kubernetes/issues/141193",
+      "title": "Security implications of named ports in NetworkPolicy",
+      "created_at": "2026-08-05T13:45:48Z",
+      "updated_at": "2026-08-06T07:38:23Z",
+      "labels": [
+        "sig/network",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141186",
+      "url": "https://github.com/kubernetes/kubernetes/issues/141186",
+      "title": "[Flaking Test] [sig-k8s-infra] ci-kubernetes-e2e-gci-gce-alpha-features kubetest.Timeout / TearDown / Test / Up [ci-kubernetes-e2e-gci-gce-alpha-features]",
+      "created_at": "2026-08-05T09:26:07Z",
+      "updated_at": "2026-08-05T13:01:37Z",
+      "labels": [
+        "kind/flake",
+        "sig/testing",
+        "needs-triage",
+        "sig/k8s-infra"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141178",
+      "url": "https://github.com/kubernetes/kubernetes/issues/141178",
+      "title": "[Flake][sig-api-machinery]k8s.io/apiextensions-apiserver/test/integration.conversion",
+      "created_at": "2026-08-05T06:58:51Z",
+      "updated_at": "2026-08-05T12:41:11Z",
+      "labels": [
+        "sig/api-machinery",
+        "kind/flake",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141166",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141162",
+      "url": "https://github.com/kubernetes/kubernetes/issues/141162",
+      "title": "[Feature request] Single API endpoint for feature gates values",
+      "created_at": "2026-08-04T13:39:18Z",
+      "updated_at": "2026-08-05T19:05:49Z",
+      "labels": [
+        "sig/api-machinery",
+        "kind/feature",
+        "sig/architecture",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141155",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141153",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141152",
+      "url": "https://github.com/kubernetes/kubernetes/issues/141152",
+      "title": "sig/network: API Server validation error message leaks full ClusterIP CIDR range to low-privileged users",
+      "created_at": "2026-08-04T04:03:25Z",
+      "updated_at": "2026-08-05T02:38:50Z",
+      "labels": [
+        "kind/bug",
+        "sig/network",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141151",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141144",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141138",
+      "url": "https://github.com/kubernetes/kubernetes/issues/141138",
+      "title": "[Flaking Test] [sig-network] LoadBalancers ExternalTrafficPolicy: Local [Feature:LoadBalancer] should work for type=LoadBalancer [Slow]",
+      "created_at": "2026-08-03T08:36:50Z",
+      "updated_at": "2026-08-04T10:48:54Z",
+      "labels": [
+        "sig/network",
+        "kind/flake",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141136",
+      "url": "https://github.com/kubernetes/kubernetes/issues/141136",
+      "title": "[Flaking Test] [sig-network] LoadBalancers ExternalTrafficPolicy: Local [Feature:LoadBalancer] should only target nodes with endpoints [Slow]",
+      "created_at": "2026-08-03T06:53:52Z",
+      "updated_at": "2026-08-03T06:54:00Z",
+      "labels": [
+        "sig/network",
+        "kind/flake",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141133",
+      "url": "https://github.com/kubernetes/kubernetes/issues/141133",
+      "title": "[Flaking Test] [sig-network] LoadBalancers [Feature:LoadBalancer] should be able to change the type and ports of a UDP service [Slow]",
+      "created_at": "2026-08-03T04:35:54Z",
+      "updated_at": "2026-08-03T04:36:13Z",
+      "labels": [
+        "sig/network",
+        "kind/flake",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141121",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141117",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141095",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141085",
+      "url": "https://github.com/kubernetes/kubernetes/issues/141085",
+      "title": "sig-windows-gce Security Context test are failing",
+      "created_at": "2026-07-31T20:01:46Z",
+      "updated_at": "2026-08-01T20:23:05Z",
+      "labels": [
+        "sig/windows",
+        "kind/failing-test",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141064",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141046",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141036",
+      "url": "https://github.com/kubernetes/kubernetes/issues/141036",
+      "title": "ci-kubernetes-node-arm64-ubuntu-serial periodically doesn't come up",
+      "created_at": "2026-07-29T17:16:40Z",
+      "updated_at": "2026-08-02T07:48:37Z",
+      "labels": [
+        "sig/node",
+        "kind/flake",
+        "priority/important-longterm",
+        "triage/accepted"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141025",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141022",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#141007",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#140984",
+      "url": "https://github.com/kubernetes/kubernetes/issues/140984",
+      "title": "DaemonSet pod can be permanently stuck Pending when its target node is saturated by equal-priority pods during mass rescheduling",
+      "created_at": "2026-07-28T09:30:45Z",
+      "updated_at": "2026-08-01T17:50:41Z",
+      "labels": [
+        "kind/bug",
+        "sig/scheduling",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#140979",
+      "url": "https://github.com/kubernetes/kubernetes/issues/140979",
+      "title": "[Flaking Test] apiserver/pkg/storage/cacher: panic: synthetic error kills the unit test binary via a leaked watch goroutine",
+      "created_at": "2026-07-28T01:53:23Z",
+      "updated_at": "2026-07-28T01:53:31Z",
+      "labels": [
+        "sig/api-machinery",
+        "kind/flake",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "kubernetes/kubernetes#140981",
+          "url": "https://github.com/kubernetes/kubernetes/pull/140981",
+          "title": "fix: scope etcd3 fatalOnDecodeError to the watcher so a leaked watch goroutine can't panic an unrelated test",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "claude/kubernetes-140979-2bb2ea",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #140979 search; covered expressions: #140979, Fixes #140979, Closes #140979, Related-to #140979, Refs #140979"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#140978",
+      "url": "https://github.com/kubernetes/kubernetes/issues/140978",
+      "title": "No e2e coverage for readiness probes during graceful pod termination",
+      "created_at": "2026-07-27T22:22:50Z",
+      "updated_at": "2026-07-29T16:01:24Z",
+      "labels": [
+        "kind/bug",
+        "area/test",
+        "priority/backlog",
+        "area/kubelet",
+        "sig/node",
+        "sig/testing",
+        "triage/accepted"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "kubernetes/kubernetes#130487",
+          "url": "https://github.com/kubernetes/kubernetes/pull/130487",
+          "title": "chore(kubelet): migrate prober to contextual logging",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2025-09-05T18:13:25Z",
+          "base": "master",
+          "head": "migrate-kubelet-prober-to-contextual-logging",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140978"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes/kubernetes#140882",
+          "url": "https://github.com/kubernetes/kubernetes/pull/140882",
+          "title": "kubelet: detach probe workers from the pod sync context",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-28T19:26:02Z",
+          "base": "master",
+          "head": "fix-prober-sync-ctx-cancel",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140978"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #140978 search; covered expressions: #140978, Fixes #140978, Closes #140978, Related-to #140978, Refs #140978"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes/kubernetes#140980",
+          "url": "https://github.com/kubernetes/kubernetes/pull/140980",
+          "title": "e2e: assert readiness probes run during graceful pod termination",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "e2e-probe-readiness-during-termination",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "timeline-commit",
+              "detail": "referenced:f0a37dfc42cf0e8beec5ef11a7efd55f6480df03"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #140978 search; covered expressions: #140978, Fixes #140978, Closes #140978, Related-to #140978, Refs #140978"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#140957",
+      "url": "https://github.com/kubernetes/kubernetes/issues/140957",
+      "title": "EventSeries lacks +structType=atomic, causing FieldsV1 to emit a \".\" field name that breaks Elasticsearch/OpenSearch-based event pipelines",
+      "created_at": "2026-07-27T09:20:20Z",
+      "updated_at": "2026-07-31T20:23:47Z",
+      "labels": [
+        "needs-sig",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "kubernetes/kubernetes#141086",
+          "url": "https://github.com/kubernetes/kubernetes/pull/141086",
+          "title": "Add atomic struct markers to EventSeries",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "fix-eventseries-atomic-openapi",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140957#issuecomment-5147107146"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #140957 search; covered expressions: #140957, Fixes #140957, Closes #140957, Related-to #140957, Refs #140957"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#140956",
+      "url": "https://github.com/kubernetes/kubernetes/issues/140956",
+      "title": "HPA shows integer underflow value (-9223372036854775808m) for AverageValue metric targets when replicas is 0",
+      "created_at": "2026-07-27T09:19:32Z",
+      "updated_at": "2026-07-27T14:29:24Z",
+      "labels": [
+        "kind/bug",
+        "sig/autoscaling",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "kubernetes/kubernetes#140958",
+          "url": "https://github.com/kubernetes/kubernetes/pull/140958",
+          "title": "fix(autoscaling): Skip per-pod metric division in replica calculator when replicas is 0 to avoid overflow/underflow",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "hpa-overflow-fix",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #140956 search; covered expressions: #140956, Fixes #140956, Closes #140956, Related-to #140956, Refs #140956"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#140940",
+      "url": "https://github.com/kubernetes/kubernetes/issues/140940",
+      "title": "Remove the retired Go Report Card badge from README",
+      "created_at": "2026-07-26T06:28:51Z",
+      "updated_at": "2026-07-26T06:28:59Z",
+      "labels": [
+        "kind/cleanup",
+        "sig/contributor-experience",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "kubernetes/kubernetes#140941",
+          "url": "https://github.com/kubernetes/kubernetes/pull/140941",
+          "title": "Remove retired Go Report Card badge from README",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "readme-drop-goreportcard-badge",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #140940 search; covered expressions: #140940, Fixes #140940, Closes #140940, Related-to #140940, Refs #140940"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#140937",
+      "url": "https://github.com/kubernetes/kubernetes/issues/140937",
+      "title": "kubelet: support version emulation for CPU and Topology Manager policy options",
+      "created_at": "2026-07-25T15:43:26Z",
+      "updated_at": "2026-07-25T18:38:06Z",
+      "labels": [
+        "sig/node",
+        "kind/feature",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#140936",
+      "url": "https://github.com/kubernetes/kubernetes/issues/140936",
+      "title": "kubelet: serialized pod status sync causes unnecessary cross-pod serialization",
+      "created_at": "2026-07-25T14:16:26Z",
+      "updated_at": "2026-08-03T16:13:52Z",
+      "labels": [
+        "sig/scalability",
+        "sig/node",
+        "kind/feature",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "kubernetes/kubernetes#123877",
+          "url": "https://github.com/kubernetes/kubernetes/pull/123877",
+          "title": "Improve the efficiency of synchronizing Pod status",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "syncbatch",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140936"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes/kubernetes#124596",
+          "url": "https://github.com/kubernetes/kubernetes/pull/124596",
+          "title": "Kubelet synchronizes pod states in a parallel manner.",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "improve-syncbatch",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140936#issuecomment-5120895025"
+            },
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140936"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#140924",
+      "url": "https://github.com/kubernetes/kubernetes/issues/140924",
+      "title": "Flaky test: TestValidateEvictionStatusUpdate/mark_active_and_started on Windows",
+      "created_at": "2026-07-24T21:19:53Z",
+      "updated_at": "2026-07-24T21:20:01Z",
+      "labels": [
+        "kind/flake",
+        "sig/windows",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "kubernetes/kubernetes#140925",
+          "url": "https://github.com/kubernetes/kubernetes/pull/140925",
+          "title": "Fix flaky TestValidateEvictionStatusUpdate/mark_active_and_started",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "fix-TestValidateEvictionStatusUpdate",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #140924 search; covered expressions: #140924, Fixes #140924, Closes #140924, Related-to #140924, Refs #140924"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes/kubernetes#140983",
+          "url": "https://github.com/kubernetes/kubernetes/pull/140983",
+          "title": "test: make eviction status update timestamps deterministic on Windows",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "fix/eviction-status-timestamp-flake",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #140924 search; covered expressions: #140924, Fixes #140924, Closes #140924, Related-to #140924, Refs #140924"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes/kubernetes#141051",
+          "url": "https://github.com/kubernetes/kubernetes/pull/141051",
+          "title": "test: make eviction status update timestamps deterministic on Windows",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "ssh-sign-test",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #140924 search; covered expressions: #140924, Fixes #140924, Closes #140924, Related-to #140924, Refs #140924"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#140903",
+      "url": "https://github.com/kubernetes/kubernetes/issues/140903",
+      "title": "[FG: InPlacePodVerticalScalingExclusiveCPUs] Handle currentlyAllocatedCPUs or baselineCPUs  empty abnormal cases, if any.",
+      "created_at": "2026-07-24T07:30:30Z",
+      "updated_at": "2026-07-24T19:57:06Z",
+      "labels": [
+        "sig/node",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "kubernetes/kubernetes#140629",
+          "url": "https://github.com/kubernetes/kubernetes/pull/140629",
+          "title": "[FG: InPlacePodVerticalScalingExclusiveCPUs] Fix Static CPU management policy alongside InPlacePodVerticalScaling",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "5554-4-granular-commits",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140903"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #140903 search; covered expressions: #140903, Fixes #140903, Closes #140903, Related-to #140903, Refs #140903"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes/kubernetes#140775",
+          "url": "https://github.com/kubernetes/kubernetes/pull/140775",
+          "title": "[DRAFT][FG: InPlacePodVerticalScalingExclusiveCPUs] Preparation policy static for 5554 4 granular commits",
+          "state": "open",
+          "draft": true,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "preparation-policy-static-for-5554-4-granular-commits",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140903"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "kubernetes/kubernetes#140900",
+      "url": "https://github.com/kubernetes/kubernetes/issues/140900",
+      "title": "[Failing Test] pull-kubernetes-unit-windows-master failing on all PRs: VM provisioning can't install OpenSSH (WU error 0x80244022)",
+      "created_at": "2026-07-24T06:58:02Z",
+      "updated_at": "2026-07-24T15:33:54Z",
+      "labels": [
+        "priority/important-soon",
+        "sig/windows",
+        "sig/testing",
+        "kind/failing-test",
+        "needs-triage"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "kubernetes/kubernetes#134639",
+          "url": "https://github.com/kubernetes/kubernetes/pull/134639",
+          "title": "KEP-2033: promote KubeletInUserNamespace feature to beta (v1.37)",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-24T13:13:52Z",
+          "base": "master",
+          "head": "rootless-beta",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140900#issuecomment-5071583644"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes/kubernetes#138184",
+          "url": "https://github.com/kubernetes/kubernetes/pull/138184",
+          "title": "kubelet: parallelize container kills in SyncPod Step 3",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "fix/parallelize-syncpod-container-kills",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140900#issuecomment-5071583644"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes/kubernetes#139277",
+          "url": "https://github.com/kubernetes/kubernetes/pull/139277",
+          "title": "KEP-6063: Support per-pod PID limits via resources.limits.pids (Alpha)",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "per-pod-pid-limit",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140900#issuecomment-5071583644"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes/kubernetes#139933",
+          "url": "https://github.com/kubernetes/kubernetes/pull/139933",
+          "title": "DRA: Optional Node Operations",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-24T04:09:49Z",
+          "base": "master",
+          "head": "dra-node-optional-preparation",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140900#issuecomment-5071583644"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes/kubernetes#140629",
+          "url": "https://github.com/kubernetes/kubernetes/pull/140629",
+          "title": "[FG: InPlacePodVerticalScalingExclusiveCPUs] Fix Static CPU management policy alongside InPlacePodVerticalScaling",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "5554-4-granular-commits",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140900#issuecomment-5071583644"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes/kubernetes#140880",
+          "url": "https://github.com/kubernetes/kubernetes/pull/140880",
+          "title": "[KUBELET]: Filter scoped link-local DNS servers",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "bug/filter-scoped-link-local-dns",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140900#issuecomment-5071583644"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes/kubernetes#140882",
+          "url": "https://github.com/kubernetes/kubernetes/pull/140882",
+          "title": "kubelet: detach probe workers from the pod sync context",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-28T19:26:02Z",
+          "base": "master",
+          "head": "fix-prober-sync-ctx-cancel",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140900#issuecomment-5071583644"
+            },
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140900"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #140900 search; covered expressions: #140900, Fixes #140900, Closes #140900, Related-to #140900, Refs #140900"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes/kubernetes#140883",
+          "url": "https://github.com/kubernetes/kubernetes/pull/140883",
+          "title": "kubelet/dra: expire device health at its deadline",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "AutuSnow/fix-dra-health-timeout-notification",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140900#issuecomment-5071583644"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes/kubernetes#140889",
+          "url": "https://github.com/kubernetes/kubernetes/pull/140889",
+          "title": "WIP: DNM: KEP-6063: per-pod PID limits - CI signal run",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "kep-6063-perpod-pid-limit-ci",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140900#issuecomment-5071583644"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes/kubernetes#140904",
+          "url": "https://github.com/kubernetes/kubernetes/pull/140904",
+          "title": "dra: guard health cache against nil map from checkpoint",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "PR250-dra-guard-health-cache",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/kubernetes/kubernetes/issues/140900#issuecomment-5071583644"
+            }
+          ]
+        },
+        {
+          "pr": "kubernetes-sigs/windows-testing#585",
+          "url": "https://github.com/kubernetes-sigs/windows-testing/pull/585",
+          "title": "Harden enable_ssh_windows.ps1 against Windows Update outages",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "master",
+          "head": "harden-enable-ssh",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "timeline-commit",
+              "detail": "referenced:1bfcdedbab17e22b4cb9d545ef8be565c9d3d7ca"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    }
+  ],
+  "local_exclusion": {
+    "enabled": true,
+    "excluded_total": 4,
+    "excluded": [
+      {
+        "issue": "kubernetes/kubernetes#136785",
+        "reasons": [
+          "formal-issue-terminal"
+        ],
+        "sources": [
+          "issues/kubernetes-kubernetes-136785/STATUS.yaml"
+        ]
+      },
+      {
+        "issue": "kubernetes/kubernetes#140489",
+        "reasons": [
+          "formal-issue-active"
+        ],
+        "sources": [
+          "issues/kubernetes-kubernetes-140489/STATUS.yaml"
+        ]
+      },
+      {
+        "issue": "kubernetes/kubernetes#140502",
+        "reasons": [
+          "formal-issue-active"
+        ],
+        "sources": [
+          "issues/kubernetes-kubernetes-140502/STATUS.yaml"
+        ]
+      },
+      {
+        "issue": "kubernetes/kubernetes#140523",
+        "reasons": [
+          "formal-issue-terminal"
+        ],
+        "sources": [
+          "issues/kubernetes-kubernetes-140523/STATUS.yaml"
+        ]
+      }
+    ]
+  },
+  "rate_limit": {
+    "core": {
+      "limit": "5000",
+      "remaining": "4605",
+      "reset": "1786005323",
+      "resource": "core"
+    },
+    "search": {
+      "limit": "30",
+      "remaining": "19",
+      "reset": "1786004360",
+      "resource": "search"
+    }
+  },
+  "ledger": {
+    "index": "/home/sun/projects/zhaiyezi/discovery/kubernetes-kubernetes/INDEX.yaml",
+    "scan": "/home/sun/projects/zhaiyezi/discovery/kubernetes-kubernetes/scans/2026-08-06T08-18-18.294676Z.yaml"
+  }
+}

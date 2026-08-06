@@ -224,6 +224,31 @@ class DiscoveryTests(unittest.TestCase):
             self.assertEqual({"known-evidence"}, index["example/project#7"].reasons)
             self.assertEqual({"formal-issue-terminal"}, index["example/project#8"].reasons)
 
+    def test_discovery_exclusion_is_read_and_can_be_rechecked(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            index_path = root / "discovery" / "example-project" / "INDEX.yaml"
+            index_path.parent.mkdir(parents=True)
+            index_path.write_text(
+                """schema_version: 1
+repository: example/project
+issues:
+  example/project#9:
+    result:
+      issue: example/project#9
+      discovery_exclusion:
+        enabled: true
+        reason: environment-blocked
+        recheck: explicit --include-known
+""",
+                encoding="utf-8",
+            )
+            index = discovery.build_index(root, REPOSITORY)
+            self.assertEqual(
+                {"discovery-environment-blocked"},
+                index["example/project#9"].reasons,
+            )
+
     def test_cross_reference_is_resolved_and_pr_state_is_recorded(self) -> None:
         api = FakeAPI()
         api.add_pr(REPOSITORY, 44, merged=True)

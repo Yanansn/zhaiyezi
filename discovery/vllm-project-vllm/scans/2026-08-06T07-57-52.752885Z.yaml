@@ -1,0 +1,37 @@
+schema_version: 1
+repository: vllm-project/vllm
+scan_id: 2026-08-06T07-57-52.752885Z
+started_at: '2026-08-06T07:57:52.752963Z'
+completed_at: '2026-08-06T07:59:48.866619Z'
+status: completed
+query:
+  candidate_limit: 20
+  include_labels: []
+  exclude_labels: []
+  include_known: false
+  rescan_known: false
+audited:
+- vllm-project/vllm#51234
+- vllm-project/vllm#51223
+- vllm-project/vllm#51220
+- vllm-project/vllm#51232
+- vllm-project/vllm#51212
+- vllm-project/vllm#51211
+- vllm-project/vllm#51214
+- vllm-project/vllm#51205
+- vllm-project/vllm#51198
+- vllm-project/vllm#51197
+- vllm-project/vllm#51193
+- vllm-project/vllm#51192
+- vllm-project/vllm#51188
+- vllm-project/vllm#51200
+- vllm-project/vllm#51186
+- vllm-project/vllm#51187
+- vllm-project/vllm#51181
+- vllm-project/vllm#51164
+- vllm-project/vllm#51163
+- vllm-project/vllm#51162
+reused: []
+local_exclusions: []
+limitations: []
+error: null

@@ -1,0 +1,1138 @@
+{
+  "schema_version": 1,
+  "repository": "vllm-project/vllm",
+  "generated_at": "2026-08-06T07:59:48.866577Z",
+  "query": {
+    "state": "open",
+    "assignee": "none",
+    "candidate_limit": 20,
+    "include_labels": [],
+    "exclude_labels": [],
+    "local_exclusion_enabled": true
+  },
+  "execution": {
+    "audit_workers": 2,
+    "api_request_pacing": "global"
+  },
+  "summary": {
+    "matched_total": 1913,
+    "inspected": 20,
+    "audited_now": 20,
+    "reused_results": 0,
+    "related_pr_found": 12,
+    "no_known_related_pr": 8,
+    "insufficient_evidence": 0
+  },
+  "limitations": [],
+  "issues": [
+    {
+      "issue": "vllm-project/vllm#51234",
+      "url": "https://github.com/vllm-project/vllm/issues/51234",
+      "title": "[Feature]: per request kv cache write logic",
+      "created_at": "2026-08-06T07:26:23Z",
+      "updated_at": "2026-08-06T07:28:50Z",
+      "labels": [
+        "feature request"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51232",
+      "url": "https://github.com/vllm-project/vllm/issues/51232",
+      "title": "[Rocm] Fix AITER_MLA issues for the kimik3-dspark model with Agentic workload",
+      "created_at": "2026-08-06T07:15:13Z",
+      "updated_at": "2026-08-06T07:39:57Z",
+      "labels": [
+        "rocm",
+        "kimi",
+        "k3"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "ROCm/aiter#4474",
+          "url": "https://github.com/ROCm/aiter/pull/4474",
+          "title": "[Bugfix][Triton] Fix int32 KV-offset overflow in _mla_gluon >2GB path",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-08-04T05:17:29Z",
+          "base": "main",
+          "head": "fix_k3_prefix_cache_spec_decode",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51232"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#50618",
+          "url": "https://github.com/vllm-project/vllm/pull/50618",
+          "title": "[ROCm][Bugfix] Fix wvSplitK OOB reads on strided activations",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "fix/wvsplitk-strided-oob",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51232"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#50619",
+          "url": "https://github.com/vllm-project/vllm/pull/50619",
+          "title": "[ROCm][Perf] Fix Kimi-K3 DSpark FP8 MLA verification",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "fix/spec-decode-draft-cg-support",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51232"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#51004",
+          "url": "https://github.com/vllm-project/vllm/pull/51004",
+          "title": "[Rocm] Fix LMcache support issues for the kimik3-dspark model",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "rocm-kimik3-dspark",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51232"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#51040",
+          "url": "https://github.com/vllm-project/vllm/pull/51040",
+          "title": "Extend FP8 asm MLA prefill to non-divisor small head counts",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "xguo/rocm-mla-fp8-prefill-independent",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51232"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51223",
+      "url": "https://github.com/vllm-project/vllm/issues/51223",
+      "title": "[Feature]: DeepSeek V4: option to preserve <think>/</think> markers in chat completion content",
+      "created_at": "2026-08-06T03:51:42Z",
+      "updated_at": "2026-08-06T04:27:55Z",
+      "labels": [
+        "feature request"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "vllm-project/vllm#41255",
+          "url": "https://github.com/vllm-project/vllm/pull/41255",
+          "title": "[Perf] Intergrate Tile Kernels `head_compute_mix_kernel` for Deepseek-V4",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-05-01T19:01:17Z",
+          "base": "main",
+          "head": "mhc-head-tilelang",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51223 search; covered expressions: #51223, Fixes #51223, Closes #51223, Related-to #51223, Refs #51223"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#45877",
+          "url": "https://github.com/vllm-project/vllm/pull/45877",
+          "title": "[Frontend] [Parser] Port DeepSeek V4 to streaming parser engine framework",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-04T00:55:23Z",
+          "base": "main",
+          "head": "streaming-parser-engine-deepseek",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51223"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#51229",
+          "url": "https://github.com/vllm-project/vllm/pull/51229",
+          "title": "fix(deepseek_v4): preserve thinking tags on request",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "fix/issue-51223-keep-deepseek-thinking-tags",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51223 search; covered expressions: #51223, Fixes #51223, Closes #51223, Related-to #51223, Refs #51223"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51220",
+      "url": "https://github.com/vllm-project/vllm/issues/51220",
+      "title": "[RFC][Rust Frontend] Complete RL control-plane endpoint parity",
+      "created_at": "2026-08-06T02:48:54Z",
+      "updated_at": "2026-08-06T02:48:54Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51214",
+      "url": "https://github.com/vllm-project/vllm/issues/51214",
+      "title": "[RFC]: ARK H2 Upstream Roadmap for vLLM INC Path XPU Inference",
+      "created_at": "2026-08-06T01:28:37Z",
+      "updated_at": "2026-08-06T01:57:14Z",
+      "labels": [
+        "RFC",
+        "quantization"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "vllm-project/vllm#39778",
+          "url": "https://github.com/vllm-project/vllm/pull/39778",
+          "title": "[Quantization][Autoround][Toolkit] Add W4A16 Support",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-05-14T11:18:49Z",
+          "base": "main",
+          "head": "zhenzhong/w4a16_ark",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51214"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#47434",
+          "url": "https://github.com/vllm-project/vllm/pull/47434",
+          "title": "[AutoRound] Support AutoRound Format Block-Wise FP8 in vLLM",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "arfp8_cuda",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51214"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#47521",
+          "url": "https://github.com/vllm-project/vllm/pull/47521",
+          "title": "[Quantization][INC][ARK] Support INT2 XPU WOQ Linear",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-14T00:29:46Z",
+          "base": "main",
+          "head": "zhenzhong/arint2",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51214"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#50396",
+          "url": "https://github.com/vllm-project/vllm/pull/50396",
+          "title": "[Quantization][Autoround][ARK] Add ARK W4A16(moe) Support",
+          "state": "open",
+          "draft": true,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "zhenzhong/ark_moe_rebased",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51214"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51212",
+      "url": "https://github.com/vllm-project/vllm/issues/51212",
+      "title": "[RFC]: Model Runner V2 Pluggable Design",
+      "created_at": "2026-08-06T01:17:33Z",
+      "updated_at": "2026-08-06T01:32:41Z",
+      "labels": [
+        "RFC"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51211",
+      "url": "https://github.com/vllm-project/vllm/issues/51211",
+      "title": "Question: content-based LoRA adapter selection (routing from the query, not the request naming the adapter)",
+      "created_at": "2026-08-06T00:28:22Z",
+      "updated_at": "2026-08-06T00:28:22Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51205",
+      "url": "https://github.com/vllm-project/vllm/issues/51205",
+      "title": "[Bug]:  Inkling-Small-NVFP4 wont start on 2 H200 GPUs.",
+      "created_at": "2026-08-05T22:09:29Z",
+      "updated_at": "2026-08-05T22:09:39Z",
+      "labels": [
+        "bug",
+        "quantization"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51200",
+      "url": "https://github.com/vllm-project/vllm/issues/51200",
+      "title": "[Bug]: `MiniMAXGemmaRMSNorm` unconditionally calls FlashInfer CUDA kernels, breaking MiniMax-M3 on every non-CUDA platform",
+      "created_at": "2026-08-05T21:07:40Z",
+      "updated_at": "2026-08-06T01:42:06Z",
+      "labels": [
+        "bug",
+        "intel-gpu"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "vllm-project/vllm#81",
+          "url": "https://github.com/vllm-project/vllm/pull/81",
+          "title": "Use runtime profiling to replace manual memory analyzers",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2023-05-19T17:35:44Z",
+          "base": "main",
+          "head": "dynamic-memory-profiler",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51200 search; covered expressions: #51200, Fixes #51200, Closes #51200, Related-to #51200, Refs #51200"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#5036",
+          "url": "https://github.com/vllm-project/vllm/pull/5036",
+          "title": "[Kernel][RFC] Refactor the punica kernel based on Triton",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2024-08-01T00:12:24Z",
+          "base": "main",
+          "head": "refactor-punica-kernel",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51200 search; covered expressions: #51200, Fixes #51200, Closes #51200, Related-to #51200, Refs #51200"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#25913",
+          "url": "https://github.com/vllm-project/vllm/pull/25913",
+          "title": "[Benchmark] Support benchmark throughput for external launcher DP",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2025-09-30T01:43:57Z",
+          "base": "main",
+          "head": "zhuohan/support-benchmark-throughput-for-external-launcher-dp",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51200 search; covered expressions: #51200, Fixes #51200, Closes #51200, Related-to #51200, Refs #51200"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#31832",
+          "url": "https://github.com/vllm-project/vllm/pull/31832",
+          "title": "[Perf][Kernel] Fused SiLU+Mul+Quant kernel for NVFP4 cutlass_moe",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-01-09T14:40:34Z",
+          "base": "main",
+          "head": "nvfp4_cutlass_moe_fused_silu_quant",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51200 search; covered expressions: #51200, Fixes #51200, Closes #51200, Related-to #51200, Refs #51200"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#31837",
+          "url": "https://github.com/vllm-project/vllm/pull/31837",
+          "title": "[Perf] Fuse stride preparation for NVFP4 cutlass_moe",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-01-07T18:31:27Z",
+          "base": "main",
+          "head": "fuse-stride-prep-nvfp4-cutlass-moe",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51200 search; covered expressions: #51200, Fixes #51200, Closes #51200, Related-to #51200, Refs #51200"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#32957",
+          "url": "https://github.com/vllm-project/vllm/pull/32957",
+          "title": "[Feat] Add RMSNorm NvFp4 Quant Operator (#32612)",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "feature/rmsnorm-fp4quant",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51200 search; covered expressions: #51200, Fixes #51200, Closes #51200, Related-to #51200, Refs #51200"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#36413",
+          "url": "https://github.com/vllm-project/vllm/pull/36413",
+          "title": "[Feat] add rmsnorm fp4 quant fusion of flashinfer",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "feature/rmsnorm-fp4quant-flashinfer",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51200 search; covered expressions: #51200, Fixes #51200, Closes #51200, Related-to #51200, Refs #51200"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#40633",
+          "url": "https://github.com/vllm-project/vllm/pull/40633",
+          "title": "[Feature] Triton INT4 / INT2 per-token-head KV cache quantization",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "feature/int4-int2-per-token-head-v2",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51200 search; covered expressions: #51200, Fixes #51200, Closes #51200, Related-to #51200, Refs #51200"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#45381",
+          "url": "https://github.com/vllm-project/vllm/pull/45381",
+          "title": "[Model] Add MiniMax M3 support",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-15T17:01:25Z",
+          "base": "main",
+          "head": "m3_release",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51200"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#45714",
+          "url": "https://github.com/vllm-project/vllm/pull/45714",
+          "title": "[Misc] Add pure decode throughput to `vllm bench serve` results",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "decode_throughput",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51200 search; covered expressions: #51200, Fixes #51200, Closes #51200, Related-to #51200, Refs #51200"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#45797",
+          "url": "https://github.com/vllm-project/vllm/pull/45797",
+          "title": "[XPU][MiniMax-M3] Tune gemma_rmsnorm Triton num_warps for BMG",
+          "state": "closed",
+          "draft": true,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "pr/gemma-rmsnorm-numwarps",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51200"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#45881",
+          "url": "https://github.com/vllm-project/vllm/pull/45881",
+          "title": "[XPU][MiniMax-M3] Add XPU support for MSA sparse-attention path + tune gemma_rmsnorm for BMG",
+          "state": "open",
+          "draft": true,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "minimax-m3",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51200"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#46498",
+          "url": "https://github.com/vllm-project/vllm/pull/46498",
+          "title": "[KVConnector] Add UcclP2pConnector for disaggregated prefill over UCCL P2P",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "main",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51200 search; covered expressions: #51200, Fixes #51200, Closes #51200, Related-to #51200, Refs #51200"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#46659",
+          "url": "https://github.com/vllm-project/vllm/pull/46659",
+          "title": "Fix FA4 dynamic_causal for full attention layers",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-29T21:23:35Z",
+          "base": "main",
+          "head": "fix_fa4_dynamic_causal",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51200 search; covered expressions: #51200, Fixes #51200, Closes #51200, Related-to #51200, Refs #51200"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#47270",
+          "url": "https://github.com/vllm-project/vllm/pull/47270",
+          "title": "[ROCm][MiniMax-M3] Fuse input-side all-reduce + RMSNorm in the AMD decoder",
+          "state": "open",
+          "draft": true,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "m3-input-ar-rmsnorm-fusion",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51200"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#50305",
+          "url": "https://github.com/vllm-project/vllm/pull/50305",
+          "title": "[Bugfix] Re-land MiniMax M3 default video processor",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-31T07:46:19Z",
+          "base": "main",
+          "head": "fix/minimax-mm-preprocess-cpu-import",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51200"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51198",
+      "url": "https://github.com/vllm-project/vllm/issues/51198",
+      "title": "[Bug]: --enable-prefix-caching is a silent 0%-hit no-op on Mamba-2/GDN hybrids (Qwen3_5MoeForConditionalGeneration)",
+      "created_at": "2026-08-05T20:26:15Z",
+      "updated_at": "2026-08-06T06:09:20Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "vllm-project/vllm#50991",
+          "url": "https://github.com/vllm-project/vllm/pull/50991",
+          "title": "[Mamba] enable prefix cache by default",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-08-04T15:20:51Z",
+          "base": "main",
+          "head": "prefix-cache-default",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/vllm-project/vllm/issues/51198#issuecomment-5199782684"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51197",
+      "url": "https://github.com/vllm-project/vllm/issues/51197",
+      "title": "[Performance]: Qwen3.6-35B-A3B (Qwen3_5MoeForConditionalGeneration) BF16 GDN backbone isn't quantized — ~80% of per-step reads, caps decode",
+      "created_at": "2026-08-05T20:26:14Z",
+      "updated_at": "2026-08-05T20:31:10Z",
+      "labels": [
+        "quantization"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51193",
+      "url": "https://github.com/vllm-project/vllm/issues/51193",
+      "title": "[Parity with CUDA vLLM]: ROCm Mooncake out of the box in prebuilt Docker",
+      "created_at": "2026-08-05T19:57:28Z",
+      "updated_at": "2026-08-05T20:01:06Z",
+      "labels": [
+        "feature request",
+        "rocm"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "kvcache-ai/Mooncake#3184",
+          "url": "https://github.com/kvcache-ai/Mooncake/pull/3184",
+          "title": "[ROCm] Add ROCm/HIP wheel build, CI, and release parity with CUDA (#3171)",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-08-03T02:46:51Z",
+          "base": "main",
+          "head": "rocm-ci-parity",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51193"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51192",
+      "url": "https://github.com/vllm-project/vllm/issues/51192",
+      "title": "[Dependency]: Bump torchvision to a release containing the CVE-2026-65918 fix",
+      "created_at": "2026-08-05T19:55:38Z",
+      "updated_at": "2026-08-05T19:55:38Z",
+      "labels": [
+        "bug"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "pytorch/vision#9520",
+          "url": "https://github.com/pytorch/vision/pull/9520",
+          "title": "Fix gif decoder bug",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-22T16:44:00Z",
+          "base": "main",
+          "head": "fix-gif-bug",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51192"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#19887",
+          "url": "https://github.com/vllm-project/vllm/pull/19887",
+          "title": "[New model support]Support Tarsier2",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2025-06-21T04:01:51Z",
+          "base": "main",
+          "head": "tarsier2-model",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51192 search; covered expressions: #51192, Fixes #51192, Closes #51192, Related-to #51192, Refs #51192"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51188",
+      "url": "https://github.com/vllm-project/vllm/issues/51188",
+      "title": "[Bug]: compressed-tensors models with format: dense sparsity_config fail to load",
+      "created_at": "2026-08-05T18:15:23Z",
+      "updated_at": "2026-08-05T18:15:33Z",
+      "labels": [
+        "quantization"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "vllm-project/vllm#42889",
+          "url": "https://github.com/vllm-project/vllm/pull/42889",
+          "title": "[Refactor] Remove dead code",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-05-18T20:41:22Z",
+          "base": "main",
+          "head": "wentao-remove-dead-code-3",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51188"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#43144",
+          "url": "https://github.com/vllm-project/vllm/pull/43144",
+          "title": "Remove additional dead code as a follow-up to #42889",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-05-20T14:01:45Z",
+          "base": "main",
+          "head": "remove_sparsity_utils",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51188"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#51189",
+          "url": "https://github.com/vllm-project/vllm/pull/51189",
+          "title": "[Bugfix] compressed-tensors: allow format=dense sparsity_config to load",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "fix/compressed-tensors-dense-sparsity",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51188 search; covered expressions: #51188, Fixes #51188, Closes #51188, Related-to #51188, Refs #51188"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#51190",
+          "url": "https://github.com/vllm-project/vllm/pull/51190",
+          "title": "[Bugfix] compressed-tensors: allow format=dense sparsity_config to load (backport #51189 to v0.24.0)",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "releases/v0.24.0",
+          "head": "backport/ct-dense-sparsity-v0.24.0",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51188 search; covered expressions: #51188, Fixes #51188, Closes #51188, Related-to #51188, Refs #51188"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#51191",
+          "url": "https://github.com/vllm-project/vllm/pull/51191",
+          "title": "[Bugfix] compressed-tensors: allow format=dense sparsity_config to load (backport #51189 to v0.26.0)",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "releases/v0.26.0",
+          "head": "backport/ct-dense-sparsity-v0.26.0",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51188 search; covered expressions: #51188, Fixes #51188, Closes #51188, Related-to #51188, Refs #51188"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51187",
+      "url": "https://github.com/vllm-project/vllm/issues/51187",
+      "title": "[Bug]: VLLM_BATCH_INVARIANT=1 returns non-identical logprobs across repeats of a byte-identical concurrent workload at ~44 co-resident sequences",
+      "created_at": "2026-08-05T18:14:02Z",
+      "updated_at": "2026-08-05T18:14:02Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51186",
+      "url": "https://github.com/vllm-project/vllm/issues/51186",
+      "title": "[RFC]: Adopt otel genai semantic conventions for metrics",
+      "created_at": "2026-08-05T18:11:54Z",
+      "updated_at": "2026-08-05T18:11:54Z",
+      "labels": [
+        "RFC"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51181",
+      "url": "https://github.com/vllm-project/vllm/issues/51181",
+      "title": "[Bug]: DeepSeekV4 DSpark CUDA graph capture failure on H100",
+      "created_at": "2026-08-05T16:33:30Z",
+      "updated_at": "2026-08-05T16:45:50Z",
+      "labels": [
+        "bug"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "deepseek-ai/DeepGEMM#399",
+          "url": "https://github.com/deepseek-ai/DeepGEMM/pull/399",
+          "title": "fix: SM90 paged mqa `prefix_sum` out of range (`CUDBG_EXCEPTION_WARP_OUT_OF_RANGE_ADDRESS`)",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "sm90-paged-mqa-logits-warp-out-of-range",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51181"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#51182",
+          "url": "https://github.com/vllm-project/vllm/pull/51182",
+          "title": "[Bugfix] [Build] Fix DeepGEMM SM90 paged mqa `prefix_sum` out of range",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "sm90-paged-mqa-logits-warp-out-of-range",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51181 search; covered expressions: #51181, Fixes #51181, Closes #51181, Related-to #51181, Refs #51181"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51164",
+      "url": "https://github.com/vllm-project/vllm/issues/51164",
+      "title": "[Bug]: Step3p5ReasoningParser strips the wrong newline once the discarded prefix is preserved (follow-up to #50918)",
+      "created_at": "2026-08-05T12:49:35Z",
+      "updated_at": "2026-08-05T21:25:15Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "vllm-project/vllm#15893",
+          "url": "https://github.com/vllm-project/vllm/pull/15893",
+          "title": "[FEAT][ROCm]: Support AITER MLA",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2025-04-22T16:31:13Z",
+          "base": "main",
+          "head": "aiter-mla-integration",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51164 search; covered expressions: #51164, Fixes #51164, Closes #51164, Related-to #51164, Refs #51164"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#50918",
+          "url": "https://github.com/vllm-project/vllm/pull/50918",
+          "title": "[Bugfix] Enhance reasoning extraction to handle prefixes and missing …",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "fix-issue-50901",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51164"
+            }
+          ]
+        },
+        {
+          "pr": "vllm-project/vllm#51201",
+          "url": "https://github.com/vllm-project/vllm/pull/51201",
+          "title": "Step3p5ReasoningParser strips the wrong newline",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "fix/step3p5-newline-strip",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51164 search; covered expressions: #51164, Fixes #51164, Closes #51164, Related-to #51164, Refs #51164"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51163",
+      "url": "https://github.com/vllm-project/vllm/issues/51163",
+      "title": "[Bug]: cache_config_info reports block_size=4 despite --block-size 256, and num_gpu_blocks × block_size ≠ kv_cache_size_tokens (DeepSeek-V4, fp8_ds_mla)",
+      "created_at": "2026-08-05T12:36:42Z",
+      "updated_at": "2026-08-05T15:34:20Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "vllm-project/vllm#41834",
+          "url": "https://github.com/vllm-project/vllm/pull/41834",
+          "title": "[New Model][Nvidia] Add SM12x support for DeepSeek V4 Flash with essential fixes",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "codex/ds4-sm120-min-enable",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "timeline-commit",
+              "detail": "referenced:1dc0259e3b4ce78317e1d4cf4f71c04b4f2c16d0"
+            },
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/vllm-project/vllm/issues/51163"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #51163 search; covered expressions: #51163, Fixes #51163, Closes #51163, Related-to #51163, Refs #51163"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "vllm-project/vllm#51162",
+      "url": "https://github.com/vllm-project/vllm/issues/51162",
+      "title": "[Feature]: `vllm.utils.import_util._has_module` should not import modules",
+      "created_at": "2026-08-05T12:32:02Z",
+      "updated_at": "2026-08-05T12:32:02Z",
+      "labels": [
+        "feature request"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "vllm-project/vllm#51159",
+          "url": "https://github.com/vllm-project/vllm/pull/51159",
+          "title": "[ROCm] Defer `tilelang` import",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "tilelang-lazy-import",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #51162 search; covered expressions: #51162, Fixes #51162, Closes #51162, Related-to #51162, Refs #51162"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    }
+  ],
+  "local_exclusion": {
+    "enabled": true,
+    "excluded_total": 0,
+    "excluded": []
+  },
+  "rate_limit": {
+    "core": {
+      "limit": "5000",
+      "remaining": "4851",
+      "reset": "1786005323",
+      "resource": "core"
+    },
+    "search": {
+      "limit": "30",
+      "remaining": "23",
+      "reset": "1786003200",
+      "resource": "search"
+    }
+  },
+  "ledger": {
+    "index": "/home/sun/projects/zhaiyezi/discovery/vllm-project-vllm/INDEX.yaml",
+    "scan": "/home/sun/projects/zhaiyezi/discovery/vllm-project-vllm/scans/2026-08-06T07-57-52.752885Z.yaml"
+  }
+}

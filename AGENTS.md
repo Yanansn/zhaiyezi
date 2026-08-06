@@ -148,6 +148,22 @@ Discovery 只从这些正式记录单向读取排除信息；Ledger 与 Issue �
 同步。Ledger 中的 `no_known_related_pr` 只表示本次 API 审计事实，不表示 pass、
 available、Admission 或 implementation authorization。
 
+Discovery 对已经完成有界检查、暂时不应重复进入候选列表的 Issue，可以在对应
+`INDEX.yaml` 的 `result` 下写入：
+
+```yaml
+discovery_exclusion:
+  enabled: true
+  reason: author-active | environment-blocked | maintainer-concern | needs-kep | triaged-infrastructure
+  evidence: [...]
+  observed_at: ...
+  recheck: explicit --include-known
+```
+
+该标记是 Discovery 去重事实，不是 screening classification、Issue 状态或
+Admission 决策。普通扫描会排除它；只有显式 `--include-known` 才重新检查。标记必须
+包含原因、公开证据和观察时间；条件变化后应通过显式复查更新或移除。
+
 发现或筛选结果若包含 `author-claimed`，必须保留该标记及其公开证据；不得将其
 降级为普通 `no_known_related_pr`，也不得生成 Deep Audit 任务。
 

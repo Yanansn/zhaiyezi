@@ -88,6 +88,23 @@ def build_index(root: Path, repository: str) -> dict[str, KnownIssue]:
         classification = data.get("classification") or data.get("screening_classification")
         reason = "screened-terminal" if classification in TERMINAL_CLASSIFICATIONS else "known-evidence"
         _add(index, issue, reason, path, root)
+
+    # Discovery may record a bounded, explicit exclusion after checking public
+    # ownership, maintainer direction, environment, or design constraints.
+    # `--include-known` remains the explicit escape hatch for rechecking it.
+    discovery_path = root / "discovery" / repository.replace("/", "-") / "INDEX.yaml"
+    data = _load(discovery_path) if discovery_path.exists() else None
+    entries = data.get("issues", {}) if isinstance(data, dict) else {}
+    for key, entry in entries.items():
+        if not isinstance(entry, dict):
+            continue
+        result = entry.get("result")
+        exclusion = result.get("discovery_exclusion") if isinstance(result, dict) else None
+        if not isinstance(exclusion, dict) or exclusion.get("enabled") is not True:
+            continue
+        issue = _issue_key((result or {}).get("issue") or key, repository)
+        reason = str(exclusion.get("reason") or "discovery-excluded")
+        _add(index, issue, f"discovery-{reason}", discovery_path, root)
     return index
 
 

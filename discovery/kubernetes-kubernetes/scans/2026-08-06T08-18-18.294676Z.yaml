@@ -1,0 +1,77 @@
+schema_version: 1
+repository: kubernetes/kubernetes
+scan_id: 2026-08-06T08-18-18.294676Z
+started_at: '2026-08-06T08:18:18.336293Z'
+completed_at: '2026-08-06T08:19:43.752252Z'
+status: completed
+query:
+  candidate_limit: 40
+  include_labels: []
+  exclude_labels: []
+  include_known: false
+  rescan_known: false
+audited:
+- kubernetes/kubernetes#140979
+- kubernetes/kubernetes#140957
+- kubernetes/kubernetes#140956
+- kubernetes/kubernetes#140978
+- kubernetes/kubernetes#140937
+- kubernetes/kubernetes#140940
+- kubernetes/kubernetes#140936
+- kubernetes/kubernetes#140924
+- kubernetes/kubernetes#140903
+- kubernetes/kubernetes#140900
+reused:
+- kubernetes/kubernetes#141216
+- kubernetes/kubernetes#141214
+- kubernetes/kubernetes#141212
+- kubernetes/kubernetes#141210
+- kubernetes/kubernetes#141200
+- kubernetes/kubernetes#141198
+- kubernetes/kubernetes#141193
+- kubernetes/kubernetes#141186
+- kubernetes/kubernetes#141178
+- kubernetes/kubernetes#141166
+- kubernetes/kubernetes#141162
+- kubernetes/kubernetes#141155
+- kubernetes/kubernetes#141153
+- kubernetes/kubernetes#141152
+- kubernetes/kubernetes#141151
+- kubernetes/kubernetes#141144
+- kubernetes/kubernetes#141138
+- kubernetes/kubernetes#141136
+- kubernetes/kubernetes#141133
+- kubernetes/kubernetes#141121
+- kubernetes/kubernetes#141117
+- kubernetes/kubernetes#141095
+- kubernetes/kubernetes#141085
+- kubernetes/kubernetes#141064
+- kubernetes/kubernetes#141046
+- kubernetes/kubernetes#141036
+- kubernetes/kubernetes#141025
+- kubernetes/kubernetes#141022
+- kubernetes/kubernetes#141007
+- kubernetes/kubernetes#140984
+local_exclusions:
+- issue: kubernetes/kubernetes#136785
+  reasons:
+  - formal-issue-terminal
+  sources:
+  - issues/kubernetes-kubernetes-136785/STATUS.yaml
+- issue: kubernetes/kubernetes#140489
+  reasons:
+  - formal-issue-active
+  sources:
+  - issues/kubernetes-kubernetes-140489/STATUS.yaml
+- issue: kubernetes/kubernetes#140502
+  reasons:
+  - formal-issue-active
+  sources:
+  - issues/kubernetes-kubernetes-140502/STATUS.yaml
+- issue: kubernetes/kubernetes#140523
+  reasons:
+  - formal-issue-terminal
+  sources:
+  - issues/kubernetes-kubernetes-140523/STATUS.yaml
+limitations: []
+error: null
