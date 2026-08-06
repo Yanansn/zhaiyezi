@@ -1,0 +1,106 @@
+schema_version: 2
+task_id: lmcache-4390-screening
+created_by: agent:luna
+decision_author: agent:luna
+materialized_by: agent:luna
+status: completed
+revision: 1
+request_ref: REQUEST.yaml
+outputs:
+  - RESULT.yaml
+actions_performed:
+  - read_repository
+  - repository_read
+  - analyze_code
+actions_not_performed:
+  - modify_upstream_code
+  - upstream_write
+  - create_pull_request
+validation:
+  - "Public Issue page read: https://github.com/LMCache/LMCache/issues/4390"
+  - "Target binding read: agent-work/bindings/LMCache-LMCache.yaml"
+  - "Source baseline read: /home/sun/py/LMCache at f625b9733ad38c6b1bb3ba3d5083998ab5307ffb"
+limitations:
+  - no GPU or CUDA runtime
+  - pytest is not installed in the target environment
+  - no vLLM runtime execution
+  - no maintainer confirmation or design acceptance is visible
+
+issue: LMCache/LMCache#4390
+classification: needs-more-investigation
+confidence: medium
+evidence_refs:
+  - https://github.com/LMCache/LMCache/issues/4390
+  - agent-work/bindings/LMCache-LMCache.yaml
+  - candidates.json
+
+pre_deep_audit_gate:
+  concrete_scope: >-
+    pass; the RFC specifies an MP connector snapshot of active request ID,
+    token IDs, priority, and status at scheduler steps or request arrival.
+  public_evidence: >-
+    pass; the Issue body, author, open state, no-assignee state, no-label state,
+    no-development state, and proposal boundaries are readable.
+  target_binding: >-
+    pass; the LMCache target binding is valid and the local baseline is clean.
+  verification_route: >-
+    pass for source-focused analysis; current source exposes
+    LMCacheMPConnector, LMCacheMPConnectorMetadata, request trackers, scheduler
+    methods, and related vLLM connector tests.
+  runtime_dependencies: >-
+    vLLM, scheduler integration, and likely a running MP deployment are needed
+    for runtime validation; GPU is not yet proven necessary for the requested
+    mechanism-only source audit.
+  effort_budget: >-
+    pass only for a bounded source audit; runtime reproduction and full
+    integration validation are out of scope under the current environment.
+  decision: eligible-for-bounded-source-deep-audit
+
+maintainer_intent:
+  issue_kind: RFC
+  public_signal: >-
+    The author proposes a mechanism-only request snapshot and explicitly leaves
+    consuming policies for follow-up work; this is a proposal, not an accepted
+    implementation boundary.
+  comments: empty-observation
+  assignee: empty-observation
+  labels: empty-observation
+  project_milestone_development: empty-observation
+  linked_pr: empty-observation
+  conclusion: >-
+    Maintainer willingness and acceptance are unconfirmed. Do not treat the RFC
+    as implementation authorization or as evidence that maintainers want an
+    external contribution now.
+
+source_facts:
+  - file: lmcache/integration/vllm/lmcache_mp_connector.py
+    symbols: [LMCacheMPConnector, LMCacheMPConnectorMetadata, LMCacheMPRequestTracker]
+    fact: >-
+      The connector maintains per-request tracker state and builds connector
+      metadata from scheduler output.
+  - file: lmcache/integration/vllm/lmcache_mp_connector.py
+    symbols: [LMCacheMPConnector.build_connector_meta, LMCacheMPConnector.get_num_new_matched_tokens, LMCacheMPConnector.update_state_after_alloc]
+    fact: >-
+      The scheduler-side path processes retrieve, new, and cached requests and
+      reports block allocation deltas; request tracker state is consumed during
+      lookup and allocation transitions.
+  - file: tests/v1/test_mp_connector_mm_keys.py
+    symbols: [LMCacheMPRequestTracker, LMCacheMPRequestMetadata]
+    fact: >-
+      Existing tests exercise tracker token IDs and store/retrieve metadata, but
+      do not establish an active-request snapshot API.
+
+feasibility:
+  reproducibility: "source behavior is inspectable; runtime behavior is not locally reproducible"
+  test_entry: "existing MP connector tracker tests; pytest/vLLM execution blocked locally"
+  change_scope: "likely LMCache vLLM MP connector and focused scheduler-side tests; exact scope requires Deep Audit"
+  hardware: "no GPU/CUDA available; GPU requirement for the mechanism is not established"
+  risk: "medium: scheduler integration, request lifecycle, and message/prefetch semantics may affect behavior"
+  overall: medium
+
+next_action: >-
+  Pause before Deep Audit. Resume only if a maintainer direction/acceptance
+  signal appears or if the user explicitly wants a low-cost source-only audit
+  despite the unconfirmed design boundary. Do not attempt GPU reproduction or
+  implementation unless a later task explicitly authorizes it and provides a
+  viable validation route.

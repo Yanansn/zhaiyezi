@@ -1,0 +1,88 @@
+schema_version: 2
+task_id: dynamo-12317-screening
+created_by: agent:luna
+decision_author: agent:luna
+materialized_by: agent:luna
+status: completed
+revision: 1
+request_ref: REQUEST.yaml
+outputs:
+  - RESULT.yaml
+  - REPORT.md
+actions_performed:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - write_result
+  - write_report
+actions_not_performed:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+validation:
+  - "Issue #12317 is open, unassigned, has one comment, and has no visible direct implementation PR in the bounded discovery evidence."
+  - "The author comment clarifies the request as startup logging for etcd/Kubernetes discovery; it does not claim implementation or a planned PR."
+  - "No maintainer comment, assignment, project item, or explicit maintainer commitment to implement the request was visible in the current public metadata."
+  - "Local source search found existing runtime-plane and graceful-shutdown configuration/test entry points; no upstream source was modified."
+  - "No GPU, model, vLLM, CUDA, or external runtime is required for the initial source-focused screening."
+limitations:
+  - "No fresh upstream fetch was performed; the local clone is the existing PR branch."
+  - "No runtime startup or deployment test was run during screening."
+reported_behavior:
+  - "The Issue requests low-volume startup visibility for effective discovery, event/request plane, message-size, queue, and shutdown settings."
+source_confirmed_behavior:
+  - "The local repository contains existing request-plane, event-plane, discovery, and graceful-shutdown configuration/test references, but this screening did not identify a single consolidated startup configuration log."
+runtime_confirmed_behavior: []
+ownership:
+  author_claimed: false
+  maintainer_claim: false
+  direct_implementation_pr: empty_observation
+  maintainer_intent: no_explicit_signal
+  evidence:
+    - https://github.com/ai-dynamo/dynamo/issues/12317
+    - https://github.com/ai-dynamo/dynamo/issues/12317#issuecomment-5119989920
+feasibility:
+  reproducibility: "medium; the requested absence/presence of startup fields can be checked by source inspection and a bounded startup/log test"
+  test_entry: "medium; existing runtime and router test helpers provide entry points, but the exact logging path needs source audit"
+  change_scope: "medium; existing config dump and RuntimeConfig paths are reusable, but effective-value logging must be placed across relevant startup paths and covered by focused assertions"
+  hardware: "No GPU required for the requested configuration/logging behavior"
+  risk: "medium; logging fields must remain sanitized, stable, and low-volume across components"
+  overall: medium
+workload_estimate:
+  level: medium
+  likely_changes:
+    - "Reuse or extend components/src/dynamo/common/config_dump/config_dumper.py without exposing sensitive environment values."
+    - "Select a shared startup logging boundary for RuntimeConfig and effective shutdown/queue settings."
+    - "Add focused tests for stable fields, defaults, overrides, and single-emission behavior."
+  not_required:
+    - "GPU, model, vLLM, CUDA, Kubernetes, or distributed runtime reproduction for the initial implementation."
+  uncertainty:
+    - "The exact effective-value sources and number of component entry points require Deep Audit."
+pre_deep_audit_gate:
+  concrete_scope: pass
+  public_evidence: pass
+  target_binding: pass
+  verification_route: pass
+  runtime_dependencies: pass
+  effort_budget: pass
+  decision: eligible_for_bounded_source_deep_audit
+classification: candidate-for-admission
+confidence: medium
+issue_type: observability-enhancement
+evidence_refs:
+  - https://github.com/ai-dynamo/dynamo/issues/12317
+  - discovery/ai-dynamo-dynamo/INDEX.yaml
+  - /home/sun/py/dynamo/tests/router/common.py
+  - /home/sun/py/dynamo/lib/backend-common/CLAUDE.md
+next_action: >-
+  If the user accepts the medium workload and lack of explicit maintainer
+  commitment, create a separate bounded Deep Audit task to map startup/config
+  paths and identify the smallest safe logging scope. Do not modify upstream
+  from this screening record.

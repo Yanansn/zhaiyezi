@@ -58,6 +58,14 @@ limitation rather than an Issue judgment; Deep Audit remains paused unless a
 low-cost alternative, explicit CI-only acceptance, or sufficient upstream
 evidence makes the remaining question bounded.
 
+Screening may also record an independent `issue_type`. The current supported
+type `observability-enhancement` covers logging, metrics, tracing, effective
+configuration visibility, and diagnostic improvements. It describes Issue
+semantics only; it does not replace classification, feasibility, priority,
+Admission, or implementation authorization. Such Issues require an explicit
+check of maintainer intent, existing diagnostic mechanisms, sanitization
+boundaries, workload, and verification entry points.
+
 ## Commands
 
 ```bash

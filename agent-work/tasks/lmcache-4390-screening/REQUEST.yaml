@@ -1,0 +1,43 @@
+schema_version: 2
+task_id: lmcache-4390-screening
+task_type: screening-record
+created_by: agent:luna
+decision_author: agent:luna
+materialized_by: agent:luna
+assigned_agent: agent:luna
+repository: LMCache/LMCache
+issue: LMCache/LMCache#4390
+status: ready
+input_refs:
+  - candidates.json
+  - https://github.com/LMCache/LMCache/issues/4390
+  - agent-work/bindings/LMCache-LMCache.yaml
+goal: >-
+  Run the Pre-Deep-Audit Gate for LMCache/LMCache#4390 and determine whether a
+  bounded source-focused Deep Audit is worth starting under the current
+  no-GPU/no-pytest environment.
+allowed_actions:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - write_result
+prohibited_actions:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+expected_outputs:
+  - agent-work/tasks/lmcache-4390-screening/RESULT.yaml
+approval_required: false
+target_repository:
+  name: LMCache/LMCache
+  phase: deep-audit
+  local:
+    path: /home/sun/py/LMCache
+    discovery: true

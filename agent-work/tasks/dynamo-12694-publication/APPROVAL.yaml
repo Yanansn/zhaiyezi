@@ -1,0 +1,11 @@
+schema_version: 2
+task_id: dynamo-12694-publication
+approved_by: user
+decision_author: user
+materialized_by: user
+status: approved
+actions:
+  - push_upstream_branch
+scope: >-
+  Push local branch fix/ci-checkpoint-gate-12694 to origin at bzsuni/dynamo.
+  Pull Request creation and all other public GitHub actions remain unapproved.

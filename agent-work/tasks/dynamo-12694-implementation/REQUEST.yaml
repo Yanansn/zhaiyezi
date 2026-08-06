@@ -1,0 +1,52 @@
+schema_version: 2
+task_id: dynamo-12694-implementation
+task_type: implementation
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+assigned_agent: agent:terra
+repository: ai-dynamo/dynamo
+issue: ai-dynamo/dynamo#12694
+status: ready
+input_refs:
+  - agent-work/tasks/dynamo-12694-deep-audit/RESULT.yaml
+  - https://github.com/ai-dynamo/dynamo/issues/12694
+goal: >-
+  On a local branch based on current upstream main, make the smallest workflow
+  change that prevents a cancelled checkpoint snapshot-agent setup job from
+  passing deploy-status-check; ensure the GitHub job deadline is strictly
+  greater than the called Helm deadline; validate the workflow statically and
+  prepare, but do not publish, the proposed commit and PR metadata.
+allowed_actions:
+  - read_repository
+  - repository_read
+  - repository_modify
+  - run_tests
+  - write_result
+  - write_report
+prohibited_actions:
+  - modify_registry
+  - initialize_formal_issue
+  - fetch_official_upstream
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+expected_outputs:
+  - agent-work/tasks/dynamo-12694-implementation/IMPLEMENTATION.md
+  - agent-work/tasks/dynamo-12694-implementation/TESTING.md
+  - agent-work/tasks/dynamo-12694-implementation/RESULT.yaml
+approval_required: false
+target_repository:
+  name: ai-dynamo/dynamo
+  phase: implementation
+  fork:
+    remote: origin
+    url: git@github.com:bzsuni/dynamo.git
+  local:
+    path: /home/sun/py/dynamo
+    branch: fix/ci-checkpoint-gate-12694
+    discovery: true

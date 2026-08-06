@@ -85,6 +85,12 @@ limitations, and next action directly in `RESULT.yaml`. `available` never
 means admitted. Historical `screenings/` records remain readable; new tasks
 use `scripts/validate_agent_protocol.py`.
 
+When useful, also record `issue_type: observability-enhancement` for requests
+about logs, metrics, tracing, effective configuration visibility, or diagnostic
+behavior. This is semantic metadata, not a classification or admission result.
+For this type, check maintainer intent, existing config/log/metric mechanisms,
+sanitization boundaries, workload, test entry points, and runtime dependencies.
+
 ### Evidence collection — Luna
 
 Require a finite Issue list, sources, output location, and limitations. Collect

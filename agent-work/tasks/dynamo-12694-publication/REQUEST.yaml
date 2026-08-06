@@ -1,0 +1,51 @@
+schema_version: 2
+task_id: dynamo-12694-publication
+task_type: publication
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+assigned_agent: agent:terra
+repository: ai-dynamo/dynamo
+issue: ai-dynamo/dynamo#12694
+status: ready
+input_refs:
+  - agent-work/tasks/dynamo-12694-implementation/RESULT.yaml
+  - agent-work/tasks/dynamo-12694-implementation/DECISION.yaml
+goal: >-
+  Verify the amended, DCO-signed local commit, prepare an exact repository-style
+  Pull Request draft, and push fix/ci-checkpoint-gate-12694 only to the
+  bzsuni/dynamo target fork. Do not create a Pull Request or modify upstream.
+allowed_actions:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - run_tests
+  - write_result
+  - write_report
+  - push_upstream_branch
+prohibited_actions:
+  - modify_registry
+  - initialize_formal_issue
+  - fetch_official_upstream
+  - modify_upstream_code
+  - upstream_write
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+expected_outputs:
+  - agent-work/tasks/dynamo-12694-publication/PR.md
+  - agent-work/tasks/dynamo-12694-publication/RESULT.yaml
+  - agent-work/tasks/dynamo-12694-publication/DECISION.yaml
+approval_required: true
+target_repository:
+  name: ai-dynamo/dynamo
+  phase: implementation
+  fork:
+    remote: origin
+    url: git@github.com:bzsuni/dynamo.git
+  local:
+    path: /home/sun/py/dynamo
+    branch: fix/ci-checkpoint-gate-12694
+    discovery: true

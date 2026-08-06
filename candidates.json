@@ -1,0 +1,2540 @@
+{
+  "schema_version": 1,
+  "repository": "LMCache/LMCache",
+  "generated_at": "2026-08-05T07:39:56.061330Z",
+  "query": {
+    "state": "open",
+    "assignee": "none",
+    "candidate_limit": 100,
+    "include_labels": [],
+    "exclude_labels": [],
+    "local_exclusion_enabled": true
+  },
+  "execution": {
+    "audit_workers": 4,
+    "api_request_pacing": "global"
+  },
+  "summary": {
+    "matched_total": 148,
+    "inspected": 100,
+    "audited_now": 40,
+    "reused_results": 60,
+    "related_pr_found": 92,
+    "no_known_related_pr": 8,
+    "insufficient_evidence": 0
+  },
+  "limitations": [],
+  "issues": [
+    {
+      "issue": "LMCache/LMCache#4419",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4416",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4402",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4394",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4390",
+      "url": "https://github.com/LMCache/LMCache/issues/4390",
+      "title": "[RFC] Request list snapshot for the LMCache connector",
+      "created_at": "2026-08-03T00:48:40Z",
+      "updated_at": "2026-08-03T00:48:40Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#4387",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4386",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4385",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4365",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4364",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4360",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4352",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4345",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4344",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4342",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4340",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4311",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4307",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4305",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4299",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4293",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4291",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4270",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4266",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4256",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4247",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4239",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4228",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4226",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4224",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4204",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4198",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4186",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4185",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4179",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4171",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4159",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4155",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4149",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4139",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4137",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4133",
+      "url": "https://github.com/LMCache/LMCache/issues/4133",
+      "title": "[Bug] Lookup→retrieve TOCTOU under eviction pressure kills the engine (layerwise + blending)",
+      "created_at": "2026-07-17T00:44:54Z",
+      "updated_at": "2026-07-17T00:44:54Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#4132",
+      "url": "https://github.com/LMCache/LMCache/issues/4132",
+      "title": "[Bug] Layerwise blender reuses stale singleton state and staging buffers across requests — crashes under variable-length load",
+      "created_at": "2026-07-17T00:44:53Z",
+      "updated_at": "2026-07-17T00:44:53Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#4131",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4127",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4126",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4109",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4100",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4095",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4090",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4085",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4071",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4069",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4065",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4064",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4063",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4061",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4049",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4041",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4030",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "LMCache/LMCache#4029",
+      "url": "https://github.com/LMCache/LMCache/issues/4029",
+      "title": "[ROCm] stable pypi and nightly wheels of ROCm LMCache",
+      "created_at": "2026-07-07T03:34:32Z",
+      "updated_at": "2026-07-22T07:03:18Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#4190",
+          "url": "https://github.com/LMCache/LMCache/pull/4190",
+          "title": "build: add ROCm wheel artifact builder",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "codex/rocm-wheel-build-smoke",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #4029 search; covered expressions: #4029, Fixes #4029, Closes #4029, Related-to #4029, Refs #4029"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#4025",
+      "url": "https://github.com/LMCache/LMCache/issues/4025",
+      "title": "LMCache 2026 Q3 Roadmap",
+      "created_at": "2026-07-06T23:43:27Z",
+      "updated_at": "2026-07-31T15:31:44Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3908",
+          "url": "https://github.com/LMCache/LMCache/pull/3908",
+          "title": "Collapse object-group KV transfer into one GIL-released native call",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-02T07:15:48Z",
+          "base": "dev",
+          "head": "localdev/fix_gil",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/4025#issuecomment-5059652120"
+            },
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/4025#issuecomment-5059910382"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3968",
+          "url": "https://github.com/LMCache/LMCache/pull/3968",
+          "title": "[MP][Ascend] Ascend NPU multiprocess format support + generic engine-driven path",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "feature/support_ascend_mp_mode",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/4025"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3978",
+          "url": "https://github.com/LMCache/LMCache/pull/3978",
+          "title": "[MP][Coordinator] Add Pin/Unpin Tokens API",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-07T23:15:59Z",
+          "base": "dev",
+          "head": "feat/pin",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/4025"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3990",
+          "url": "https://github.com/LMCache/LMCache/pull/3990",
+          "title": "[MP][Coordinator] token-based cache delete API",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-16T21:15:08Z",
+          "base": "dev",
+          "head": "feat/delete",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/4025"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#4004",
+          "url": "https://github.com/LMCache/LMCache/pull/4004",
+          "title": "docs: guide for integrating new non-CUDA devices via engine-driven MP path",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-16T08:27:21Z",
+          "base": "dev",
+          "head": "docs/platform-new-backend-guide",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/4025"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#4088",
+          "url": "https://github.com/LMCache/LMCache/pull/4088",
+          "title": "[CLI] Add flame-graph profiling tool for a running LMCache server (py-spy / perf / bcc)",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-17T22:55:43Z",
+          "base": "dev",
+          "head": "tool/flamegraph-py-spy",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #4025 search; covered expressions: #4025, Fixes #4025, Closes #4025, Related-to #4025, Refs #4025"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#4151",
+          "url": "https://github.com/LMCache/LMCache/pull/4151",
+          "title": "[MP][Coordinator] Commit OpenAPI contract with drift-guard test",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "feat/coordinator-openapi-contract",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/4025#issuecomment-5017867588"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #4025 search; covered expressions: #4025, Fixes #4025, Closes #4025, Related-to #4025, Refs #4025"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#4176",
+          "url": "https://github.com/LMCache/LMCache/pull/4176",
+          "title": "feat: add omni model support for vLLM and SGLang",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "feat/omni-model-support",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #4025 search; covered expressions: #4025, Fixes #4025, Closes #4025, Related-to #4025, Refs #4025"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#4382",
+          "url": "https://github.com/LMCache/LMCache/pull/4382",
+          "title": "feat(mp): add runtime management policy API",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "codex/runtime-policy-config",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #4025 search; covered expressions: #4025, Fixes #4025, Closes #4025, Related-to #4025, Refs #4025"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#4383",
+          "url": "https://github.com/LMCache/LMCache/pull/4383",
+          "title": "feat(mp): add coordinator runtime policy fanout",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "codex/runtime-policy-coordinator",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #4025 search; covered expressions: #4025, Fixes #4025, Closes #4025, Related-to #4025, Refs #4025"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#4399",
+          "url": "https://github.com/LMCache/LMCache/pull/4399",
+          "title": "[Operator] Make hostIPC optional",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "feat/operator-hostipc-optional",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #4025 search; covered expressions: #4025, Fixes #4025, Closes #4025, Related-to #4025, Refs #4025"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#4019",
+      "url": "https://github.com/LMCache/LMCache/issues/4019",
+      "title": "[Bug] LazyMemoryAllocator pins the host pool in __init__, creating a CUDA context on cuda:0 at MP-server start (before any worker connects)",
+      "created_at": "2026-07-06T09:29:29Z",
+      "updated_at": "2026-07-07T04:07:04Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#4018",
+          "url": "https://github.com/LMCache/LMCache/pull/4018",
+          "title": "fix(memory): defer host pinning in LazyMemoryAllocator to first allocate",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "fix/deferred-host-pinning",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #4019 search; covered expressions: #4019, Fixes #4019, Closes #4019, Related-to #4019, Refs #4019"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3957",
+      "url": "https://github.com/LMCache/LMCache/issues/3957",
+      "title": "[Bug] lmcache_mp_connector_0201.py (vLLM 0.20.1) out of sync with refactored adapter API — ParallelStrategy/SchedulerAdapter signature mismatch",
+      "created_at": "2026-06-30T12:09:21Z",
+      "updated_at": "2026-06-30T12:09:21Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3798",
+          "url": "https://github.com/LMCache/LMCache/pull/3798",
+          "title": "Fix free_lookup_locks missing cache_salt in the _0201 connector copy (follow-up to #3771)",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "fix/3770-free-lookup-locks-cache-salt",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3957"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3853",
+          "url": "https://github.com/LMCache/LMCache/pull/3853",
+          "title": "[GPU connector] Allow non-zero storage_offset in dim-0-padded layout (MTP + CPU offload)",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-30T20:17:38Z",
+          "base": "dev",
+          "head": "allow-nonzero-storage-offset-mtp-offload",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3957"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3959",
+          "url": "https://github.com/LMCache/LMCache/pull/3959",
+          "title": "Fix lmcache_mp_connector_0201 drift from refactored adapter API",
+          "state": "open",
+          "draft": true,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "fix/mp-connector-0201-adapter-api",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3957 search; covered expressions: #3957, Fixes #3957, Closes #3957, Related-to #3957, Refs #3957"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3945",
+      "url": "https://github.com/LMCache/LMCache/issues/3945",
+      "title": "Slot-compression hybrid models (e.g. DeepSeek-V4) are accepted but served without per-group sliding-window masking",
+      "created_at": "2026-06-29T19:39:35Z",
+      "updated_at": "2026-07-04T04:06:10Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3940",
+      "url": "https://github.com/LMCache/LMCache/issues/3940",
+      "title": "[MP] Refactor LMCache MP multiplatform framework to make lmcache platform agnostic",
+      "created_at": "2026-06-29T11:10:40Z",
+      "updated_at": "2026-07-07T02:08:51Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3924",
+          "url": "https://github.com/LMCache/LMCache/pull/3924",
+          "title": "[platform][refactor] refactor device detection",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-04T09:04:53Z",
+          "base": "dev",
+          "head": "platform/refactor-1",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3940#issuecomment-4899428593"
+            },
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3940"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3936",
+      "url": "https://github.com/LMCache/LMCache/issues/3936",
+      "title": "[feat]: Proposal about Unified Device Ops via `DeviceOps` Abstraction",
+      "created_at": "2026-06-29T08:34:32Z",
+      "updated_at": "2026-07-06T14:07:33Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#4021",
+          "url": "https://github.com/LMCache/LMCache/pull/4021",
+          "title": "[platform][refactor] add registry-based DeviceOps",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "device_ops_abstract_phase_1",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3936#issuecomment-4893741403"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3931",
+      "url": "https://github.com/LMCache/LMCache/issues/3931",
+      "title": "[Bug] The MPConnector throws an error when trying to load DeepSeek-V4-Flash with vLLM",
+      "created_at": "2026-06-29T04:27:48Z",
+      "updated_at": "2026-06-29T20:45:39Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3853",
+          "url": "https://github.com/LMCache/LMCache/pull/3853",
+          "title": "[GPU connector] Allow non-zero storage_offset in dim-0-padded layout (MTP + CPU offload)",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-30T20:17:38Z",
+          "base": "dev",
+          "head": "allow-nonzero-storage-offset-mtp-offload",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3931#issuecomment-4829114336"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3917",
+      "url": "https://github.com/LMCache/LMCache/issues/3917",
+      "title": "[Bug] lmcache-mp (TRT-LLM): store/retrieve crash on non-chunk-aligned block lists (save_unfull_chunk=False)",
+      "created_at": "2026-06-27T19:37:36Z",
+      "updated_at": "2026-06-27T19:37:36Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3612",
+          "url": "https://github.com/LMCache/LMCache/pull/3612",
+          "title": "[MP][Core][HMA] Implement the interface for multi-object group and sliding window support",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-11T00:53:22Z",
+          "base": "dev",
+          "head": "local-dev/hma-optimization",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3917"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3918",
+          "url": "https://github.com/LMCache/LMCache/pull/3918",
+          "title": "[BugFix] lmcache-driven (TRT-LLM MP): trim trailing partial chunk before downsample",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "fix/mp-downsample-partial-chunk",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3917 search; covered expressions: #3917, Fixes #3917, Closes #3917, Related-to #3917, Refs #3917"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3912",
+      "url": "https://github.com/LMCache/LMCache/issues/3912",
+      "title": "Query: Does LMCache support DeepSeek V4 and store/retrieve KVCache to/from localdisk file/filesystem?",
+      "created_at": "2026-06-27T09:45:37Z",
+      "updated_at": "2026-06-29T20:09:02Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3911",
+      "url": "https://github.com/LMCache/LMCache/issues/3911",
+      "title": "[Bug] Excessive CPU RAM usage when combining --mamba-cache-mode align with LMCacheMPConnector engine_driven SHM transfer mode",
+      "created_at": "2026-06-27T08:31:01Z",
+      "updated_at": "2026-07-01T03:17:50Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3889",
+      "url": "https://github.com/LMCache/LMCache/issues/3889",
+      "title": "TRT-LLM connector: _TRTLLM_KERNEL_BATCH_SIZE (32) exceeds c_ops kernel's 4-object cap → store fails for prompts >4 chunks",
+      "created_at": "2026-06-26T00:28:40Z",
+      "updated_at": "2026-06-26T00:28:40Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3894",
+          "url": "https://github.com/LMCache/LMCache/pull/3894",
+          "title": "[Bugfix] trtllm: cap kernel object batch at 4 to match c_ops limit (#3889)",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "fix/3889-trtllm-kernel-batch-cap",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3889 search; covered expressions: #3889, Fixes #3889, Closes #3889, Related-to #3889, Refs #3889"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3868",
+      "url": "https://github.com/LMCache/LMCache/issues/3868",
+      "title": "[CLI] Could the client commands share one HTTP helper?",
+      "created_at": "2026-06-25T01:11:56Z",
+      "updated_at": "2026-06-25T17:27:17Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#1555",
+          "url": "https://github.com/LMCache/LMCache/pull/1555",
+          "title": "Optimized token chunking with PyTorch's unfold instead of loop slicing.",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "patch_03",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3868 search; covered expressions: #3868, Fixes #3868, Closes #3868, Related-to #3868, Refs #3868"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#1638",
+          "url": "https://github.com/LMCache/LMCache/pull/1638",
+          "title": "[Core] Add async Redis cluster connector + unit tests",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2025-10-01T09:44:15Z",
+          "base": "dev",
+          "head": "new-redis-cluster-connector",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3868 search; covered expressions: #3868, Fixes #3868, Closes #3868, Related-to #3868, Refs #3868"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3867",
+          "url": "https://github.com/LMCache/LMCache/pull/3867",
+          "title": "[CLI] Add `describe engine` command",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-30T00:23:37Z",
+          "base": "dev",
+          "head": "gfi/3720-describe-engine",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3868"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #3868 search; covered expressions: #3868, Fixes #3868, Closes #3868, Related-to #3868, Refs #3868"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3898",
+          "url": "https://github.com/LMCache/LMCache/pull/3898",
+          "title": "[Refactor][CLI] share one HTTP helper across client commands (#3868)",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "fix/3868-cli-shared-http-helper",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3868 search; covered expressions: #3868, Fixes #3868, Closes #3868, Related-to #3868, Refs #3868"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3933",
+          "url": "https://github.com/LMCache/LMCache/pull/3933",
+          "title": "Share CLI HTTP helpers",
+          "state": "closed",
+          "draft": true,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "codex/share-cli-http-helpers",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3868 search; covered expressions: #3868, Fixes #3868, Closes #3868, Related-to #3868, Refs #3868"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3934",
+          "url": "https://github.com/LMCache/LMCache/pull/3934",
+          "title": "Share CLI HTTP helpers",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "fix/share-cli-http-helpers",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3868 search; covered expressions: #3868, Fixes #3868, Closes #3868, Related-to #3868, Refs #3868"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3865",
+      "url": "https://github.com/LMCache/LMCache/issues/3865",
+      "title": "[Feature] Provide collect_env.py script for automatic environment reporting in bug issues",
+      "created_at": "2026-06-24T18:23:07Z",
+      "updated_at": "2026-06-25T08:53:33Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#1413",
+          "url": "https://github.com/LMCache/LMCache/pull/1413",
+          "title": "[Bugfix] Fix Prefill returns before all kv store operations complete",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "bugfix/prefill-wait-for-store",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3865 search; covered expressions: #3865, Fixes #3865, Closes #3865, Related-to #3865, Refs #3865"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3874",
+          "url": "https://github.com/LMCache/LMCache/pull/3874",
+          "title": "Add LMCache environment report script",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "gfi/collect-env",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3865#issuecomment-4797487481"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3913",
+          "url": "https://github.com/LMCache/LMCache/pull/3913",
+          "title": "feat(tools): add collect_env.py for automatic environment reporting",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "feat/collect-env-script",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "timeline-commit",
+              "detail": "referenced:9139728f9a5f0835f6b56a415e90f00ed3310826"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #3865 search; covered expressions: #3865, Fixes #3865, Closes #3865, Related-to #3865, Refs #3865"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#4104",
+          "url": "https://github.com/LMCache/LMCache/pull/4104",
+          "title": "chore(deps): bump github/codeql-action/init from 4.30.8 to 4.37.0",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "dependabot/github_actions/github/codeql-action/init-4.37.0",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3865 search; covered expressions: #3865, Fixes #3865, Closes #3865, Related-to #3865, Refs #3865"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3861",
+      "url": "https://github.com/LMCache/LMCache/issues/3861",
+      "title": "CI: gate nightly vLLM before using it as the LMCache test baseline",
+      "created_at": "2026-06-24T11:44:07Z",
+      "updated_at": "2026-06-28T01:14:05Z",
+      "labels": [
+        "Testing",
+        "ci/cd",
+        "RFC",
+        "vllm",
+        "mp_mode"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3910",
+          "url": "https://github.com/LMCache/LMCache/pull/3910",
+          "title": "ci: pin vLLM nightly to the canary-verified version",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-29T19:26:44Z",
+          "base": "dev",
+          "head": "feat/pin-vllm-from-tested-branch",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3861"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3920",
+          "url": "https://github.com/LMCache/LMCache/pull/3920",
+          "title": "[CI] Supports timer trigger test vllm and record",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-28T03:21:09Z",
+          "base": "dev",
+          "head": "zlytest",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3861"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3856",
+      "url": "https://github.com/LMCache/LMCache/issues/3856",
+      "title": "Tracking: MetaX MACA Backend Support Roadmap",
+      "created_at": "2026-06-24T07:06:42Z",
+      "updated_at": "2026-06-25T16:22:29Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3880",
+          "url": "https://github.com/LMCache/LMCache/pull/3880",
+          "title": "feat: add MACA platform p0 helpers",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "dev",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3856"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #3856 search; covered expressions: #3856, Fixes #3856, Closes #3856, Related-to #3856, Refs #3856"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3855",
+      "url": "https://github.com/LMCache/LMCache/issues/3855",
+      "title": "[Bug] SGLang deadlocks due to KV retrieve",
+      "created_at": "2026-06-24T02:58:59Z",
+      "updated_at": "2026-07-12T06:20:58Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3189",
+          "url": "https://github.com/LMCache/LMCache/pull/3189",
+          "title": "[Bugfix] Fix LocalCPUBackend recovery when pinned CPU chunks block eviction",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-02T00:06:47Z",
+          "base": "dev",
+          "head": "lazy_bugfix",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3855"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#4036",
+          "url": "https://github.com/LMCache/LMCache/pull/4036",
+          "title": "fix(disk): release disk_lock and roll back on staging-allocation failure (SGLang deadlock), fixes #3855",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "fix/disk-retrieve-staging-deadlock",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3855#issuecomment-4906870615"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #3855 search; covered expressions: #3855, Fixes #3855, Closes #3855, Related-to #3855, Refs #3855"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3834",
+      "url": "https://github.com/LMCache/LMCache/issues/3834",
+      "title": "Race condition in `TensorMemoryAllocator.memcheck()` causes false health failure during lazy expansion",
+      "created_at": "2026-06-23T07:49:38Z",
+      "updated_at": "2026-06-23T07:49:38Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#2407",
+          "url": "https://github.com/LMCache/LMCache/pull/2407",
+          "title": "[Core] Introduce lazy memory allocator",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-01-15T04:27:45Z",
+          "base": "dev",
+          "head": "local-dev/lazy-alloc",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3834"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3833",
+          "url": "https://github.com/LMCache/LMCache/pull/3833",
+          "title": "Fix race condition in `memcheck()` during `LazyMemoryAllocator` expansion",
+          "state": "open",
+          "draft": true,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "fix/memcheck-race-lazy-expansion",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3834 search; covered expressions: #3834, Fixes #3834, Closes #3834, Related-to #3834, Refs #3834"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3831",
+      "url": "https://github.com/LMCache/LMCache/issues/3831",
+      "title": "S3L2Adapter GET callback can write past MemoryObj bounds on oversized responses",
+      "created_at": "2026-06-23T05:34:25Z",
+      "updated_at": "2026-06-23T05:34:25Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3832",
+          "url": "https://github.com/LMCache/LMCache/pull/3832",
+          "title": "fix: bounds-check S3L2Adapter GET to prevent writing past MemoryObj (#3831)",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "fix/3831-s3-get-bounds",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "timeline-commit",
+              "detail": "referenced:bd495113d618510e3950dc82f3540f221994b742"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #3831 search; covered expressions: #3831, Fixes #3831, Closes #3831, Related-to #3831, Refs #3831"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#4124",
+          "url": "https://github.com/LMCache/LMCache/pull/4124",
+          "title": "style(s3_connector): convert f-string log calls to %-format (G004)",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-17T20:49:14Z",
+          "base": "dev",
+          "head": "style/g004-s3-connector",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3831 search; covered expressions: #3831, Fixes #3831, Closes #3831, Related-to #3831, Refs #3831"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3809",
+      "url": "https://github.com/LMCache/LMCache/issues/3809",
+      "title": "[Bug] lmcache bench engine fails when vLLM uses --served-model-name: model alias vs HF path mismatch",
+      "created_at": "2026-06-22T07:47:58Z",
+      "updated_at": "2026-06-22T07:47:58Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3814",
+          "url": "https://github.com/LMCache/LMCache/pull/3814",
+          "title": "[Bench] Support --served-model-name in engine bench (alias vs HF path)",
+          "state": "open",
+          "draft": true,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "fix/bench-served-model-name",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3809 search; covered expressions: #3809, Fixes #3809, Closes #3809, Related-to #3809, Refs #3809"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3753",
+      "url": "https://github.com/LMCache/LMCache/issues/3753",
+      "title": "Reduce bringup time with parallel and batched recovery slot-header validation",
+      "created_at": "2026-06-18T07:01:02Z",
+      "updated_at": "2026-06-30T02:37:30Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3835",
+          "url": "https://github.com/LMCache/LMCache/pull/3835",
+          "title": "Reduce bringup time with parallel and batched recovery slot-header validation",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "priv/dg/raw-block-multithreads-recovery",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3753#issuecomment-4839368042"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #3753 search; covered expressions: #3753, Fixes #3753, Closes #3753, Related-to #3753, Refs #3753"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3891",
+          "url": "https://github.com/LMCache/LMCache/pull/3891",
+          "title": "[Fix][RawBlock] Bounce unaligned buffers in io_uring uring_cmd read paths",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "fix/rawblock-uring-cmd-bounce-batched",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3753#issuecomment-4839368042"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3752",
+      "url": "https://github.com/LMCache/LMCache/issues/3752",
+      "title": "[Feature] L1/L2/L3 cache hit rate observability — Prometheus metrics, OTel spans & per-request JSONL trace",
+      "created_at": "2026-06-18T03:13:45Z",
+      "updated_at": "2026-07-28T13:59:52Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3919",
+          "url": "https://github.com/LMCache/LMCache/pull/3919",
+          "title": "feat(observability): per-tier (L2/L3/remote) cache-hit token metrics (#3752)",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "feat/per-tier-hit-metrics",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3752 search; covered expressions: #3752, Fixes #3752, Closes #3752, Related-to #3752, Refs #3752"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3749",
+      "url": "https://github.com/LMCache/LMCache/issues/3749",
+      "title": "feat: native Google Cloud Storage (GCS) connector (parity with S3, no NIXL dependency)",
+      "created_at": "2026-06-18T02:00:50Z",
+      "updated_at": "2026-06-28T02:07:02Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#2141",
+          "url": "https://github.com/LMCache/LMCache/pull/2141",
+          "title": "feat: Add Azure Blob Storage backend support for LMCache KV cache storage",
+          "state": "closed",
+          "draft": true,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "dev",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3749"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3160",
+          "url": "https://github.com/LMCache/LMCache/pull/3160",
+          "title": "Add support for `AZURE_BLOB` NIXL backend",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-05-08T15:57:05Z",
+          "base": "dev",
+          "head": "azure-blob-support",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3749"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3686",
+          "url": "https://github.com/LMCache/LMCache/pull/3686",
+          "title": "feat: add native Azure Blob Storage connector (#3575)",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-08T01:49:17Z",
+          "base": "dev",
+          "head": "feat/azure-blob-connector",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3749"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3921",
+          "url": "https://github.com/LMCache/LMCache/pull/3921",
+          "title": "feat: add GCS L2 adapter for MP Mode distributed KV cache",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "feat/gcs-mp-l2-adapter-clean",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3749 search; covered expressions: #3749, Fixes #3749, Closes #3749, Related-to #3749, Refs #3749"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3922",
+          "url": "https://github.com/LMCache/LMCache/pull/3922",
+          "title": "feat: add GCS L2 adapter for MP Mode distributed KV cache",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "feat/gcs-mp-l2-adapter-clean",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3749 search; covered expressions: #3749, Fixes #3749, Closes #3749, Related-to #3749, Refs #3749"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3923",
+          "url": "https://github.com/LMCache/LMCache/pull/3923",
+          "title": "feat: add GCS L2 adapter for MP Mode distributed KV cache",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "feat/gcs-mp-l2-adapter-clean",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "timeline-commit",
+              "detail": "referenced:31b6b5f5720b9c21c496454827d8cce371cb2f31"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #3749 search; covered expressions: #3749, Fixes #3749, Closes #3749, Related-to #3749, Refs #3749"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3720",
+      "url": "https://github.com/LMCache/LMCache/issues/3720",
+      "title": "[Good second issue] Extending the LMCache CLI",
+      "created_at": "2026-06-16T08:19:09Z",
+      "updated_at": "2026-07-05T06:33:18Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3678",
+          "url": "https://github.com/LMCache/LMCache/pull/3678",
+          "title": "[refactor] refactor CLI for multi sub commands ",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-22T07:46:45Z",
+          "base": "dev",
+          "head": "refactor-cli",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3720#issuecomment-4725283049"
+            },
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3720#issuecomment-4781939699"
+            },
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3720"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3719",
+          "url": "https://github.com/LMCache/LMCache/pull/3719",
+          "title": "[docs] add cli extension docs",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-22T08:44:40Z",
+          "base": "dev",
+          "head": "docs/extension",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3720#issuecomment-4725283049"
+            },
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3720#issuecomment-4766540133"
+            },
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3720#issuecomment-4775194648"
+            },
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3720#issuecomment-4781939699"
+            },
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3720"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3842",
+          "url": "https://github.com/LMCache/LMCache/pull/3842",
+          "title": "Add CLI command tree inspector",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "gfi/3720-list-commands",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3720#issuecomment-4781939699"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #3720 search; covered expressions: #3720, Fixes #3720, Closes #3720, Related-to #3720, Refs #3720"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3867",
+          "url": "https://github.com/LMCache/LMCache/pull/3867",
+          "title": "[CLI] Add `describe engine` command",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-30T00:23:37Z",
+          "base": "dev",
+          "head": "gfi/3720-describe-engine",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3720 search; covered expressions: #3720, Fixes #3720, Closes #3720, Related-to #3720, Refs #3720"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3971",
+          "url": "https://github.com/LMCache/LMCache/pull/3971",
+          "title": "[CLI] Add `query kvcache` lookup mode",
+          "state": "open",
+          "draft": true,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "gfi/3720-query-kvcache",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3720 search; covered expressions: #3720, Fixes #3720, Closes #3720, Related-to #3720, Refs #3720"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3710",
+      "url": "https://github.com/LMCache/LMCache/issues/3710",
+      "title": "MP-mode component-level K/V tier placement for asymmetric (FP16-K / FP8-V) serde",
+      "created_at": "2026-06-15T23:09:29Z",
+      "updated_at": "2026-07-16T15:46:16Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3277",
+          "url": "https://github.com/LMCache/LMCache/pull/3277",
+          "title": "[Feat][MP][1/N] Asymmetric Serde Support (eg., FP16 Key , FP8 Value)",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-16T03:41:57Z",
+          "base": "dev",
+          "head": "20260513-serdes-asym",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3710#issuecomment-4984940637"
+            },
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3710"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #3710 search; covered expressions: #3710, Fixes #3710, Closes #3710, Related-to #3710, Refs #3710"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3688",
+      "url": "https://github.com/LMCache/LMCache/issues/3688",
+      "title": "request abortion bring down vllm service",
+      "created_at": "2026-06-15T04:18:21Z",
+      "updated_at": "2026-07-06T18:23:54Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3687",
+          "url": "https://github.com/LMCache/LMCache/pull/3687",
+          "title": "fix assert for aborted requests in scheduler",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "patch-2",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3688#issuecomment-4766610393"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #3688 search; covered expressions: #3688, Fixes #3688, Closes #3688, Related-to #3688, Refs #3688"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#4130",
+          "url": "https://github.com/LMCache/LMCache/pull/4130",
+          "title": "[Docs] Add SGLang-to-vLLM KV cache sharing example",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-18T04:33:45Z",
+          "base": "dev",
+          "head": "docs/sglang-vllm-kv-sharing-example",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3688 search; covered expressions: #3688, Fixes #3688, Closes #3688, Related-to #3688, Refs #3688"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3685",
+      "url": "https://github.com/LMCache/LMCache/issues/3685",
+      "title": "Simultaneously configuring nixl and enable_async_loading causes vllm crash",
+      "created_at": "2026-06-15T02:43:17Z",
+      "updated_at": "2026-06-15T02:43:17Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3722",
+          "url": "https://github.com/LMCache/LMCache/pull/3722",
+          "title": "[Bugfix] Clear reqs_status on async lookup timeout to prevent KeyError on recall",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "wayne/fix-3685-async-lookup-timeout-keyerror",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "timeline-commit",
+              "detail": "referenced:9b94fb9486be94fc1bae226188d527d4d42478c2"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #3685 search; covered expressions: #3685, Fixes #3685, Closes #3685, Related-to #3685, Refs #3685"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3766",
+          "url": "https://github.com/LMCache/LMCache/pull/3766",
+          "title": "Fix KeyError on lookup_cache re-query after async lookup timeout",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "fix/async-lookup-requery-keyerror",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3685 search; covered expressions: #3685, Fixes #3685, Closes #3685, Related-to #3685, Refs #3685"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3675",
+      "url": "https://github.com/LMCache/LMCache/issues/3675",
+      "title": "feature(multiprocess): add device-agnostic base DeviceIPCWrapper for KV-cache IPC",
+      "created_at": "2026-06-14T03:30:29Z",
+      "updated_at": "2026-06-24T07:43:45Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3703",
+          "url": "https://github.com/LMCache/LMCache/pull/3703",
+          "title": "feat(mp): introduce device-agnostic DeviceIPCWrapper base for KV-cache IPC",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-22T20:34:52Z",
+          "base": "dev",
+          "head": "enable_device_ipc_wrapper",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3675 search; covered expressions: #3675, Fixes #3675, Closes #3675, Related-to #3675, Refs #3675"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3674",
+      "url": "https://github.com/LMCache/LMCache/issues/3674",
+      "title": "[Refactor][Platform]: Move GPUKVFormat into a header file not coupled to accelerator",
+      "created_at": "2026-06-14T02:35:31Z",
+      "updated_at": "2026-06-14T06:31:48Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3676",
+          "url": "https://github.com/LMCache/LMCache/pull/3676",
+          "title": "refactor: move KV-transfer enums into a backend-agnostic header",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-18T03:36:35Z",
+          "base": "dev",
+          "head": "refactor/3674-kv-format-header",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3674 search; covered expressions: #3674, Fixes #3674, Closes #3674, Related-to #3674, Refs #3674"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3788",
+          "url": "https://github.com/LMCache/LMCache/pull/3788",
+          "title": "refactor: single-source the EngineKVFormat enum via engine_kv_format.def",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "refactor/single-source-kv-format",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "timeline-commit",
+              "detail": "referenced:e877b1b307561027b28181885014aa27e2fabf0b"
+            },
+            {
+              "kind": "reference-search",
+              "detail": "broad #3674 search; covered expressions: #3674, Fixes #3674, Closes #3674, Related-to #3674, Refs #3674"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3670",
+      "url": "https://github.com/LMCache/LMCache/issues/3670",
+      "title": "It may be a good idea to separate the k8s operator code from the llmcache code base.",
+      "created_at": "2026-06-13T09:28:08Z",
+      "updated_at": "2026-06-13T09:28:08Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#1334",
+          "url": "https://github.com/LMCache/LMCache/pull/1334",
+          "title": "[metrics] add memory related metrics",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2025-08-15T01:40:43Z",
+          "base": "dev",
+          "head": "cpu-metrics",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3670 search; covered expressions: #3670, Fixes #3670, Closes #3670, Related-to #3670, Refs #3670"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3661",
+      "url": "https://github.com/LMCache/LMCache/issues/3661",
+      "title": "Support KV cache events in MP mode (for Dynamo KV-aware routing)",
+      "created_at": "2026-06-12T19:28:15Z",
+      "updated_at": "2026-06-26T18:43:22Z",
+      "labels": [
+        "help wanted"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3594",
+          "url": "https://github.com/LMCache/LMCache/pull/3594",
+          "title": "chore(deps): bump pre-commit from 4.5.0 to 4.6.0 in the minor-update group across 1 directory",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-13T22:43:59Z",
+          "base": "dev",
+          "head": "dependabot/pip/minor-update-cc73f56f53",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3661 search; covered expressions: #3661, Fixes #3661, Closes #3661, Related-to #3661, Refs #3661"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3938",
+          "url": "https://github.com/LMCache/LMCache/pull/3938",
+          "title": "feat: support KV cache events in MP mode for Dynamo KV-aware routing",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "feat/mp-dynamo-kv-events",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3661 search; covered expressions: #3661, Fixes #3661, Closes #3661, Related-to #3661, Refs #3661"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3659",
+      "url": "https://github.com/LMCache/LMCache/issues/3659",
+      "title": "Feature: KV Cache Hit/Miss Explainability Dashboard",
+      "created_at": "2026-06-12T18:19:54Z",
+      "updated_at": "2026-06-27T00:46:14Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#2213",
+          "url": "https://github.com/LMCache/LMCache/pull/2213",
+          "title": "auto store remote to local pool",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2025-12-31T04:24:13Z",
+          "base": "dev",
+          "head": "save_d_cache_1",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3659 search; covered expressions: #3659, Fixes #3659, Closes #3659, Related-to #3659, Refs #3659"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3205",
+          "url": "https://github.com/LMCache/LMCache/pull/3205",
+          "title": "[observability]update dashboard metrics",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-05-06T19:27:55Z",
+          "base": "dev",
+          "head": "granfana-dashboard-refactor",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3659#issuecomment-4694733828"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3607",
+          "url": "https://github.com/LMCache/LMCache/pull/3607",
+          "title": "[observability] blend server trace sub-spans + V3 hit-rate breakdown",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-11T02:39:45Z",
+          "base": "dev",
+          "head": "feat/cb-v3-server-spans",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3659#issuecomment-4694733828"
+            },
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3659#issuecomment-4814403785"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#4281",
+          "url": "https://github.com/LMCache/LMCache/pull/4281",
+          "title": "[MP][Observability] L1/L2 hit attribution and early-exit reason on lookup END",
+          "state": "open",
+          "draft": true,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "feat/mp-lookup-outcome-attribution",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3659 search; covered expressions: #3659, Fixes #3659, Closes #3659, Related-to #3659, Refs #3659"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3656",
+      "url": "https://github.com/LMCache/LMCache/issues/3656",
+      "title": "Query: Does LMCache support DeepSeek-V3.2 and GLM-5.1?",
+      "created_at": "2026-06-12T14:13:48Z",
+      "updated_at": "2026-06-12T19:54:28Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3654",
+      "url": "https://github.com/LMCache/LMCache/issues/3654",
+      "title": "[RFC][MP] L1 backend extension points",
+      "created_at": "2026-06-12T10:21:45Z",
+      "updated_at": "2026-06-22T15:32:19Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3584",
+          "url": "https://github.com/LMCache/LMCache/pull/3584",
+          "title": "[Feat][MP] Support Device-DAX as hybrid L1 cache overflow",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-17T20:30:51Z",
+          "base": "dev",
+          "head": "devdax-l1-zero-copy",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3654#issuecomment-4734366320"
+            },
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3654"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3589",
+          "url": "https://github.com/LMCache/LMCache/pull/3589",
+          "title": "[core] Add GDS L1 slab-file tier (cuFile DMA) for MP mode",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-10T19:32:53Z",
+          "base": "dev",
+          "head": "gds-mp-v2",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3654"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#4052",
+          "url": "https://github.com/LMCache/LMCache/pull/4052",
+          "title": "[MP][Maru] Maru CXL L1 backend for MP mode",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "maru-mp-l1",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3654 search; covered expressions: #3654, Fixes #3654, Closes #3654, Related-to #3654, Refs #3654"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3652",
+      "url": "https://github.com/LMCache/LMCache/issues/3652",
+      "title": "[RFC] Make hybrid L1 placement policy an explicit extension point",
+      "created_at": "2026-06-12T08:19:14Z",
+      "updated_at": "2026-06-13T07:06:03Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#1096",
+          "url": "https://github.com/LMCache/LMCache/pull/1096",
+          "title": "[ADAPTER|vLLM] fix: Handle the prefix cache hit >= num_external_hit_tokens case avoid storing invoked",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2025-07-25T22:26:45Z",
+          "base": "dev",
+          "head": "handlePrefixCacheHit",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3652 search; covered expressions: #3652, Fixes #3652, Closes #3652, Related-to #3652, Refs #3652"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3584",
+          "url": "https://github.com/LMCache/LMCache/pull/3584",
+          "title": "[Feat][MP] Support Device-DAX as hybrid L1 cache overflow",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-06-17T20:30:51Z",
+          "base": "dev",
+          "head": "devdax-l1-zero-copy",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3652#issuecomment-4692841375"
+            },
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3652#issuecomment-4697594613"
+            },
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3652"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3594",
+          "url": "https://github.com/LMCache/LMCache/pull/3594",
+          "title": "chore(deps): bump pre-commit from 4.5.0 to 4.6.0 in the minor-update group across 1 directory",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-13T22:43:59Z",
+          "base": "dev",
+          "head": "dependabot/pip/minor-update-cc73f56f53",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3652 search; covered expressions: #3652, Fixes #3652, Closes #3652, Related-to #3652, Refs #3652"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3650",
+      "url": "https://github.com/LMCache/LMCache/issues/3650",
+      "title": "double unpin warnings occur when run as a vllm plugin",
+      "created_at": "2026-06-12T06:55:26Z",
+      "updated_at": "2026-06-12T07:08:48Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3385",
+          "url": "https://github.com/LMCache/LMCache/pull/3385",
+          "title": "[Fix]: Skip unpin for non-pinned objects in cleanup_memory_objs",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-05-26T20:59:10Z",
+          "base": "dev",
+          "head": "fix/fix-unpin-issue",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/LMCache/LMCache/issues/3650"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3651",
+          "url": "https://github.com/LMCache/LMCache/pull/3651",
+          "title": "fix double unpin",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "patch-1",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3650 search; covered expressions: #3650, Fixes #3650, Closes #3650, Related-to #3650, Refs #3650"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3641",
+      "url": "https://github.com/LMCache/LMCache/issues/3641",
+      "title": "[Discussion][Feature] Add new store/prefetch policy options",
+      "created_at": "2026-06-11T17:13:48Z",
+      "updated_at": "2026-06-22T05:50:28Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#3594",
+          "url": "https://github.com/LMCache/LMCache/pull/3594",
+          "title": "chore(deps): bump pre-commit from 4.5.0 to 4.6.0 in the minor-update group across 1 directory",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-13T22:43:59Z",
+          "base": "dev",
+          "head": "dependabot/pip/minor-update-cc73f56f53",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3641 search; covered expressions: #3641, Fixes #3641, Closes #3641, Related-to #3641, Refs #3641"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3640",
+      "url": "https://github.com/LMCache/LMCache/issues/3640",
+      "title": "[Bug] LMCacheMPConnector under-stores prompt chunks with chunked prefill, causing warm cache misses",
+      "created_at": "2026-06-11T16:46:44Z",
+      "updated_at": "2026-06-13T23:35:12Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#912",
+          "url": "https://github.com/LMCache/LMCache/pull/912",
+          "title": "[optimize] boost local_disk_backend submit_put_task performance",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "llc_test",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3640 search; covered expressions: #3640, Fixes #3640, Closes #3640, Related-to #3640, Refs #3640"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#4050",
+          "url": "https://github.com/LMCache/LMCache/pull/4050",
+          "title": "docs: add CPU vLLM reproduction guide for issue 3640",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "codex/update-issue-3640-cpu-vllm-doc",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3640 search; covered expressions: #3640, Fixes #3640, Closes #3640, Related-to #3640, Refs #3640"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#4051",
+          "url": "https://github.com/LMCache/LMCache/pull/4051",
+          "title": "docs: update issue 3640 CPU vLLM repro",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "codex/update-issue-3640-cpu-vllm-doc",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3640 search; covered expressions: #3640, Fixes #3640, Closes #3640, Related-to #3640, Refs #3640"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3628",
+      "url": "https://github.com/LMCache/LMCache/issues/3628",
+      "title": "Controller manager fails to decode worker messages",
+      "created_at": "2026-06-10T15:45:29Z",
+      "updated_at": "2026-07-03T12:10:25Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "LMCache/LMCache#2330",
+          "url": "https://github.com/LMCache/LMCache/pull/2330",
+          "title": "[Controller] Use dealer mode for worker->Controller zmq communication",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2025-12-30T08:53:53Z",
+          "base": "dev",
+          "head": "hb_stuck_controller2",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-comment",
+              "detail": "https://github.com/LMCache/LMCache/issues/3628#issuecomment-4677852986"
+            }
+          ]
+        },
+        {
+          "pr": "LMCache/LMCache#3895",
+          "url": "https://github.com/LMCache/LMCache/pull/3895",
+          "title": "[Bugfix] controller: parse ROUTER payload as the last frame (#3628)",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "dev",
+          "head": "fix/3628-controller-router-frame-parse",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #3628 search; covered expressions: #3628, Fixes #3628, Closes #3628, Related-to #3628, Refs #3628"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "LMCache/LMCache#3624",
+      "url": "https://github.com/LMCache/LMCache/issues/3624",
+      "title": "跨实例共享，lmcache server不支持跨节点",
+      "created_at": "2026-06-10T09:52:42Z",
+      "updated_at": "2026-06-11T19:29:32Z",
+      "labels": [],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    }
+  ],
+  "local_exclusion": {
+    "enabled": true,
+    "excluded_total": 1,
+    "excluded": [
+      {
+        "issue": "LMCache/LMCache#4086",
+        "reasons": [
+          "known-evidence"
+        ],
+        "sources": [
+          "screenings/LMCache-LMCache/2026-08-03-lmcache-4086-evidence/evidence/4086.yaml"
+        ]
+      }
+    ]
+  },
+  "rate_limit": {
+    "core": {
+      "limit": "5000",
+      "remaining": "4361",
+      "reset": "1785917926",
+      "resource": "core"
+    },
+    "search": {
+      "limit": "30",
+      "remaining": "23",
+      "reset": "1785915602",
+      "resource": "search"
+    }
+  },
+  "ledger": {
+    "index": "/home/sun/projects/zhaiyezi/discovery/LMCache-LMCache/INDEX.yaml",
+    "scan": "/home/sun/projects/zhaiyezi/discovery/LMCache-LMCache/scans/2026-08-05T07-34-41.996768Z.yaml"
+  }
+}

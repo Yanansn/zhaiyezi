@@ -1,0 +1,103 @@
+schema_version: 2
+task_id: dynamo-12694-deep-audit
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+status: completed
+request_ref: REQUEST.yaml
+outputs:
+  - RESULT.yaml
+  - REPORT.md
+actions_performed:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - run_tests
+  - write_result
+  - write_report
+actions_not_performed:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+validation:
+  - "Agent protocol validation passed before execution."
+  - "The Deep Audit request was the sole ready agent:terra task."
+  - "GitHub Issue #12694, its Timeline, PR metadata, and workflow-run job metadata were read."
+  - "YAML parsed for .github/workflows/pr.yaml and .github/actions/setup-snapshot-agent/action.yml at local HEAD addcbae7862baa036b46cc6e39ad83342e9360f8."
+  - "The current remote main commit 3de5663e9efdb60bedcb042e3b6c1d8427b148a2 was read through the GitHub API; its relevant workflow/action content matches the audited control flow."
+  - "The local Dynamo working tree remained clean."
+limitations:
+  - "No local Kubernetes, vCluster, Helm deployment, snapshot-agent image, or GitHub Actions runner was available for an end-to-end reproduction."
+  - "The local clone was not synchronized to remote main because a previous full upstream fetch timed out; current remote files were read separately through the GitHub API."
+  - "The public job metadata confirms job conclusions, but does not by itself prove the reported container-failure trigger or the exact scheduler race between GitHub and Helm."
+  - "No maintainer response, assignee, or explicit acceptance signal was present."
+
+issue_validity:
+  assessment: "The Issue describes a real CI control-flow failure mode supported by current source and one public workflow run. Its exact timeout-race explanation and deterministic image-change reproduction remain unverified in this environment."
+  reported_behavior:
+    - "A failing snapshot-agent DaemonSet is reported to make three setup jobs reach GitHub's 15-minute job limit at the same time as the Helm 15-minute timeout."
+    - "The Issue reports that the resulting cancelled setup jobs skip all three downstream checkpoint deploy tests while the aggregate deploy gate passes."
+  source_confirmed_behavior:
+    - "On current remote main, deploy-status-check accepts success, skipped, and cancelled results at .github/workflows/pr.yaml:104-132."
+    - "On current remote main, deploy-snapshot-agent-checkpoint-vllm, -sglang, and -trtllm each have timeout-minutes: 15 at .github/workflows/pr.yaml:1377-1489."
+    - "The composite setup-snapshot-agent action uses helm upgrade --install --wait --timeout 15m at .github/actions/setup-snapshot-agent/action.yml:75-91."
+    - "Each checkpoint deploy-test job requires its corresponding snapshot-agent setup result to equal success at .github/workflows/pr.yaml:1530-1685."
+  runtime_confirmed_behavior:
+    - "Public run 30908394768 records the three named Snapshot Agent Setup jobs as cancelled on 2026-08-04."
+    - "The same run records the three named DynamoCheckpoint Deploy Test jobs as skipped."
+    - "The same run records deploy-status-check as success."
+  unconfirmed_behavior:
+    - "That the proposed Dockerfile alteration was the trigger for the observed run."
+    - "That GitHub, rather than Helm, definitively won the reported timeout race."
+    - "That a pull request containing this run was mergeable solely because deploy-status-check succeeded."
+
+existing_work:
+  direct_implementation_pr: "empty observation: no PR title or body search hit referenced #12694, and the Issue has no linked closing PR."
+  maintainer_direction: "empty observation: the Issue has no comments, assignees, or maintainer decision in its public Timeline."
+  related_work_adjudication:
+    - item: "ai-dynamo/dynamo#10186"
+      relation: "historical related implementation"
+      fact: "Merged PR #10186 added checkpoint CI tests, setup-snapshot-agent, and the relevant pr.yaml workflow paths; it does not reference #12694 or implement its reported status-gate behavior."
+    - item: "ai-dynamo/dynamo#12542"
+      relation: "keyword-only candidate"
+      fact: "The open PR concerns a snapshot mount helper; it does not establish a relationship to #12694's CI timeout or status-gate behavior."
+
+code_path_map:
+  - file: .github/workflows/pr.yaml
+    symbol: deploy-status-check
+    relationship: "Aggregates deploy workflow needs under always(); its jq allow-list currently permits cancelled alongside success and skipped."
+  - file: .github/workflows/pr.yaml
+    symbol: deploy-snapshot-agent-checkpoint-vllm / -sglang / -trtllm
+    relationship: "Three setup jobs invoke setup-snapshot-agent and each set a 15-minute GitHub Actions job timeout."
+  - file: .github/actions/setup-snapshot-agent/action.yml
+    symbol: Install snapshot-agent
+    relationship: "Runs Helm with --wait and --timeout 15m, then validates the DaemonSet after Helm returns."
+  - file: .github/workflows/pr.yaml
+    symbol: deploy-test-checkpoint-vllm / -sglang / -trtllm
+    relationship: "Each downstream test is gated on the corresponding setup job having result success; a cancelled prerequisite therefore prevents the test steps from running."
+
+feasibility:
+  reproducibility: "medium: the Issue supplies a bounded CI/Kubernetes reproduction, but it cannot be executed locally in the available environment."
+  verification_route: "high for static workflow assertions and public workflow-run metadata; medium for a protected CI validation run."
+  change_scope: "small: the directly evidenced surface is the three workflow job timeouts and deploy-status-check result policy, subject to review of cancellation policy."
+  implementation_risk: "medium: accepting cancelled may have been intended for a different cancellation path, and increasing job limits affects CI capacity and wall-clock budget."
+  overall: medium
+
+classification: candidate-for-admission
+confidence: high
+evidence_refs:
+  - agent-work/tasks/dynamo-12694-screening/RESULT.yaml
+  - https://github.com/ai-dynamo/dynamo/issues/12694
+  - https://github.com/ai-dynamo/dynamo/actions/runs/30908394768
+  - https://github.com/ai-dynamo/dynamo/pull/10186
+  - https://github.com/ai-dynamo/dynamo/blob/3de5663e9efdb60bedcb042e3b6c1d8427b148a2/.github/workflows/pr.yaml
+  - https://github.com/ai-dynamo/dynamo/blob/3de5663e9efdb60bedcb042e3b6c1d8427b148a2/.github/actions/setup-snapshot-agent/action.yml
+next_action: "Await an explicit user decision before creating any implementation task; if approved, first capture a fresh target binding and validate the intended cancellation policy in CI."
+boundary: "This Deep Audit is a screening recommendation only. It does not authorize admission, implementation, target-fork Push, Pull Request creation, or any public GitHub action."

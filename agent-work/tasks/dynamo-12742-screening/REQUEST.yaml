@@ -1,0 +1,46 @@
+schema_version: 2
+task_id: dynamo-12742-screening
+task_type: screening-record
+created_by: agent:luna
+decision_author: agent:luna
+materialized_by: agent:luna
+assigned_agent: agent:luna
+repository: ai-dynamo/dynamo
+issue: ai-dynamo/dynamo#12742
+status: ready
+input_refs:
+  - discovery/ai-dynamo-dynamo/INDEX.yaml
+  - https://github.com/ai-dynamo/dynamo/issues/12742
+goal: >-
+  Run a bounded Pre-Deep-Audit Screening for Dynamo#12742: verify the reported
+  Rust/Python Prometheus code-generation drift, existing work, environment
+  feasibility, and the smallest safe next step without modifying upstream.
+allowed_actions:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - write_result
+  - write_report
+prohibited_actions:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+expected_outputs:
+  - agent-work/tasks/dynamo-12742-screening/RESULT.yaml
+  - agent-work/tasks/dynamo-12742-screening/REPORT.md
+approval_required: false
+target_repository:
+  name: ai-dynamo/dynamo
+  phase: evidence
+  local:
+    path: /home/sun/py/dynamo
+    branch: fix/ci-checkpoint-gate-12694
+    head: ed60d3e2f0c2ce68d80a5de6bf1d2d056cbb73b1
+    discovery: true

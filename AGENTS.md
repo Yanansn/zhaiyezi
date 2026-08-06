@@ -76,6 +76,22 @@ Evidence completed 不等于 admission、selected 或 implementation authorizati
 Repository binding、target repository、evidence 和 screening 是保留的独立能力，
 不改变公开操作权限。
 
+## Issue 类型补充
+
+Screening 结果可以记录独立的 `issue_type`，用于描述 Issue 的技术性质，不能替代
+classification、confidence、feasibility 或 Admission 判断。
+
+`observability-enhancement` 表示日志、指标、trace、配置可见性或诊断能力增强。
+这类 Issue 通常不是 Bug；必须单独核查维护者意向、已有配置/诊断基础、预期修改范围、
+验证入口和工作量。存在可复用基础不等于已被项目接受，也不自动提升优先级。
+
+对 `observability-enhancement`，至少记录：
+
+- 需要暴露的实际运行事实和脱敏边界；
+- 是否已有 config dump、日志、指标或 trace 机制；
+- 维护者/作者是否表达实现意向；
+- 预计修改范围、测试入口和运行环境依赖。
+
 ## Pre-Deep-Audit Gate
 
 Deep Audit 前必须先完成一次低成本、实时的继续性检查。至少确认：

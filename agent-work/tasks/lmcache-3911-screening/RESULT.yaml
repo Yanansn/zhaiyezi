@@ -1,0 +1,161 @@
+schema_version: 2
+task_id: lmcache-3911-screening
+created_by: agent:luna
+decision_author: agent:luna
+materialized_by: agent:luna
+status: completed
+revision: 1
+request_ref: REQUEST.yaml
+outputs:
+  - RESULT.yaml
+actions_performed:
+  - read_repository
+  - repository_read
+  - analyze_code
+actions_not_performed:
+  - modify_upstream_code
+  - upstream_write
+  - create_pull_request
+validation:
+  - "Public Issue read with gh: https://github.com/LMCache/LMCache/issues/3911"
+  - "Candidate cache read: candidates.json"
+  - "Target source baseline read: /home/sun/py/LMCache at f625b9733ad38c6b1bb3ba3d5083998ab5307ffb"
+  - "PR search returned empty observation for broad #3911 and title-keyword query"
+  - "Local environment probe: pytest, torch, and vLLM are not installed"
+limitations:
+  - no GPU or CUDA runtime
+  - pytest is not installed in the target environment
+  - torch is not installed in the target environment
+  - vLLM is not installed in the target environment
+  - no containerized Qwen reproduction
+  - no runtime memory measurement
+
+issue: LMCache/LMCache#3911
+classification: candidate-for-admission
+confidence: medium
+evidence_refs:
+  - https://github.com/LMCache/LMCache/issues/3911
+  - candidates.json
+  - agent-work/bindings/LMCache-LMCache.yaml
+
+issue_summary:
+  reported_behavior: >-
+    The reporter states that Qwen/Qwen3.5-2B with --mamba-cache-mode align and
+    LMCacheMPConnector using engine_driven SHM transfer causes vLLM worker CPU
+    RAM to exceed 100 GB during startup. The reporter also states that removing
+    either flag restores normal RAM usage.
+  follow_up_signal: >-
+    A contributor suggested trying lmcache-driven transfer mode; the reporter
+    replied that RAM still spiked, from 80 GB to 250 GB.
+  maintainer_intent: >-
+    No assignee, labels, milestone, project item, linked development item, or
+    maintainer acceptance signal was visible in the issue metadata read for this
+    screening.
+
+related_work:
+  explicit_issue_pr_search: empty-observation
+  broad_title_keyword_pr_search: empty-observation
+  candidate_cache_status: no_known_related_pr
+  note: >-
+    Empty observations are screening facts only; they do not prove that no
+    related implementation exists.
+
+pre_deep_audit_gate:
+  concrete_scope: >-
+    pass; the report names the affected model, vLLM flag, LMCache connector,
+    transfer mode, startup phase, and memory symptom.
+  public_evidence: >-
+    pass; the issue body and two comments are readable and define the observed
+    configuration and follow-up behavior.
+  target_binding: >-
+    pass; LMCache target source is readable at a clean local baseline.
+  verification_route: >-
+    pass for source-focused analysis and limited test-entry inspection; local
+    runtime reproduction is blocked by missing pytest, torch, vLLM, model, and
+    GPU/container setup.
+  runtime_dependencies: >-
+    Full confirmation needs vLLM, torch, container/model setup, and likely GPU
+    access to reproduce the reported startup memory profile.
+  effort_budget: >-
+    pass only for a bounded source Deep Audit that maps allocation and transfer
+    paths; fail for runtime reproduction under the current environment.
+  decision: eligible-for-bounded-source-deep-audit
+
+source_facts:
+  - file: lmcache/integration/vllm/lmcache_mp_connector.py
+    symbols:
+      - LMCacheMPConnector
+      - LMCacheMPConnector.start_load_kv
+      - LMCacheMPSchedulerAdapter
+    fact: >-
+      LMCacheMPConnector validates mamba step alignment, builds scheduler and
+      worker adapters from vLLM config, reads lmcache.mp extra config, and
+      submits batched retrieve requests from start_load_kv.
+  - file: lmcache/integration/vllm/vllm_multi_process_adapter.py
+    symbols:
+      - LMCacheMPSchedulerAdapter
+      - lmcache_tokens_per_chunk
+      - blocks_in_chunk
+    fact: >-
+      The scheduler adapter reads LMCache chunk size from the MP server and
+      derives blocks_in_chunk from LMCache chunk size and vLLM block size.
+  - file: lmcache/v1/platform/cpu/cache_context.py
+    symbols:
+      - CPUCacheContext
+      - tmp_cpu_buffer_
+      - get_tmp_chunk_gpu_buffer_batched
+    fact: >-
+      CPU cache context builds KV layer groups, optionally enables full
+      sliding-window KV behavior, and allocates a CPU temporary transfer buffer
+      sized from per-group chunk shapes and max_batch_size.
+  - file: lmcache/v1/kv_layer_groups.py
+    symbols:
+      - ObjectGroupInfo
+      - KVLayerGroupsManager.enable_full_sw_kv
+      - KVLayerGroupsManager.get_subchunk_sw_size_tokens
+    fact: >-
+      KV layer grouping explicitly models sliding-window or mamba KV caches,
+      and full_sw_kv changes the reported window size to the full LMCache chunk.
+  - file: lmcache/v1/distributed/memory_manager/l1_memory_manager.py
+    symbols:
+      - create_memory_allocator
+      - L1MemoryManager.allocate
+    fact: >-
+      L1 memory allocation chooses LazyMemoryAllocator or MixedMemoryAllocator
+      from config; a configured SHM name is normalized and used for
+      MixedMemoryAllocator.
+  - file: tests/v1/multiprocess/test_engine_driven_transfer.py
+    symbols:
+      - test_engine_context_shm_pool_info
+      - test_server_engine_driven_reregister_returns_existing_shm_response
+      - test_engine_driven_context_shm_store_retrieve_flow_with_mocked_mq
+    fact: >-
+      Existing tests cover engine-driven transfer and SHM context behavior, but
+      this screening did not find a test dedicated to mamba-cache-mode align
+      memory growth.
+
+feasibility:
+  reproducibility: "reported but not locally runtime-confirmed"
+  test_entry: "engine-driven SHM tests exist; execution is blocked locally by missing pytest and torch"
+  change_scope: "likely vLLM MP connector, CPU/SHM cache context, KV layer grouping, or transfer allocation tests; exact scope requires Deep Audit"
+  hardware: "full reproduction likely needs vLLM, torch, model/container setup, and GPU; source-only audit can proceed without GPU"
+  risk: "medium: hybrid/mamba KV geometry, SHM allocation, and vLLM connector lifecycle interact across scheduler and worker paths"
+  overall: medium
+
+confirmed_facts:
+  - "The issue is open and unassigned in the metadata read for this screening."
+  - "The report gives a concrete configuration and a memory-growth symptom."
+  - "The local source contains mamba/window-aware KV grouping and CPU/SHM transfer allocation paths."
+  - "Existing tests include engine-driven SHM transfer coverage."
+
+unconfirmed_facts:
+  - "The reported >100 GB or 250 GB RAM growth was not reproduced locally."
+  - "No root cause was established."
+  - "No implementation boundary was established."
+  - "No maintainer direction or acceptance signal was confirmed."
+
+next_action: >-
+  Prefer this candidate over RFC/query-style candidates for a bounded
+  source-only Deep Audit. Continue only if the user accepts medium confidence
+  and the no-runtime-reproduction limitation. Do not implement until Deep Audit
+  confirms a narrow source cause or a viable validation route.

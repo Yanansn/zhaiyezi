@@ -1,0 +1,895 @@
+{
+  "schema_version": 1,
+  "repository": "ai-dynamo/dynamo",
+  "generated_at": "2026-08-06T06:52:49.418417Z",
+  "query": {
+    "state": "open",
+    "assignee": "none",
+    "candidate_limit": 50,
+    "include_labels": [],
+    "exclude_labels": [],
+    "local_exclusion_enabled": true
+  },
+  "execution": {
+    "audit_workers": 2,
+    "api_request_pacing": "global"
+  },
+  "summary": {
+    "matched_total": 155,
+    "inspected": 50,
+    "audited_now": 10,
+    "reused_results": 40,
+    "related_pr_found": 29,
+    "no_known_related_pr": 21,
+    "insufficient_evidence": 0
+  },
+  "limitations": [],
+  "issues": [
+    {
+      "issue": "ai-dynamo/dynamo#12742",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12742",
+      "title": "[BUG]: prometheus_names.py is out of sync with Rust source",
+      "created_at": "2026-08-06T05:50:22Z",
+      "updated_at": "2026-08-06T05:51:14Z",
+      "labels": [
+        "bug",
+        "language::rust",
+        "python",
+        "metrics",
+        "observability"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12696",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12692",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12672",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12671",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12657",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12645",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12636",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12636",
+      "title": "[CONTRIBUTION]: Centralize worker component names in prometheus_names::component_names (PREFILL/BACKEND/ENCODE/DIFFUSION) & migrate hardcoded registration sites",
+      "created_at": "2026-08-04T17:25:30Z",
+      "updated_at": "2026-08-05T23:35:10Z",
+      "labels": [
+        "language::rust",
+        "backend::vllm",
+        "metrics",
+        "observability",
+        "backend::sglang",
+        "backend::trtllm",
+        "contribution-request"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "candidate_status": "author-claimed",
+      "author_claimed": {
+        "author": "aryangorwade",
+        "status": true,
+        "reason": "author_announced_draft_and_planned_pr",
+        "evidence": [
+          "https://github.com/ai-dynamo/dynamo/issues/12636#issuecomment-5188572086"
+        ],
+        "observed_at": "2026-08-06T06:56:06Z"
+      },
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12630",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12591",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12555",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12475",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12475",
+      "title": "[Dynamo MultiNode Kimi-K3] [H200 Recipe Please!] Kimi-K3 deployment on H200 (Hopper/SM90) hits FP8 MLA prefill kernel assertion",
+      "created_at": "2026-07-31T05:19:32Z",
+      "updated_at": "2026-07-31T05:20:38Z",
+      "labels": [
+        "bug",
+        "platform support",
+        "dynamo-runtime",
+        "backend::vllm",
+        "dep:draft"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12463",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12463",
+      "title": "[BUG]: vLLM disaggregated serving over InfiniBand returns garbage tokens when UCX_NET_DEVICES is unset on passthrough VMs",
+      "created_at": "2026-07-30T23:55:54Z",
+      "updated_at": "2026-08-01T06:24:47Z",
+      "labels": [
+        "bug",
+        "language::python",
+        "dynamo-runtime",
+        "nixl",
+        "backend::vllm",
+        "deployment::k8s",
+        "kvbm",
+        "Dynamo 1.3.0",
+        "runtime"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12460",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12441",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12383",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12360",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12360",
+      "title": "[CONTRIBUTION]: Make OnceLock Env var a !marco pattern",
+      "created_at": "2026-07-29T15:26:51Z",
+      "updated_at": "2026-08-03T15:53:13Z",
+      "labels": [
+        "language::rust",
+        "refactor",
+        "contribution-request",
+        "runtime"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "candidate_status": "author-claimed",
+      "author_claimed": {
+        "author": "elizabetht",
+        "status": true,
+        "reason": "author_announced_draft_and_planned_pr",
+        "evidence": [
+          "https://github.com/ai-dynamo/dynamo/issues/12360#issuecomment-5188332353"
+        ],
+        "observed_at": "2026-07-30T05:58:03Z"
+      },
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12356",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12355",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12355",
+      "title": "[BUG] vllm-runtime 1.3.0-dev.1-cuda13: baked flashinfer-jit-cache pin breaks any in-container vLLM upgrade (serve-time registry failure)",
+      "created_at": "2026-07-29T13:21:45Z",
+      "updated_at": "2026-07-29T13:22:36Z",
+      "labels": [
+        "dynamo-runtime",
+        "backend::vllm",
+        "runtime"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12349",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12344",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12340",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12324",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12317",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12317",
+      "title": "Log effective runtime defaults at startup for key serving knobs",
+      "created_at": "2026-07-28T22:02:26Z",
+      "updated_at": "2026-07-29T15:30:56Z",
+      "labels": [
+        "enhancement",
+        "dynamo-runtime",
+        "observability"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12314",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12312",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12312",
+      "title": "Make etcd lease TTL configurable for runtime discovery liveness",
+      "created_at": "2026-07-28T21:58:40Z",
+      "updated_at": "2026-08-03T13:39:56Z",
+      "labels": [
+        "enhancement",
+        "dynamo-runtime",
+        "discovery",
+        "fault-tolerance"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12311",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12310",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12307",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12307",
+      "title": "Let router selectors request strict DP-rank admission",
+      "created_at": "2026-07-28T21:53:22Z",
+      "updated_at": "2026-07-29T15:33:04Z",
+      "labels": [
+        "enhancement",
+        "language::rust",
+        "dynamo-runtime",
+        "router"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12306",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12306",
+      "title": "Track active-request ISL pressure by worker and DP rank for router selection",
+      "created_at": "2026-07-28T21:52:56Z",
+      "updated_at": "2026-07-29T15:34:01Z",
+      "labels": [
+        "enhancement",
+        "language::rust",
+        "dynamo-runtime",
+        "router"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12305",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12303",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12303",
+      "title": "Expose best device-tier overlap on router admission responses",
+      "created_at": "2026-07-28T21:47:00Z",
+      "updated_at": "2026-07-29T15:43:51Z",
+      "labels": [
+        "enhancement",
+        "language::rust",
+        "dynamo-runtime",
+        "metrics",
+        "observability",
+        "router"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12302",
+      "related_pr_status": "related_pr_found",
+      "related_prs": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12301",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12301",
+      "title": "Expose router queue and KV indexer operation metrics",
+      "created_at": "2026-07-28T21:42:42Z",
+      "updated_at": "2026-08-02T07:54:36Z",
+      "labels": [
+        "enhancement",
+        "language::rust",
+        "dynamo-runtime",
+        "metrics",
+        "observability",
+        "router"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12300",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12300",
+      "title": "Account for active request load in router worker selection",
+      "created_at": "2026-07-28T21:42:19Z",
+      "updated_at": "2026-07-29T15:29:48Z",
+      "labels": [
+        "enhancement",
+        "language::rust",
+        "dynamo-runtime",
+        "router"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12299",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12299",
+      "title": "Expose endpoint taint snapshots in Python bindings",
+      "created_at": "2026-07-28T21:41:48Z",
+      "updated_at": "2026-08-01T04:42:59Z",
+      "labels": [
+        "enhancement",
+        "language::python",
+        "dynamo-runtime",
+        "python",
+        "router",
+        "runtime"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12296",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12296",
+      "title": "Add opt-in graceful shutdown hooks for Python worker decorators",
+      "created_at": "2026-07-28T21:37:42Z",
+      "updated_at": "2026-07-28T21:38:32Z",
+      "labels": [
+        "enhancement",
+        "language::python",
+        "dynamo-runtime",
+        "runtime"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12293",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12293",
+      "title": "Support first-yield gating for Python-backed HTTP streams",
+      "created_at": "2026-07-28T21:35:16Z",
+      "updated_at": "2026-07-29T15:39:40Z",
+      "labels": [
+        "enhancement",
+        "dynamo-runtime",
+        "python",
+        "frontend"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12292",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12292",
+      "title": "Support graceful stop behavior on HTTP client disconnect",
+      "created_at": "2026-07-28T21:34:13Z",
+      "updated_at": "2026-08-03T13:39:58Z",
+      "labels": [
+        "language::rust",
+        "dynamo-runtime",
+        "dynamo-llm",
+        "frontend",
+        "fault-tolerance"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12290",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12290",
+      "title": "low-prio: Expose detached Python Context while preserving trace metadata",
+      "created_at": "2026-07-28T21:34:03Z",
+      "updated_at": "2026-07-28T23:14:40Z",
+      "labels": [
+        "enhancement",
+        "language::python",
+        "observability"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12289",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12289",
+      "title": "high-prio: Emit stable Anthropic cache token usage fields",
+      "created_at": "2026-07-28T21:33:06Z",
+      "updated_at": "2026-07-28T23:15:20Z",
+      "labels": [
+        "bug",
+        "language::rust",
+        "dynamo-llm",
+        "frontend"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "ai-dynamo/dynamo#11136",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11136",
+          "title": "feat: support multiple served model names (SGLang)",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "feat/multi-served-model-name",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #12289 search; covered expressions: #12289, Fixes #12289, Closes #12289, Related-to #12289, Refs #12289"
+            }
+          ]
+        },
+        {
+          "pr": "ai-dynamo/dynamo#12472",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12472",
+          "title": "fix(frontend): emit stable Anthropic cache_creation_input_tokens",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "fix/stable-anthropic-cache-token-fields--99b2faa7b505",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #12289 search; covered expressions: #12289, Fixes #12289, Closes #12289, Related-to #12289, Refs #12289"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12287",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12287",
+      "title": "Gate Gemma 4 reasoning parsing on explicit enable_thinking",
+      "created_at": "2026-07-28T21:23:41Z",
+      "updated_at": "2026-07-28T21:24:34Z",
+      "labels": [
+        "enhancement",
+        "language::rust",
+        "frontend"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "ai-dynamo/dynamo#11136",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11136",
+          "title": "feat: support multiple served model names (SGLang)",
+          "state": "closed",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "feat/multi-served-model-name",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #12287 search; covered expressions: #12287, Fixes #12287, Closes #12287, Related-to #12287, Refs #12287"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12286",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12286",
+      "title": "Emit Anthropic-native tool_use IDs when converting backend tool calls",
+      "created_at": "2026-07-28T21:23:30Z",
+      "updated_at": "2026-07-28T21:24:23Z",
+      "labels": [
+        "dynamo-llm",
+        "frontend"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "ai-dynamo/dynamo#12614",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12614",
+          "title": "fix(anthropic): emit Anthropic-native tool_use ids",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "fix/anthropic-tool-use-ids--71696a58d181",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #12286 search; covered expressions: #12286, Fixes #12286, Closes #12286, Related-to #12286, Refs #12286"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12285",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12285",
+      "title": "Delay Anthropic tool_use content_block_stop until streamed arguments are complete JSON",
+      "created_at": "2026-07-28T21:23:21Z",
+      "updated_at": "2026-07-29T15:28:37Z",
+      "labels": [
+        "bug",
+        "language::rust",
+        "frontend"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "ai-dynamo/dynamo#12464",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12464",
+          "title": "fix(anthropic): delay tool_use stop until JSON is complete",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "fix/anthropic-tool-json-stop",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #12285 search; covered expressions: #12285, Fixes #12285, Closes #12285, Related-to #12285, Refs #12285"
+            }
+          ]
+        },
+        {
+          "pr": "ai-dynamo/dynamo#12614",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12614",
+          "title": "fix(anthropic): emit Anthropic-native tool_use ids",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "fix/anthropic-tool-use-ids--71696a58d181",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #12285 search; covered expressions: #12285, Fixes #12285, Closes #12285, Related-to #12285, Refs #12285"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12284",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12284",
+      "title": "Preserve chat_template_args when converting Responses requests to Chat Completions",
+      "created_at": "2026-07-28T21:23:14Z",
+      "updated_at": "2026-08-03T15:53:18Z",
+      "labels": [
+        "bug",
+        "language::rust",
+        "dynamo-llm",
+        "frontend"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "ai-dynamo/dynamo#12477",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12477",
+          "title": "fix(responses): preserve chat_template_args during Responses to Chat Completions conversion",
+          "state": "closed",
+          "draft": true,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "rmccormick/responses-preserve-chat-template-args",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #12284 search; covered expressions: #12284, Fixes #12284, Closes #12284, Related-to #12284, Refs #12284"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12262",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12262",
+      "title": "[BUG]: flaky test: concurrent_rank_reset_waits_for_all_local_tiers races lower-tier event application",
+      "created_at": "2026-07-28T14:06:19Z",
+      "updated_at": "2026-07-29T13:51:18Z",
+      "labels": [
+        "bug",
+        "language::rust",
+        "ci",
+        "backend::vllm",
+        "kvbm"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "ai-dynamo/dynamo#12260",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12260",
+          "title": "feat(http): move frontend route extensions to a dedicated sub-router",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "feat/extension-sub-router",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/ai-dynamo/dynamo/issues/12262"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12252",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12252",
+      "title": "[BUG][CI]: live.rs kvbm-offload test module fails to compile (missing Arc/Mutex import)",
+      "created_at": "2026-07-28T09:11:05Z",
+      "updated_at": "2026-07-28T09:21:44Z",
+      "labels": [
+        "bug",
+        "language::rust",
+        "ci",
+        "backend::vllm",
+        "kvbm"
+      ],
+      "assignees": [],
+      "related_pr_status": "related_pr_found",
+      "related_pr_evidence": [
+        {
+          "pr": "ai-dynamo/dynamo#11917",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/11917",
+          "title": "feat(mocker): add live request engine",
+          "state": "closed",
+          "draft": false,
+          "merged": true,
+          "merged_at": "2026-07-23T00:25:38Z",
+          "base": "main",
+          "head": "feat/mocker-live-engine",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/ai-dynamo/dynamo/issues/12252"
+            }
+          ]
+        },
+        {
+          "pr": "ai-dynamo/dynamo#12064",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12064",
+          "title": "fix(ext-proc): support IPv6 EPP endpoints",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "fix/rust-epp-ipv6-endpoints",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "timeline-commit",
+              "detail": "referenced:ebe3617ee9c7800316a0e5b234c45f6fb71d84f5"
+            },
+            {
+              "kind": "issue-body",
+              "detail": "https://github.com/ai-dynamo/dynamo/issues/12252"
+            }
+          ]
+        },
+        {
+          "pr": "ai-dynamo/dynamo#12254",
+          "url": "https://github.com/ai-dynamo/dynamo/pull/12254",
+          "title": "fix(mocker): import Arc/Mutex for kvbm-offload live scheduler tests",
+          "state": "open",
+          "draft": false,
+          "merged": false,
+          "merged_at": null,
+          "base": "main",
+          "head": "fix/mocker-live-kvbm-offload-import",
+          "relationship": "unclassified",
+          "sources": [
+            {
+              "kind": "reference-search",
+              "detail": "broad #12252 search; covered expressions: #12252, Fixes #12252, Closes #12252, Related-to #12252, Refs #12252"
+            }
+          ]
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12200",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12200",
+      "title": "DEP: Extend PD-connector compatibility validation beyond the PdConnector/HMA case",
+      "created_at": "2026-07-27T15:04:32Z",
+      "updated_at": "2026-07-27T18:28:06Z",
+      "labels": [
+        "bug",
+        "language::python",
+        "dynamo-runtime",
+        "nixl",
+        "backend::vllm",
+        "kvbm",
+        "dep:draft"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12198",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12198",
+      "title": "[BUG]: MTP speculative decoding crashes on NIXL-transferred requests for Mamba-hybrid models",
+      "created_at": "2026-07-27T14:50:52Z",
+      "updated_at": "2026-07-27T18:28:11Z",
+      "labels": [
+        "bug",
+        "nixl",
+        "backend::vllm",
+        "kvbm"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    },
+    {
+      "issue": "ai-dynamo/dynamo#12197",
+      "url": "https://github.com/ai-dynamo/dynamo/issues/12197",
+      "title": "[BUG]:  --enable-prefix-caching crashes decode for Mamba-hybrid models in disaggregated (NixlConnector) serving",
+      "created_at": "2026-07-27T14:45:57Z",
+      "updated_at": "2026-07-27T14:47:01Z",
+      "labels": [
+        "bug",
+        "nixl",
+        "backend::vllm",
+        "kvbm"
+      ],
+      "assignees": [],
+      "related_pr_status": "no_known_related_pr",
+      "related_pr_evidence": [],
+      "limitations": []
+    }
+  ],
+  "local_exclusion": {
+    "enabled": true,
+    "excluded_total": 1,
+    "excluded": [
+      {
+        "issue": "ai-dynamo/dynamo#12694",
+        "reasons": [
+          "active-task"
+        ],
+        "sources": [
+          "agent-work/tasks/dynamo-12694-deep-audit/REQUEST.yaml",
+          "agent-work/tasks/dynamo-12694-implementation/REQUEST.yaml",
+          "agent-work/tasks/dynamo-12694-publication/REQUEST.yaml",
+          "agent-work/tasks/dynamo-12694-screening/REQUEST.yaml"
+        ]
+      }
+    ]
+  },
+  "rate_limit": {
+    "core": {
+      "limit": "5000",
+      "remaining": "4879",
+      "reset": "1786001510",
+      "resource": "core"
+    },
+    "search": {
+      "limit": "30",
+      "remaining": "20",
+      "reset": "1785999178",
+      "resource": "search"
+    }
+  },
+  "ledger": {
+    "index": "/home/sun/projects/zhaiyezi/discovery/ai-dynamo-dynamo/INDEX.yaml",
+    "scan": "/home/sun/projects/zhaiyezi/discovery/ai-dynamo-dynamo/scans/2026-08-06T06-50-03.457174Z.yaml"
+  }
+}

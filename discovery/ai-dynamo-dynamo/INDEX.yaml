@@ -23,31 +23,8 @@ issues:
     last_scan_id: 2026-08-05T09-42-37.329012Z
     result:
       issue: ai-dynamo/dynamo#12645
-      url: https://github.com/ai-dynamo/dynamo/issues/12645
-      title: 'CI: deploy-operator fails on every release/* branch (invalid k8s label
-        from truncated branch name)'
-      created_at: '2026-08-04T18:15:53Z'
-      updated_at: '2026-08-04T18:16:56Z'
-      labels:
-      - bug
-      - ci
-      - deployment::k8s
-      assignees: []
       related_pr_status: related_pr_found
-      related_pr_evidence:
-      - pr: ai-dynamo/dynamo#12702
-        url: https://github.com/ai-dynamo/dynamo/pull/12702
-        title: 'fix(ci): make release cleanup keys valid'
-        state: open
-        merged: false
-        merged_at: null
-        base: main
-        head: fix/release-ci-cleanup-key
-        relationship: direct-implementation
-        sources:
-        - kind: semantic-pr-refresh
-          detail: PR explicitly closes #12645 and changes setup-dynamo-operator cleanup-key generation.
-      limitations: []
+      related_prs: []
   ai-dynamo/dynamo#12636:
     remote_updated_at: '2026-08-05T23:35:10Z'
     last_scanned_at: '2026-08-06T03:49:44.063102Z'
@@ -86,8 +63,7 @@ issues:
     result:
       issue: ai-dynamo/dynamo#12630
       related_pr_status: related_pr_found
-      related_prs:
-      - ai-dynamo/dynamo#12688
+      related_prs: []
   ai-dynamo/dynamo#12657:
     remote_updated_at: '2026-08-04T19:25:14Z'
     last_scanned_at: '2026-08-05T09:43:23.983133Z'
@@ -130,9 +106,24 @@ issues:
       - backend::vllm
       - dep:draft
       assignees: []
-      related_pr_status: no_known_related_pr
-      related_pr_evidence: []
-      limitations: []
+      related_pr_status: related_pr_found
+      related_prs:
+      - number: 12745
+        title: 'fix(metrics): sync prometheus_names.py'
+        url: https://github.com/ai-dynamo/dynamo/pull/12745
+        state: open
+        draft: true
+        author: flpanbin
+        relation: direct-implementation
+        linked_issue: closes-12742
+      candidate_status: implementation-pr-exists
+      author_claimed:
+        status: true
+        author: flpanbin
+        evidence: direct-implementation-pr
+        observed_at: '2026-08-06T07:19:57Z'
+      limitations:
+      - PR is open and draft; maintainer review and merge are not complete.
   ai-dynamo/dynamo#12463:
     remote_updated_at: '2026-08-01T06:24:47Z'
     last_scanned_at: '2026-08-05T09:43:38.198399Z'
@@ -274,25 +265,8 @@ issues:
     last_scan_id: 2026-08-06T03-49-32.964936Z
     result:
       issue: ai-dynamo/dynamo#12694
-      url: https://github.com/ai-dynamo/dynamo/issues/12694
-      title: 'ci: DynamoCheckpoint deploy tests silently skipped when snapshot-agent
-        pods fail to become Ready'
-      created_at: '2026-08-05T11:04:45Z'
-      updated_at: '2026-08-05T11:06:00Z'
-      labels:
-      - bug
-      - ci
-      - dynamo-deploy
-      - deployment::k8s
-      assignees: []
       related_pr_status: related_pr_found
-      related_prs:
-      - ai-dynamo/dynamo#12739
-      related_pr_evidence:
-      - url: https://github.com/ai-dynamo/dynamo/pull/12739
-        relation: closes_issue_12694
-        observed_at: '2026-08-06T06:24:22Z'
-      limitations: []
+      related_prs: []
   ai-dynamo/dynamo#12696:
     remote_updated_at: '2026-08-05T11:33:12Z'
     last_scanned_at: '2026-08-06T03:49:49.006630Z'
@@ -300,8 +274,450 @@ issues:
     result:
       issue: ai-dynamo/dynamo#12696
       related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12742:
+    remote_updated_at: '2026-08-06T05:51:14Z'
+    last_scanned_at: '2026-08-06T06:46:07.780585Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12742
+      url: https://github.com/ai-dynamo/dynamo/issues/12742
+      title: '[BUG]: prometheus_names.py is out of sync with Rust source'
+      created_at: '2026-08-06T05:50:22Z'
+      updated_at: '2026-08-06T05:51:14Z'
+      labels:
+      - bug
+      - language::rust
+      - python
+      - metrics
+      - observability
+      assignees: []
+      related_pr_status: related_pr_found
       related_prs:
-      - ai-dynamo/dynamo#752
-      - ai-dynamo/dynamo#753
-      - ai-dynamo/grove#753
-      - ai-dynamo/grove#755
+      - number: 12745
+        title: 'fix(metrics): sync prometheus_names.py'
+        url: https://github.com/ai-dynamo/dynamo/pull/12745
+        state: open
+        draft: true
+        author: flpanbin
+        relation: direct-implementation
+        linked_issue: closes-12742
+      candidate_status: implementation-pr-exists
+      author_claimed:
+        status: true
+        author: flpanbin
+        evidence: direct-implementation-pr
+        observed_at: '2026-08-06T07:19:57Z'
+      limitations:
+      - PR is open and draft; maintainer review and merge are not complete.
+  ai-dynamo/dynamo#12317:
+    remote_updated_at: '2026-07-29T15:30:56Z'
+    last_scanned_at: '2026-08-06T06:46:13.818631Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12317
+      url: https://github.com/ai-dynamo/dynamo/issues/12317
+      title: Log effective runtime defaults at startup for key serving knobs
+      created_at: '2026-07-28T22:02:26Z'
+      updated_at: '2026-07-29T15:30:56Z'
+      labels:
+      - enhancement
+      - dynamo-runtime
+      - observability
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12324:
+    remote_updated_at: '2026-08-03T15:53:15Z'
+    last_scanned_at: '2026-08-06T06:46:22.421870Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12324
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12314:
+    remote_updated_at: '2026-08-03T13:39:55Z'
+    last_scanned_at: '2026-08-06T06:46:23.440696Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12314
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12312:
+    remote_updated_at: '2026-08-03T13:39:56Z'
+    last_scanned_at: '2026-08-06T06:46:27.508658Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12312
+      url: https://github.com/ai-dynamo/dynamo/issues/12312
+      title: Make etcd lease TTL configurable for runtime discovery liveness
+      created_at: '2026-07-28T21:58:40Z'
+      updated_at: '2026-08-03T13:39:56Z'
+      labels:
+      - enhancement
+      - dynamo-runtime
+      - discovery
+      - fault-tolerance
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12311:
+    remote_updated_at: '2026-07-30T07:42:46Z'
+    last_scanned_at: '2026-08-06T06:46:32.336466Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12311
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12310:
+    remote_updated_at: '2026-07-29T15:34:36Z'
+    last_scanned_at: '2026-08-06T06:46:34.960814Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12310
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12307:
+    remote_updated_at: '2026-07-29T15:33:04Z'
+    last_scanned_at: '2026-08-06T06:46:36.640497Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12307
+      url: https://github.com/ai-dynamo/dynamo/issues/12307
+      title: Let router selectors request strict DP-rank admission
+      created_at: '2026-07-28T21:53:22Z'
+      updated_at: '2026-07-29T15:33:04Z'
+      labels:
+      - enhancement
+      - language::rust
+      - dynamo-runtime
+      - router
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12306:
+    remote_updated_at: '2026-07-29T15:34:01Z'
+    last_scanned_at: '2026-08-06T06:46:40.663434Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12306
+      url: https://github.com/ai-dynamo/dynamo/issues/12306
+      title: Track active-request ISL pressure by worker and DP rank for router selection
+      created_at: '2026-07-28T21:52:56Z'
+      updated_at: '2026-07-29T15:34:01Z'
+      labels:
+      - enhancement
+      - language::rust
+      - dynamo-runtime
+      - router
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12303:
+    remote_updated_at: '2026-07-29T15:43:51Z'
+    last_scanned_at: '2026-08-06T06:46:48.495986Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12303
+      url: https://github.com/ai-dynamo/dynamo/issues/12303
+      title: Expose best device-tier overlap on router admission responses
+      created_at: '2026-07-28T21:47:00Z'
+      updated_at: '2026-07-29T15:43:51Z'
+      labels:
+      - enhancement
+      - language::rust
+      - dynamo-runtime
+      - metrics
+      - observability
+      - router
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12305:
+    remote_updated_at: '2026-08-03T13:39:56Z'
+    last_scanned_at: '2026-08-06T06:46:49.672010Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12305
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12301:
+    remote_updated_at: '2026-08-02T07:54:36Z'
+    last_scanned_at: '2026-08-06T06:46:55.853547Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12301
+      url: https://github.com/ai-dynamo/dynamo/issues/12301
+      title: Expose router queue and KV indexer operation metrics
+      created_at: '2026-07-28T21:42:42Z'
+      updated_at: '2026-08-02T07:54:36Z'
+      labels:
+      - enhancement
+      - language::rust
+      - dynamo-runtime
+      - metrics
+      - observability
+      - router
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12302:
+    remote_updated_at: '2026-08-03T15:53:16Z'
+    last_scanned_at: '2026-08-06T06:46:57.211509Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12302
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12300:
+    remote_updated_at: '2026-07-29T15:29:48Z'
+    last_scanned_at: '2026-08-06T06:47:01.122637Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12300
+      url: https://github.com/ai-dynamo/dynamo/issues/12300
+      title: Account for active request load in router worker selection
+      created_at: '2026-07-28T21:42:19Z'
+      updated_at: '2026-07-29T15:29:48Z'
+      labels:
+      - enhancement
+      - language::rust
+      - dynamo-runtime
+      - router
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12299:
+    remote_updated_at: '2026-08-01T04:42:59Z'
+    last_scanned_at: '2026-08-06T06:47:03.163363Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12299
+      url: https://github.com/ai-dynamo/dynamo/issues/12299
+      title: Expose endpoint taint snapshots in Python bindings
+      created_at: '2026-07-28T21:41:48Z'
+      updated_at: '2026-08-01T04:42:59Z'
+      labels:
+      - enhancement
+      - language::python
+      - dynamo-runtime
+      - python
+      - router
+      - runtime
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12296:
+    remote_updated_at: '2026-07-28T21:38:32Z'
+    last_scanned_at: '2026-08-06T06:47:05.858531Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12296
+      url: https://github.com/ai-dynamo/dynamo/issues/12296
+      title: Add opt-in graceful shutdown hooks for Python worker decorators
+      created_at: '2026-07-28T21:37:42Z'
+      updated_at: '2026-07-28T21:38:32Z'
+      labels:
+      - enhancement
+      - language::python
+      - dynamo-runtime
+      - runtime
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12293:
+    remote_updated_at: '2026-07-29T15:39:40Z'
+    last_scanned_at: '2026-08-06T06:47:08.491013Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12293
+      url: https://github.com/ai-dynamo/dynamo/issues/12293
+      title: Support first-yield gating for Python-backed HTTP streams
+      created_at: '2026-07-28T21:35:16Z'
+      updated_at: '2026-07-29T15:39:40Z'
+      labels:
+      - enhancement
+      - dynamo-runtime
+      - python
+      - frontend
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12292:
+    remote_updated_at: '2026-08-03T13:39:58Z'
+    last_scanned_at: '2026-08-06T06:47:10.138158Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12292
+      url: https://github.com/ai-dynamo/dynamo/issues/12292
+      title: Support graceful stop behavior on HTTP client disconnect
+      created_at: '2026-07-28T21:34:13Z'
+      updated_at: '2026-08-03T13:39:58Z'
+      labels:
+      - language::rust
+      - dynamo-runtime
+      - dynamo-llm
+      - frontend
+      - fault-tolerance
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12290:
+    remote_updated_at: '2026-07-28T23:14:40Z'
+    last_scanned_at: '2026-08-06T06:47:13.153035Z'
+    last_scan_id: 2026-08-06T06-44-24.060065Z
+    result:
+      issue: ai-dynamo/dynamo#12290
+      url: https://github.com/ai-dynamo/dynamo/issues/12290
+      title: 'low-prio: Expose detached Python Context while preserving trace metadata'
+      created_at: '2026-07-28T21:34:03Z'
+      updated_at: '2026-07-28T23:14:40Z'
+      labels:
+      - enhancement
+      - language::python
+      - observability
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12287:
+    remote_updated_at: '2026-07-28T21:24:34Z'
+    last_scanned_at: '2026-08-06T06:52:04.321611Z'
+    last_scan_id: 2026-08-06T06-50-03.457174Z
+    result:
+      issue: ai-dynamo/dynamo#12287
+      related_pr_status: related_pr_found
+      related_prs:
+      - ai-dynamo/dynamo#11136
+  ai-dynamo/dynamo#12289:
+    remote_updated_at: '2026-07-28T23:15:20Z'
+    last_scanned_at: '2026-08-06T06:52:09.273152Z'
+    last_scan_id: 2026-08-06T06-50-03.457174Z
+    result:
+      issue: ai-dynamo/dynamo#12289
+      related_pr_status: related_pr_found
+      related_prs:
+      - ai-dynamo/dynamo#11136
+      - ai-dynamo/dynamo#12472
+  ai-dynamo/dynamo#12286:
+    remote_updated_at: '2026-07-28T21:24:23Z'
+    last_scanned_at: '2026-08-06T06:52:13.999669Z'
+    last_scan_id: 2026-08-06T06-50-03.457174Z
+    result:
+      issue: ai-dynamo/dynamo#12286
+      related_pr_status: related_pr_found
+      related_prs:
+      - ai-dynamo/dynamo#12614
+  ai-dynamo/dynamo#12285:
+    remote_updated_at: '2026-07-29T15:28:37Z'
+    last_scanned_at: '2026-08-06T06:52:18.335643Z'
+    last_scan_id: 2026-08-06T06-50-03.457174Z
+    result:
+      issue: ai-dynamo/dynamo#12285
+      related_pr_status: related_pr_found
+      related_prs:
+      - ai-dynamo/dynamo#12464
+      - ai-dynamo/dynamo#12614
+  ai-dynamo/dynamo#12284:
+    remote_updated_at: '2026-08-03T15:53:18Z'
+    last_scanned_at: '2026-08-06T06:52:24.260860Z'
+    last_scan_id: 2026-08-06T06-50-03.457174Z
+    result:
+      issue: ai-dynamo/dynamo#12284
+      related_pr_status: related_pr_found
+      related_prs:
+      - ai-dynamo/dynamo#12477
+  ai-dynamo/dynamo#12262:
+    remote_updated_at: '2026-07-29T13:51:18Z'
+    last_scanned_at: '2026-08-06T06:52:31.265529Z'
+    last_scan_id: 2026-08-06T06-50-03.457174Z
+    result:
+      issue: ai-dynamo/dynamo#12262
+      related_pr_status: related_pr_found
+      related_prs:
+      - ai-dynamo/dynamo#12260
+  ai-dynamo/dynamo#12252:
+    remote_updated_at: '2026-07-28T09:21:44Z'
+    last_scanned_at: '2026-08-06T06:52:43.459435Z'
+    last_scan_id: 2026-08-06T06-50-03.457174Z
+    result:
+      issue: ai-dynamo/dynamo#12252
+      related_pr_status: related_pr_found
+      related_prs:
+      - ai-dynamo/dynamo#11917
+      - ai-dynamo/dynamo#12064
+      - ai-dynamo/dynamo#12254
+  ai-dynamo/dynamo#12200:
+    remote_updated_at: '2026-07-27T18:28:06Z'
+    last_scanned_at: '2026-08-06T06:52:43.585468Z'
+    last_scan_id: 2026-08-06T06-50-03.457174Z
+    result:
+      issue: ai-dynamo/dynamo#12200
+      url: https://github.com/ai-dynamo/dynamo/issues/12200
+      title: 'DEP: Extend PD-connector compatibility validation beyond the PdConnector/HMA
+        case'
+      created_at: '2026-07-27T15:04:32Z'
+      updated_at: '2026-07-27T18:28:06Z'
+      labels:
+      - bug
+      - language::python
+      - dynamo-runtime
+      - nixl
+      - backend::vllm
+      - kvbm
+      - dep:draft
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12198:
+    remote_updated_at: '2026-07-27T18:28:11Z'
+    last_scanned_at: '2026-08-06T06:52:49.320211Z'
+    last_scan_id: 2026-08-06T06-50-03.457174Z
+    result:
+      issue: ai-dynamo/dynamo#12198
+      url: https://github.com/ai-dynamo/dynamo/issues/12198
+      title: '[BUG]: MTP speculative decoding crashes on NIXL-transferred requests
+        for Mamba-hybrid models'
+      created_at: '2026-07-27T14:50:52Z'
+      updated_at: '2026-07-27T18:28:11Z'
+      labels:
+      - bug
+      - nixl
+      - backend::vllm
+      - kvbm
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12197:
+    remote_updated_at: '2026-07-27T14:47:01Z'
+    last_scanned_at: '2026-08-06T06:52:49.381899Z'
+    last_scan_id: 2026-08-06T06-50-03.457174Z
+    result:
+      issue: ai-dynamo/dynamo#12197
+      url: https://github.com/ai-dynamo/dynamo/issues/12197
+      title: '[BUG]:  --enable-prefix-caching crashes decode for Mamba-hybrid models
+        in disaggregated (NixlConnector) serving'
+      created_at: '2026-07-27T14:45:57Z'
+      updated_at: '2026-07-27T14:47:01Z'
+      labels:
+      - bug
+      - nixl
+      - backend::vllm
+      - kvbm
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []

@@ -1,0 +1,43 @@
+schema_version: 2
+task_id: dynamo-12694-screening
+task_type: screening-record
+created_by: agent:luna
+decision_author: agent:luna
+materialized_by: agent:luna
+assigned_agent: agent:luna
+repository: ai-dynamo/dynamo
+issue: ai-dynamo/dynamo#12694
+status: ready
+input_refs:
+  - discovery/ai-dynamo-dynamo/INDEX.yaml
+  - candidates-dynamo.json
+  - https://github.com/ai-dynamo/dynamo/issues/12694
+goal: >-
+  Run the Pre-Deep-Audit Gate for Dynamo#12694 and determine whether a bounded
+  source-and-CI-focused Deep Audit is worth starting under the current local
+  environment without Kubernetes/vCluster access.
+allowed_actions:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - write_result
+prohibited_actions:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+expected_outputs:
+  - agent-work/tasks/dynamo-12694-screening/RESULT.yaml
+approval_required: false
+target_repository:
+  name: ai-dynamo/dynamo
+  phase: deep-audit
+  local:
+    path: /home/sun/py/dynamo
+    discovery: true

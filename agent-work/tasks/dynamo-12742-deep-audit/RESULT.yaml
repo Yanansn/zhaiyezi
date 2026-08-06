@@ -1,0 +1,145 @@
+schema_version: 2
+task_id: dynamo-12742-deep-audit
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+status: completed
+revision: 1
+request_ref: REQUEST.yaml
+outputs:
+  - RESULT.yaml
+  - REPORT.md
+actions_performed:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - write_result
+  - write_report
+actions_not_performed:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+validation:
+  - "Agent protocol validation passed before and after the audit record was prepared."
+  - "The target Dynamo worktree was clean at HEAD ed60d3e2f0c2ce68d80a5de6bf1d2d056cbb73b1."
+  - "Static module comparison found lifecycle in generated Python but not in the Rust source."
+  - "cargo +1.96.1 run -p dynamo-codegen --bin gen-python-prometheus-names completed successfully with a temporary output path; no target file was written."
+  - "The temporary generated file had 523 lines versus 511 tracked lines; the diff contained 116 changed lines and removed lifecycle plus KV_CACHE_HIT_RATE from the generated output."
+  - "git diff --check passed for the target repository."
+limitations:
+  - "No Rust/Python test suite was run; this audit used the bounded codegen reproduction and static checks."
+  - "No runtime metrics service was started; runtime behavior remains unconfirmed."
+  - "No fresh upstream fetch was performed; the local source baseline is the existing PR branch. Public PR #12745 was checked separately."
+  - "The discovery INDEX.yaml contains a separate uncommitted scan update and was not modified by this audit."
+
+issue_validity:
+  reported_behavior:
+    - "The Issue reports that regenerating the Python Prometheus constants from Rust removes lifecycle and breaks tests/utils/payloads.py."
+    - "The Issue reports additional Rust/Python constant drift beyond lifecycle."
+  source_confirmed_behavior:
+    - "lib/runtime/src/metrics/prometheus_names.rs declares top-level public modules but no lifecycle module."
+    - "lib/bindings/python/src/dynamo/prometheus_names.py declares class lifecycle with CLEANUP_TIME_SECONDS and DRAIN_TIME_SECONDS."
+    - "tests/utils/payloads.py references both lifecycle constants."
+    - "The codegen parser reads top-level public Rust modules and emits Python classes from the parsed module map; a module absent from Rust is not regenerated."
+    - "The generator writes the generated Python file from a template and supports an explicit output path, allowing a safe temporary-output reproduction when cargo is available."
+  runtime_confirmed_behavior: []
+
+existing_work:
+  direct_implementation_pr:
+    number: 12745
+    title: "fix(metrics): sync prometheus_names.py"
+    url: https://github.com/ai-dynamo/dynamo/pull/12745
+    state: open
+    draft: true
+    author: flpanbin
+    relation: direct-implementation
+    linked_issue: closes-12742
+  related_work:
+    - item: ai-dynamo/dynamo#3425
+      relation: historical-foundation
+      fact: "Merged PR #3425 introduced the Rust-to-Python Prometheus constant generator and migrated Python consumers; it does not fix the current lifecycle drift."
+    - item: ai-dynamo/dynamo#12636
+      relation: partial-file-overlap
+      fact: "#12636 is an author-claimed contribution request for component_names constants in the same source/generated area, but its stated scope does not include lifecycle synchronization."
+  author_claimed:
+    status: true
+    author: flpanbin
+    evidence: direct-implementation-pr
+  maintainer_direction: "No maintainer comment, assignment, or explicit scope decision is visible for #12742."
+
+code_path_map:
+  - file: lib/runtime/src/metrics/prometheus_names.rs
+    symbols: [prometheus_names, component_names]
+    relationship: "Rust source of truth for public Prometheus constant modules; lifecycle is absent at the audited baseline."
+  - file: lib/bindings/python/codegen/src/prometheus_parser.rs
+    symbols: [PrometheusParser::parse_file, PrometheusParser::parse_module]
+    relationship: "Parses top-level public Rust modules and public string constants into ModuleDef values."
+  - file: lib/bindings/python/codegen/src/gen_python_prometheus_names.rs
+    symbols: [PythonGenerator::generate_python_file, PythonGenerator::generate_classes]
+    relationship: "Loads the template, emits one Python class per parsed Rust module, and writes prometheus_names.py."
+  - file: lib/bindings/python/src/dynamo/prometheus_names.py
+    symbols: [lifecycle]
+    relationship: "Generated Python artifact currently contains lifecycle despite the Rust source lacking that module."
+  - file: tests/utils/payloads.py
+    symbols: [DynamoMetricsPayload._get_lifecycle_checks]
+    relationship: "Downstream Python consumer reads lifecycle cleanup and drain constant names."
+
+technical_summary:
+  confirmed:
+    - "The source/generated module sets differ: lifecycle is Python-only; several Rust modules are not represented as top-level Python classes because the parser has a documented nested-module limitation."
+    - "The reported lifecycle mismatch is statically confirmed at the inspected baseline."
+    - "Running the repository's generator with Cargo 1.96.1 produces Python without lifecycle, reproducing the reported removal in a temporary file."
+    - "The same generated output also differs in other constants and formatting; the lifecycle mismatch is part of a broader generated-file drift."
+  unconfirmed:
+    - "The runtime failure of tests/utils/payloads.py was not executed; runtime behavior remains unconfirmed."
+    - "The broader generated diff was observed but not adjudicated as part of this bounded audit."
+
+feasibility:
+  reproducibility: "high; the repository generator reproduced the lifecycle removal into a temporary output"
+  test_entry: "high; codegen output diff, Python import/consumer checks, and relevant repository tests provide bounded validation"
+  change_scope: "small-to-medium; likely Rust source correction plus regenerated Python output and focused regression coverage"
+  hardware: "No GPU, CUDA, Kubernetes, model, vLLM, or external service required"
+  risk: "medium; generated output may change multiple modules, and #12636 may touch the same files"
+  overall: high
+
+risks:
+  - "Adding lifecycle to Rust and regenerating may expose or remove other drift that must be reviewed before commit."
+  - "A concurrent #12636 implementation could overlap prometheus_names.rs and the generated Python artifact."
+  - "The existing generator documents that nested public modules are skipped; the fix must distinguish intentional generator limitations from actual stale output."
+
+classification_recommendation: implementation-pr-exists
+confidence: medium
+evidence_refs:
+  - agent-work/tasks/dynamo-12742-screening/RESULT.yaml
+  - agent-work/tasks/dynamo-12742-screening/REPORT.md
+  - https://github.com/ai-dynamo/dynamo/issues/12742
+  - https://github.com/ai-dynamo/dynamo/pull/3425
+  - https://github.com/ai-dynamo/dynamo/pull/12745
+  - /home/sun/py/dynamo/lib/runtime/src/metrics/prometheus_names.rs
+  - /home/sun/py/dynamo/lib/bindings/python/codegen/src/prometheus_parser.rs
+  - /home/sun/py/dynamo/lib/bindings/python/codegen/src/gen_python_prometheus_names.rs
+  - /home/sun/py/dynamo/lib/bindings/python/src/dynamo/prometheus_names.py
+  - /home/sun/py/dynamo/tests/utils/payloads.py
+related_items:
+  - item: ai-dynamo/dynamo#12636
+    relationship: partial-file-overlap
+    state: author-claimed
+  - item: ai-dynamo/dynamo#12745
+    relationship: direct-implementation
+    state: open-draft
+    linked_issue: closes-12742
+  - item: ai-dynamo/dynamo#3425
+    relationship: generator-foundation
+    state: merged
+technical_summary_ref: technical_summary
+feasibility: high
+next_action: >-
+  Stop work on #12742 and monitor PR #12745 for maintainer review and merge.
+  Do not create an implementation task or another PR for this Issue.

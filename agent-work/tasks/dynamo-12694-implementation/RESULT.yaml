@@ -1,0 +1,64 @@
+schema_version: 2
+task_id: dynamo-12694-implementation
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+status: completed
+revision: 2
+request_ref: REQUEST.yaml
+outputs:
+  - IMPLEMENTATION.md
+  - TESTING.md
+  - RESULT.yaml
+actions_performed:
+  - read_repository
+  - repository_read
+  - repository_modify
+  - run_tests
+  - write_result
+  - write_report
+actions_not_performed:
+  - modify_registry
+  - initialize_formal_issue
+  - fetch_official_upstream
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+validation:
+  - "Protocol validation passed before local target modification."
+  - "The local branch was created from fetched upstream/main at 3de5663e9efdb60bedcb042e3b6c1d8427b148a2."
+  - "Python YAML structure assertions verified PR and post-merge setup jobs use job timeout 30, install-step timeout 20, Helm timeout 15m, and deploy-status-check no longer accepts cancelled."
+  - "Targeted repository pre-commit hooks passed for .github/workflows/pr.yaml and .github/workflows/post-merge-ci.yml."
+  - "git diff --check passed before commit."
+  - "Local target commit 11a911b845a14a0b8817bbc5ebb20a762b02bd71 was created with DCO sign-off."
+limitations:
+  - "actionlint is not installed."
+  - "No Kubernetes, vCluster, Helm, snapshot-agent image, or GitHub Actions runtime was available for end-to-end validation."
+  - "At implementation completion the change had not been pushed; the subsequent dynamo-12694-publication task records the authorized target-fork Push. No Pull Request or maintainer review exists."
+target_repository_state:
+  branch: fix/ci-checkpoint-gate-12694
+  base: 3de5663e9efdb60bedcb042e3b6c1d8427b148a2
+  head: 11a911b845a14a0b8817bbc5ebb20a762b02bd71
+  working_tree: clean
+  fork_remote: git@github.com:bzsuni/dynamo.git
+  upstream_remote: https://github.com/ai-dynamo/dynamo.git
+implementation:
+  files:
+    - .github/workflows/pr.yaml
+    - .github/workflows/post-merge-ci.yml
+  facts:
+    - "The PR and post-merge checkpoint snapshot-agent setup jobs now use 30-minute job deadlines and 20-minute install-step deadlines while setup-snapshot-agent retains Helm --timeout 15m."
+    - "Both deploy-status-check gates now accept only success and skipped job conclusions."
+  commit:
+    sha: 11a911b845a14a0b8817bbc5ebb20a762b02bd71
+    message: "fix(ci): fail checkpoint gate on cancelled setup"
+    dco_signed_off: true
+publication_draft:
+  title: "fix(ci): fail checkpoint gate on cancelled setup"
+  status: not-published
+next_action: "Use a separately approved publication task for target-fork Push. Pull Request creation remains unapproved."
+boundary: "This implementation result does not itself authorize target-fork Push, Pull Request creation, or any other public GitHub action."

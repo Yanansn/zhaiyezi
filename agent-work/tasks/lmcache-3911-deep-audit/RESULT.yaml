@@ -1,0 +1,132 @@
+schema_version: 2
+task_id: lmcache-3911-deep-audit
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+status: completed
+revision: 1
+request_ref: REQUEST.yaml
+outputs:
+  - RESULT.yaml
+  - REPORT.md
+actions_performed:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - run_tests
+  - write_result
+  - write_report
+actions_not_performed:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+validation:
+  - "python3 scripts/validate_agent_protocol.py: passed before task execution"
+  - "gh issue view 3911 --repo LMCache/LMCache: issue body and two comments readable"
+  - "gh search prs for #3911 and title/configuration terms: empty observation"
+  - "git baseline: /home/sun/py/LMCache dev at f625b9733ad38c6b1bb3ba3d5083998ab5307ffb, clean"
+  - "python3 -m pytest targeted tests: blocked because pytest is not installed"
+limitations:
+  - no GPU or CUDA runtime
+  - pytest is not installed in the target environment
+  - torch is not installed in the target environment
+  - vLLM is not installed in the target environment
+  - no Qwen container/model reproduction
+  - no runtime CPU-RAM measurement
+  - no maintainer confirmation or acceptance signal
+  - no upstream fetch or public GitHub write
+
+issue_validity:
+  reported_behavior:
+    - "The reporter states that Qwen/Qwen3.5-2B with --mamba-cache-mode align and LMCacheMPConnector engine_driven SHM causes vLLM worker CPU RAM to exceed 100 GB during startup."
+    - "The reporter states that removing either flag restores normal RAM usage."
+    - "The reporter later states that lmcache-driven mode also caused RAM to rise from 80 GB to 250 GB."
+  source_confirmed_behavior:
+    - "LMCacheMPConnector validates mamba step alignment during construction, then creates scheduler and worker adapters."
+    - "LMCacheMPConnector registers edited KV caches and engine group information before worker transfer registration."
+    - "start_load_kv collects RETRIEVE metadata and submits batched retrieve requests to the worker adapter."
+    - "The worker engine-driven adapter registers a layout-derived context and selects SHM when the server returns a non-empty SHM name and positive pool size; otherwise it uses pickle."
+    - "EngineDrivenContextShm creates tensor views over server-provided SHM slot descriptors and releases retrieve slots through commit_retrieve."
+    - "CPUCacheContext allocates a block-id tensor with capacity 1,000,000 and a temporary CPU transfer buffer sized as tmp_chunk_bytes times max_batch_size, where max_batch_size is 4."
+    - "KV layer grouping models hybrid, sliding-window, and mamba-related group geometry; full_sw_kv changes the reported window size to the full LMCache chunk."
+  runtime_confirmed_behavior: []
+  confirmed_issue_conclusion: "The public report is concrete and the relevant allocation/transfer paths exist, but the reported magnitude and causal interaction are not runtime-confirmed."
+
+existing_work:
+  explicit_implementation_pr: "empty observation for #3911 and the inspected title/configuration searches"
+  related_work_adjudication:
+    - item: "local history commit 65c2ae81 [Core][MP] Support Mamba/GDN hybrid models (Qwen3.5) (#3613)"
+      relationship: related-foundation
+      fact: "Adds MP connector support and a mamba step-alignment validation helper; it is not an issue-specific memory-growth fix."
+    - item: "local history commit 9a8ead0d (#4192)"
+      relationship: unrelated-refactor
+      fact: "Renames internal KV layer-group fields used by the CPU context; no evidence in the inspected commit message ties it to #3911."
+    - item: "PR/search hits involving #4186/#4194, #4004, #4033, #3860, and #3808"
+      relationship: keyword-or-adjacent
+      fact: "These concern transfer-mode documentation, non-CUDA guidance, CI/preemption coverage, or general engine-driven work; no direct #3911 semantic linkage was established."
+  maintainer_direction: "empty observation; the issue has no assignee, labels, milestone, project item, or visible maintainer acceptance in the inspected metadata/comments"
+
+code_path_map:
+  - file: lmcache/integration/vllm/lmcache_mp_connector.py
+    symbols: [LMCacheMPConnector.__init__, validate_mamba_step_alignment, register_kv_caches, start_load_kv]
+    relationship: "Connector construction validates the align-mode scheduler constraint; registration derives group/layout metadata; start_load_kv submits retrieve operations."
+  - file: lmcache/integration/vllm/vllm_multi_process_adapter.py
+    symbols: [LMCacheMPSchedulerAdapter, LMCacheMPWorkerAdapter.register_kv_caches, LMCacheMPWorkerAdapter.submit_retrieve]
+    relationship: "The scheduler derives LMCache chunk/block geometry; the worker registers engine-driven context metadata and submits retrieve work."
+  - file: lmcache/v1/platform/cpu/cache_context.py
+    symbols: [CPUCacheContext.__init__, tmp_cpu_buffer_, get_tmp_chunk_gpu_buffer_batched]
+    relationship: "CPU-side cache context sizes block-id and temporary transfer storage from KV group geometry and a fixed batch capacity."
+  - file: lmcache/v1/kv_layer_groups.py
+    symbols: [ObjectGroupInfo, KVLayerGroupsManager.enable_full_sw_kv, KVLayerGroupsManager.get_subchunk_sw_size_tokens]
+    relationship: "Layer/object grouping supplies window and per-group shape information consumed by cache contexts and transfer layout construction."
+  - file: lmcache/v1/multiprocess/transfer_context/base.py
+    symbols: [create_engine_driven_context, EngineDrivenContext.prepare_retrieve, EngineDrivenContext.commit_retrieve]
+    relationship: "Factory chooses SHM or pickle from server-provided pool metadata; the context lifecycle is prepare, scatter/view use, then commit."
+  - file: lmcache/v1/multiprocess/transfer_context/shm.py
+    symbols: [EngineDrivenContextShm.__init__, prepare_retrieve, commit_retrieve]
+    relationship: "Worker maps the server-owned SHM segment, builds views from slot descriptors, and releases retrieve ownership after scatter."
+  - file: lmcache/v1/distributed/memory_manager/l1_memory_manager.py
+    symbols: [create_memory_allocator, L1MemoryManager.allocate]
+    relationship: "Configured L1 memory selects a mixed allocator, optionally backed by a normalized SHM name; allocation is batched."
+  - file: lmcache/v1/multiprocess/transfer_context/worker_transfer.py
+    symbols: [LMCacheMPWorkerAdapter.register, LMCacheMPWorkerAdapter.submit_retrieve]
+    relationship: "Worker registration requests layout-derived engine context information; retrieve prepares source buffers, scatters into paged KV, synchronizes, and commits."
+
+technical_analysis:
+  source_confirmed:
+    - "The align-mode guard constrains block_size <= max_num_batched_tokens < 2*block_size, but it does not inspect CPU memory size or SHM pool sizing."
+    - "The CPU temporary buffer is allocated at context construction, before request-level retrieve calls, and its size depends on group shapes, chunk size, dtype, and fixed max_batch_size."
+    - "The engine-driven SHM worker path uses server-returned slot descriptors rather than allocating a new full model-sized tensor for each retrieve call in the inspected worker code."
+    - "The inspected source does not provide enough evidence to map the reported 100-250 GB growth to one allocation site."
+  unresolved:
+    - "The exact vLLM version and runtime KV group shapes for Qwen/Qwen3.5-2B are not available locally."
+    - "The server-side calculation of engine-driven SHM pool size and slot allocation must be measured in the reporter's image/configuration."
+    - "The interaction between max_local_cpu_size, CPUCacheContext, engine-driven SHM, and vLLM startup allocation remains unverified."
+
+feasibility:
+  overall: medium
+  reproducibility: "low locally; concrete upstream reproduction steps exist, but required runtime dependencies are absent"
+  test_entry: "medium; targeted engine-driven SHM and MP adapter tests exist, but pytest/torch are unavailable locally and no dedicated mamba-align memory test was found"
+  expected_change_scope: "unknown; likely requires narrowed measurement first across vLLM integration, CPU/SHM context sizing, or server-side engine-driven pool allocation"
+  implementation_risk: "high until allocation ownership and expected memory bound are measured; hybrid KV geometry and SHM lifecycle cross process and package boundaries"
+  contribution_feasibility: "not ready for implementation from this environment"
+
+classification_recommendation: needs-more-investigation
+confidence: medium
+final_disposition: abandoned
+abandoned_by: user
+abandonment_reason: >-
+  The available environment cannot run the required vLLM/torch/GPU/container
+  path, and the reported memory growth was not runtime-confirmed. The user
+  decided to stop this Issue task.
+next_action: >-
+  Do not continue screening, Deep Audit, Candidate Admission, implementation,
+  or upstream contribution for this Issue unless the user explicitly reopens it
+  with a new bounded task.

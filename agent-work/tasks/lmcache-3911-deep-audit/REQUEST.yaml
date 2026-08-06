@@ -1,0 +1,52 @@
+schema_version: 2
+task_id: lmcache-3911-deep-audit
+task_type: deep-audit
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+assigned_agent: agent:terra
+repository: LMCache/LMCache
+issue: LMCache/LMCache#3911
+status: ready
+input_refs:
+  - agent-work/tasks/lmcache-3911-screening/RESULT.yaml
+  - agent-work/tasks/lmcache-3911-screening/REQUEST.yaml
+  - agent-work/bindings/LMCache-LMCache.yaml
+  - https://github.com/LMCache/LMCache/issues/3911
+evidence_refs:
+  - agent-work/tasks/lmcache-3911-screening/RESULT.yaml
+  - agent-work/bindings/LMCache-LMCache.yaml
+  - https://github.com/LMCache/LMCache/issues/3911
+goal: >-
+  Perform a bounded source-focused Deep Audit of LMCache/LMCache#3911. Distinguish
+  reported, source-confirmed, and runtime-confirmed behavior; map the mamba,
+  vLLM MP connector, CPU/SHM staging, and transfer lifecycle; inspect related
+  work; and produce a screening recommendation without admission or implementation.
+allowed_actions:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - run_tests
+  - write_result
+  - write_report
+prohibited_actions:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+expected_outputs:
+  - agent-work/tasks/lmcache-3911-deep-audit/RESULT.yaml
+  - agent-work/tasks/lmcache-3911-deep-audit/REPORT.md
+approval_required: false
+target_repository:
+  name: LMCache/LMCache
+  phase: deep-audit
+  local:
+    path: /home/sun/py/LMCache
+    discovery: true

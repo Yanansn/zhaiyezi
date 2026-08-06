@@ -1,0 +1,65 @@
+schema_version: 1
+repository: ai-dynamo/dynamo
+scan_id: 2026-08-06T06-44-24.060065Z
+started_at: '2026-08-06T06:44:24.092884Z'
+completed_at: null
+status: running
+query:
+  candidate_limit: 50
+  include_labels: []
+  exclude_labels: []
+  include_known: false
+  rescan_known: false
+audited:
+- ai-dynamo/dynamo#12742
+- ai-dynamo/dynamo#12317
+- ai-dynamo/dynamo#12324
+- ai-dynamo/dynamo#12314
+- ai-dynamo/dynamo#12312
+- ai-dynamo/dynamo#12311
+- ai-dynamo/dynamo#12310
+- ai-dynamo/dynamo#12307
+- ai-dynamo/dynamo#12306
+- ai-dynamo/dynamo#12303
+- ai-dynamo/dynamo#12305
+- ai-dynamo/dynamo#12301
+- ai-dynamo/dynamo#12302
+- ai-dynamo/dynamo#12300
+- ai-dynamo/dynamo#12299
+- ai-dynamo/dynamo#12296
+- ai-dynamo/dynamo#12293
+- ai-dynamo/dynamo#12292
+- ai-dynamo/dynamo#12290
+reused:
+- ai-dynamo/dynamo#12696
+- ai-dynamo/dynamo#12692
+- ai-dynamo/dynamo#12672
+- ai-dynamo/dynamo#12671
+- ai-dynamo/dynamo#12657
+- ai-dynamo/dynamo#12645
+- ai-dynamo/dynamo#12636
+- ai-dynamo/dynamo#12630
+- ai-dynamo/dynamo#12591
+- ai-dynamo/dynamo#12555
+- ai-dynamo/dynamo#12475
+- ai-dynamo/dynamo#12463
+- ai-dynamo/dynamo#12460
+- ai-dynamo/dynamo#12441
+- ai-dynamo/dynamo#12383
+- ai-dynamo/dynamo#12360
+- ai-dynamo/dynamo#12356
+- ai-dynamo/dynamo#12355
+- ai-dynamo/dynamo#12349
+- ai-dynamo/dynamo#12344
+- ai-dynamo/dynamo#12340
+local_exclusions:
+- issue: ai-dynamo/dynamo#12694
+  reasons:
+  - active-task
+  sources:
+  - agent-work/tasks/dynamo-12694-deep-audit/REQUEST.yaml
+  - agent-work/tasks/dynamo-12694-implementation/REQUEST.yaml
+  - agent-work/tasks/dynamo-12694-publication/REQUEST.yaml
+  - agent-work/tasks/dynamo-12694-screening/REQUEST.yaml
+limitations: []
+error: null

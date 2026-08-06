@@ -1,0 +1,53 @@
+schema_version: 2
+task_id: dynamo-12742-deep-audit
+task_type: deep-audit
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+assigned_agent: agent:terra
+repository: ai-dynamo/dynamo
+issue: ai-dynamo/dynamo#12742
+status: ready
+input_refs:
+  - agent-work/tasks/dynamo-12742-screening/RESULT.yaml
+  - agent-work/tasks/dynamo-12742-screening/REPORT.md
+  - https://github.com/ai-dynamo/dynamo/issues/12742
+evidence_refs:
+  - agent-work/tasks/dynamo-12742-screening/RESULT.yaml
+  - agent-work/tasks/dynamo-12742-screening/REPORT.md
+  - https://github.com/ai-dynamo/dynamo/issues/12742
+goal: >-
+  Perform a bounded Deep Audit of Dynamo#12742: map the Rust-to-Python
+  prometheus_names code-generation path, verify the lifecycle drift and
+  downstream consumer, assess the overlap boundary with #12636, and determine
+  implementation feasibility without modifying upstream.
+allowed_actions:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - run_tests
+  - write_result
+  - write_report
+prohibited_actions:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+expected_outputs:
+  - agent-work/tasks/dynamo-12742-deep-audit/RESULT.yaml
+  - agent-work/tasks/dynamo-12742-deep-audit/REPORT.md
+approval_required: false
+target_repository:
+  name: ai-dynamo/dynamo
+  phase: deep-audit
+  local:
+    path: /home/sun/py/dynamo
+    branch: fix/ci-checkpoint-gate-12694
+    head: ed60d3e2f0c2ce68d80a5de6bf1d2d056cbb73b1
+    discovery: true

@@ -17,7 +17,7 @@ result:
   filename: RESULT.yaml
   owner: agent:luna-or-agent:terra
   required_fields: [schema_version, task_id, created_by, decision_author, materialized_by, status, request_ref, outputs, actions_performed, actions_not_performed, validation, limitations]
-  optional_fields: [revision]
+  optional_fields: [revision, issue_type]
 
 decision:
   filename: DECISION.yaml
@@ -41,6 +41,7 @@ enums:
   decision_confidence: [low, medium, high]
   approval_status: [approved, revoked]
   priority: [low, normal, high, urgent]
+  issue_type: [observability-enhancement]
 
 task_type_contracts:
   deep-audit:

@@ -1,0 +1,98 @@
+schema_version: 2
+task_id: dynamo-12742-screening
+created_by: agent:luna
+decision_author: agent:luna
+materialized_by: agent:luna
+status: completed
+revision: 1
+request_ref: REQUEST.yaml
+outputs:
+  - RESULT.yaml
+  - REPORT.md
+actions_performed:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - write_result
+  - write_report
+actions_not_performed:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+validation:
+  - "Agent protocol validation passed before screening."
+  - "Issue #12742, its metadata, comments, and Timeline were read through the public GitHub API; comments and relevant Timeline events were empty observations."
+  - "A fresh explicit PR search found draft PR #12745, authored by the Issue author, with `Closes #12742`; it directly implements the reported synchronization."
+  - "The local Dynamo worktree was clean; origin resolves to bzsuni/dynamo and upstream resolves to ai-dynamo/dynamo."
+  - "Static inspection covered the Rust source, generated Python binding, and tests/utils/payloads.py consumer."
+limitations:
+  - "The later Deep Audit ran code generation into a temporary path; this screening record itself did not modify the target repository."
+  - "No runtime metrics service was started."
+  - "The local clone is on the existing PR branch and no fresh upstream fetch was performed."
+  - "The issue body reports reproduction at commit c574e4d7c1a804c1e04056215adebd593cc3c187; local source was inspected at HEAD ed60d3e2f0c2ce68d80a5de6bf1d2d056cbb73b1."
+
+issue_validity:
+  reported_behavior:
+    - "The Issue reports that regenerating prometheus_names.py from the Rust source removes the lifecycle class and breaks tests/utils/payloads.py imports."
+    - "The Issue reports additional drift where constants present in Rust are missing in Python and a removed Rust constant remains in Python."
+  source_confirmed_behavior:
+    - "lib/runtime/src/metrics/prometheus_names.rs contains no lifecycle module in the inspected source."
+    - "lib/bindings/python/src/dynamo/prometheus_names.py contains lifecycle.CLEANUP_TIME_SECONDS and lifecycle.DRAIN_TIME_SECONDS."
+    - "tests/utils/payloads.py references prometheus_names.lifecycle.CLEANUP_TIME_SECONDS and DRAIN_TIME_SECONDS."
+    - "The Python file contains generated constants that are not currently represented by a same-named Rust lifecycle module, establishing source/generated drift at the inspected baseline."
+  runtime_confirmed_behavior: []
+
+existing_work:
+  explicit_implementation_pr:
+    number: 12745
+    title: "fix(metrics): sync prometheus_names.py"
+    url: https://github.com/ai-dynamo/dynamo/pull/12745
+    state: open
+    draft: true
+    author: flpanbin
+    relation: direct-implementation
+    linked_issue: closes-12742
+  related_work:
+    - item: ai-dynamo/dynamo#3425
+      relation: historical-foundation
+      fact: "Merged PR #3425 introduced the Rust-to-Python prometheus_names code generator; it is not a fix for the current lifecycle/source drift."
+    - item: ai-dynamo/dynamo#12636
+      relation: partial-file-overlap
+      fact: "Open Issue #12636 proposes additional component_names constants in the same Rust/generated Python area; its author has claimed that work, but it does not address the lifecycle drift reported by #12742."
+  maintainer_direction: "No maintainer comment, assignment, or explicit scope decision is visible for #12742."
+
+pre_deep_audit_gate:
+  concrete_scope: "pass; the Issue names the generator, source file, generated file, consumer, and failure mode"
+  public_evidence: "pass; Issue body and public metadata are readable"
+  target_binding: "partial; local clone and remotes are known, but the source baseline is the existing PR branch and no fresh upstream fetch was performed"
+  verification_route: "pass for static source comparison, codegen dry-run planning, Python import/test checks, and generated-file diff review"
+  runtime_dependencies: "No GPU, CUDA, model, Kubernetes, vLLM, or external service is required for the source/generated-file consistency check"
+  effort_budget: "pass for bounded screening and source-focused Deep Audit"
+  decision: eligible_for_bounded_source_deep_audit
+
+feasibility:
+  reproducibility: "high through the documented code-generation command and generated-file comparison; runtime reproduction is not required"
+  test_entry: "high; generator invocation, Python import checks, and tests/utils/payloads.py coverage are available"
+  change_scope: "small-to-medium; likely Rust module/source correction plus regenerated Python output and focused tests"
+  hardware: "No GPU required"
+  risk: "medium; generated output can remove or add many constants, and concurrent work in #12636 touches the same source/generated files"
+  overall: high
+
+classification: implementation-pr-exists
+confidence: medium
+evidence_refs:
+  - https://github.com/ai-dynamo/dynamo/issues/12742
+  - https://github.com/ai-dynamo/dynamo/pull/3425
+  - /home/sun/py/dynamo/lib/runtime/src/metrics/prometheus_names.rs
+  - /home/sun/py/dynamo/lib/bindings/python/src/dynamo/prometheus_names.py
+  - /home/sun/py/dynamo/tests/utils/payloads.py
+next_action: >-
+  Stop candidate work and monitor PR #12745 for maintainer review/merge. Do not
+  create an implementation task or another PR for #12742.

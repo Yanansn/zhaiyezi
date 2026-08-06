@@ -1,0 +1,92 @@
+schema_version: 2
+task_id: dynamo-12694-screening
+created_by: agent:luna
+decision_author: agent:luna
+materialized_by: agent:luna
+status: completed
+revision: 1
+request_ref: REQUEST.yaml
+outputs:
+  - RESULT.yaml
+actions_performed:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - write_result
+actions_not_performed:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+validation:
+  - "Agent protocol validation passed"
+  - "Issue #12694 body and metadata read from GitHub"
+  - "PR search for #12694 and snapshot-agent/cancelled terms returned empty observation"
+  - "Local source inspected at /home/sun/py/dynamo main addcbae7862baa036b46cc6e39ad83342e9360f8"
+  - "Target working tree was clean"
+limitations:
+  - no local Kubernetes or vCluster runtime
+  - no execution of GitHub Actions deployment jobs
+  - local Dynamo main was not fast-forwarded to current upstream because the large upstream fetch timed out
+  - no maintainer confirmation
+  - candidate discovery result is based on source and public Issue/PR metadata, not a new full repository scan
+
+issue_validity:
+  reported_behavior:
+    - "The Issue reports that three DynamoCheckpoint snapshot-agent jobs can be cancelled when the GitHub job timeout and Helm --timeout 15m expire together."
+    - "The Issue reports that dependent deploy-test-checkpoint jobs are skipped and deploy-status-check accepts cancelled as passing, allowing a merge with zero checkpoint tests run."
+    - "The Issue provides a deterministic reproduction by making the snapshot-agent container exit immediately."
+  source_confirmed_behavior:
+    - "The local pr.yaml deploy-status-check jq expression accepts success, skipped, and cancelled."
+    - "The three deploy-snapshot-agent-checkpoint jobs use timeout-minutes: 15 in the inspected local source."
+    - "The corresponding deploy-test-checkpoint jobs require the snapshot-agent setup result to be success."
+    - "The Issue's proposed change surface is limited to workflow timeout values and the deploy-status-check result filter."
+  runtime_confirmed_behavior: []
+
+existing_work:
+  explicit_implementation_pr: "empty observation for #12694 and snapshot-agent/cancelled searches"
+  related_work: []
+  maintainer_direction: "empty observation; no comments, assignee, or visible maintainer acceptance signal"
+
+pre_deep_audit_gate:
+  concrete_scope: "pass; the Issue names affected jobs, workflow locations, status propagation, and a deterministic failure trigger"
+  public_evidence: "pass; body, reproduction steps, observed job outcomes, and source locations are readable"
+  target_binding: "partial; local clone and clean worktree are available, but the upstream fetch did not complete and no committed binding snapshot exists"
+  verification_route: "pass for source/static workflow checks and CI-only validation; local Kubernetes execution is unavailable"
+  runtime_dependencies: "Full reproduction needs GitHub Actions runner, Kubernetes/vCluster, Helm, and the snapshot-agent image; no GPU is required by the reported gate logic"
+  effort_budget: "pass for bounded source/CI-focused audit; fail for local end-to-end reproduction"
+  decision: eligible_for_bounded_source_ci_deep_audit
+
+source_facts:
+  - file: .github/workflows/pr.yaml
+    symbols: [deploy-status-check, deploy-snapshot-agent-checkpoint-vllm, deploy-snapshot-agent-checkpoint-sglang, deploy-snapshot-agent-checkpoint-trtllm]
+    fact: "The workflow contains the reported status filter, three snapshot-agent setup jobs, and timeout-minutes: 15 for each setup job."
+  - file: .github/workflows/pr.yaml
+    symbols: [deploy-test-checkpoint-vllm, deploy-test-checkpoint-sglang, deploy-test-checkpoint-trtllm]
+    fact: "Each checkpoint deploy-test job requires the corresponding snapshot-agent setup job result to be success."
+
+feasibility:
+  reproducibility: "high in CI or a Kubernetes/vCluster environment using the Issue's deterministic failing image; not locally reproducible"
+  test_entry: "medium; workflow/static assertions can be added or run, while end-to-end validation belongs to GitHub Actions"
+  change_scope: "small and localized to .github/workflows/pr.yaml, subject to verifying skip semantics and timeout ordering"
+  hardware: "no GPU required for the reported control-flow bug; Kubernetes/vCluster and Helm are required for end-to-end validation"
+  risk: "medium: changing cancelled handling may affect legitimate cancellation semantics, and timeout values must preserve expected CI duration"
+  overall: medium
+
+classification: candidate-for-admission
+confidence: medium
+evidence_refs:
+  - https://github.com/ai-dynamo/dynamo/issues/12694
+  - discovery/ai-dynamo-dynamo/INDEX.yaml
+  - /home/sun/py/dynamo/.github/workflows/pr.yaml
+next_action: >-
+  Proceed only to a bounded source-and-CI-focused Deep Audit after completing a
+  current Dynamo binding snapshot. Do not modify registry, initialize formal
+  contribution records, or implement until the Deep Audit confirms the exact
+  workflow semantics and acceptance boundary.

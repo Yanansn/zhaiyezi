@@ -1,0 +1,37 @@
+schema_version: 1
+repository: ai-dynamo/dynamo
+scan_id: 2026-08-05T09-42-37.329012Z
+started_at: '2026-08-05T09:42:37.329213Z'
+completed_at: '2026-08-05T09:44:29.180933Z'
+status: completed
+query:
+  candidate_limit: 20
+  include_labels: []
+  exclude_labels: []
+  include_known: false
+  rescan_known: false
+audited:
+- ai-dynamo/dynamo#12692
+- ai-dynamo/dynamo#12672
+- ai-dynamo/dynamo#12645
+- ai-dynamo/dynamo#12636
+- ai-dynamo/dynamo#12630
+- ai-dynamo/dynamo#12657
+- ai-dynamo/dynamo#12671
+- ai-dynamo/dynamo#12591
+- ai-dynamo/dynamo#12475
+- ai-dynamo/dynamo#12463
+- ai-dynamo/dynamo#12555
+- ai-dynamo/dynamo#12460
+- ai-dynamo/dynamo#12360
+- ai-dynamo/dynamo#12441
+- ai-dynamo/dynamo#12355
+- ai-dynamo/dynamo#12349
+- ai-dynamo/dynamo#12344
+- ai-dynamo/dynamo#12356
+- ai-dynamo/dynamo#12383
+- ai-dynamo/dynamo#12340
+reused: []
+local_exclusions: []
+limitations: []
+error: null
