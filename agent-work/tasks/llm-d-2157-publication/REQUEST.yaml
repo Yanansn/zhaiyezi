@@ -1,0 +1,50 @@
+schema_version: 2
+task_id: llm-d-2157-publication
+task_type: publication
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+assigned_agent: agent:terra
+repository: llm-d/llm-d
+issue: llm-d/llm-d#2157
+status: ready
+input_refs:
+  - agent-work/tasks/llm-d-2157-podmonitor-implementation/RESULT.yaml
+  - agent-work/tasks/llm-d-2157-podmonitor-implementation/REPORT.md
+goal: >-
+  Publish the completed bounded TPU PodMonitor implementation from the target
+  fork and create a draft Pull Request against llm-d/llm-d main.
+allowed_actions:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - write_result
+  - write_report
+  - push_upstream_branch
+  - create_pull_request
+prohibited_actions:
+  - modify_registry
+  - initialize_formal_issue
+  - fetch_official_upstream
+  - modify_upstream_code
+  - upstream_write
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+expected_outputs:
+  - RESULT.yaml
+  - REPORT.md
+  - DECISION.yaml
+  - APPROVAL.yaml
+approval_required: true
+target_repository:
+  name: llm-d/llm-d
+  phase: implementation
+  fork:
+    remote: origin
+    url: git@github.com:bzsuni/llm-d.git
+  local:
+    path: /home/sun/py/llm-d
+    branch: feat/llm-d-2157-tpu-podmonitor
+    discovery: true

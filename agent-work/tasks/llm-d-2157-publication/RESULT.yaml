@@ -1,0 +1,52 @@
+schema_version: 2
+task_id: llm-d-2157-publication
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+status: completed
+request_ref: REQUEST.yaml
+outputs:
+  - RESULT.yaml
+  - REPORT.md
+  - DECISION.yaml
+  - APPROVAL.yaml
+actions_performed:
+  - read_repository
+  - repository_read
+  - write_result
+  - write_report
+  - push_upstream_branch
+  - create_pull_request
+actions_not_performed:
+  - modify_registry
+  - initialize_formal_issue
+  - fetch_official_upstream
+  - modify_upstream_code
+  - upstream_write
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+validation:
+  - "The target worktree was clean after the cryptographically signed commit 3264b6734dcaed39b7a802242acaa2bfae1aac4c."
+  - "The branch feat/llm-d-2157-tpu-podmonitor was pushed to bzsuni/llm-d."
+  - "GitHub reports draft PR #2190 open against llm-d/llm-d main."
+limitations:
+  - "GitHub's signed-commits check passes for the cryptographically signed amended commit."
+  - "The Pull Request remains subject to CI and maintainer review."
+  - "No ready-for-review conversion or merge action was performed."
+publication:
+  target: bzsuni/llm-d
+  branch: feat/llm-d-2157-tpu-podmonitor
+  commit: 3264b6734dcaed39b7a802242acaa2bfae1aac4c
+  pull_request:
+    number: 2190
+    url: https://github.com/llm-d/llm-d/pull/2190
+    state: open
+    draft: false
+    base: main
+next_action: "Await remaining CI and maintainer review on draft PR #2190."
+boundary: >-
+  This task records the user-approved target-fork Push and draft Pull Request
+  creation only. No Issue comment, label, assignment, merge, or upstream
+  source modification was performed.

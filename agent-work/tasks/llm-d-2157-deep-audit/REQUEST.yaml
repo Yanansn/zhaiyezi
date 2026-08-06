@@ -1,0 +1,53 @@
+schema_version: 2
+task_id: llm-d-2157-deep-audit
+task_type: deep-audit
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+assigned_agent: agent:terra
+repository: llm-d/llm-d
+issue: llm-d/llm-d#2157
+status: ready
+input_refs:
+  - candidates-llm-d.md
+  - discovery/llm-d-llm-d/INDEX.yaml
+  - https://github.com/llm-d/llm-d/issues/2157
+evidence_refs:
+  - candidates-llm-d.md
+  - discovery/llm-d-llm-d/INDEX.yaml
+  - https://github.com/llm-d/llm-d/issues/2157
+goal: >-
+  Perform a bounded Deep Audit of llm-d/llm-d#2157: verify the reported TPU
+  observability scope, map existing monitoring assets and test entry points,
+  assess mock/CI-only feasibility and implementation risk, and recommend the
+  next bounded action without modifying upstream.
+allowed_actions:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - run_tests
+  - write_result
+  - write_report
+prohibited_actions:
+  - modify_registry
+  - initialize_formal_issue
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+expected_outputs:
+  - agent-work/tasks/llm-d-2157-deep-audit/RESULT.yaml
+  - agent-work/tasks/llm-d-2157-deep-audit/REPORT.md
+approval_required: false
+target_repository:
+  name: llm-d/llm-d
+  phase: deep-audit
+  local:
+    path: /home/sun/py/llm-d
+    branch: main
+    head: 1758aeeede2b02b8447cfc0d52a841bdfe35b82a4
+    discovery: true

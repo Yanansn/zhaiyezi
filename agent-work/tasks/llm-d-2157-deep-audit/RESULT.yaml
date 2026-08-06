@@ -1,0 +1,95 @@
+schema_version: 2
+task_id: llm-d-2157-deep-audit
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+status: completed
+request_ref: agent-work/tasks/llm-d-2157-deep-audit/REQUEST.yaml
+outputs:
+  - agent-work/tasks/llm-d-2157-deep-audit/REPORT.md
+actions_performed:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - run_tests
+  - write_result
+  - write_report
+actions_not_performed:
+  - modify_upstream_code
+  - upstream_write
+  - create_issue
+  - comment_issue
+  - create_pull_request
+  - candidate_admission
+classification_recommendation: candidate-for-admission
+confidence: medium
+evidence_refs:
+  - https://github.com/llm-d/llm-d/issues/2157
+  - candidates-llm-d.md
+  - discovery/llm-d-llm-d/INDEX.yaml
+  - /home/sun/py/llm-d/guides/recipes/modelserver/components/monitoring/kustomization.yaml
+  - /home/sun/py/llm-d/guides/recipes/modelserver/components/monitoring/decode-podmonitor.yaml
+  - /home/sun/py/llm-d/guides/recipes/observability/grafana/dashboards
+technical_summary:
+  reported_behavior: >-
+    The Issue reports that llm-d lacks TPU hardware and interconnect telemetry
+    integration, including a TPU metrics exporter PodMonitor, recording rules,
+    a Grafana dashboard, and corresponding documentation.
+  source_confirmed: >-
+    The repository has generic model-server PodMonitor components, a Prometheus
+    and Grafana installer, existing Grafana dashboards, and TPU deployment
+    guides. No TPU-specific exporter metric names, TPU PodMonitor, or TPU
+    observability dashboard was found in the inspected paths.
+  runtime_confirmed: false
+  code_path_map:
+    - file: guides/recipes/modelserver/components/monitoring/kustomization.yaml
+      symbol: monitoring Kustomize component
+      relationship: includes the generic decode PodMonitor
+    - file: guides/recipes/modelserver/components/monitoring/decode-podmonitor.yaml
+      symbol: PodMonitor/decode
+      relationship: scrapes model-server /metrics on the modelserver port
+    - file: guides/recipes/observability/install-prometheus-grafana.sh
+      symbol: install_prometheus_grafana
+      relationship: installs Prometheus Operator/Grafana and configures PodMonitor selection
+    - file: guides/recipes/observability/grafana/dashboards
+      symbol: dashboard assets
+      relationship: source directory loaded into Grafana ConfigMaps
+    - file: .github/workflows/nightly-e2e-*-tpu-*.yaml
+      symbol: TPU nightly workflows
+      relationship: provides TPU deployment/CI paths but not TPU hardware metric definitions
+feasibility:
+  level: medium
+  reproducibility: >-
+    Public evidence supplies concrete metric names and deployment context, but
+    local reproduction requires TPU/GKE, the exporter, Prometheus, and a model
+    workload.
+  test_entry_points:
+    - Kustomize rendering of monitoring components
+    - JSON/schema validation for dashboard assets
+    - mock Prometheus samples and PromQL rule tests
+    - CI-only TPU workflow validation
+  estimated_scope: >-
+    A focused first contribution would likely touch a TPU PodMonitor, recording
+    rules, one dashboard, and observability documentation; exporter deployment
+    and TPU runtime validation are external dependencies.
+  implementation_risk: medium-high
+risks:
+  - exporter metric names and labels may vary by TPU generation and exporter version
+  - recording rules can create high-cardinality or incorrect topology series
+  - dashboard queries require validation against real TPU samples
+  - CI may validate manifests without proving metric availability at runtime
+limitations:
+  - no TPU or GKE runtime available
+  - no live Prometheus/exporter samples available
+  - no maintainer commitment to implement the full proposed scope
+  - local repository was audited at HEAD 1758aeeede2b02b8447cfc0d52a841bdfe35b82a4
+next_action: >-
+  If User approves Candidate Admission separately, create a bounded implementation
+  task limited to the exporter scrape configuration, mock-tested recording rules,
+  one dashboard, and documentation; retain real TPU validation as an explicit CI
+  or maintainer validation limitation.
+validation:
+  - "python3 scripts/validate_agent_protocol.py: passed before artifact creation."
+  - "JSON parsing of guides/recipes/observability/grafana/dashboards/*.json: passed."
+  - "kustomize build guides/recipes/modelserver/components/monitoring: not run; kustomize is not installed."
+  - "git diff --check: passed in the facts repository."

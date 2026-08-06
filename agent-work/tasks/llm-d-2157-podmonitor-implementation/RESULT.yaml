@@ -1,0 +1,59 @@
+schema_version: 2
+task_id: llm-d-2157-podmonitor-implementation
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+status: completed
+request_ref: agent-work/tasks/llm-d-2157-podmonitor-implementation/REQUEST.yaml
+outputs:
+  - agent-work/tasks/llm-d-2157-podmonitor-implementation/REPORT.md
+actions_performed:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - repository_modify
+  - run_tests
+  - write_result
+  - write_report
+  - run_tests
+actions_not_performed:
+  - upstream_write
+  - push_upstream_branch
+  - create_pull_request
+implementation:
+  repository: llm-d/llm-d
+  local_path: /home/sun/py/llm-d
+  branch: feat/llm-d-2157-tpu-podmonitor
+  files:
+    - guides/recipes/observability/tpu/kustomization.yaml
+    - guides/recipes/observability/tpu/tpu-metrics-exporter-podmonitor.yaml
+    - guides/recipes/observability/tpu/README.md
+  scope: >-
+    Add a Prometheus Operator PodMonitor for the existing GKE TPU device-plugin
+    metrics exporter, plus a concise application and verification guide.
+  excluded:
+    - exporter implementation
+    - GKE Managed Prometheus PodMonitoring variant
+    - Grafana dashboard
+    - Prometheus recording rules
+    - alerts
+validation:
+  - "Python YAML assertions passed for Kustomize resource name, API version, kind, namespace, selector, portNumber, and interval."
+  - "Whitespace checks passed for the new target files."
+  - "A disposable Kind cluster using kindest/node:v1.34.0 was created successfully on 10.20.202.10 and reached Ready."
+  - "The disposable Kind cluster was deleted successfully after validation."
+  - "The kube-prometheus-stack 88.1.5 Chart was downloaded successfully through the remote host and rendered against the disposable cluster."
+  - "Prometheus Operator 0.93.0 and Prometheus 3.13.2 were started in the disposable cluster after loading the required images."
+  - "A mock exporter with label k8s-app=tpu-device-plugin and port 2112 was discovered by the PodMonitor; the Prometheus target reported health=up."
+  - "PromQL returned tpu_mxu_duty_cycle=42 and tpu_hbm_memory_used_bytes=123456 from the mock exporter."
+  - "The disposable Kind cluster was deleted successfully after the completed scrape validation."
+limitations:
+  - "No GKE or TPU runtime validation has been performed."
+  - "The scrape validation used a synthetic exporter and synthetic metric values; it does not validate a real TPU/GKE exporter or metric contract."
+  - "The monitor requires central Prometheus discovery of PodMonitors in kube-system, as documented."
+publication:
+next_action: "Publication was handled by the separate llm-d-2157-publication task."
+boundary: >-
+  This task contains implementation and validation evidence only. It did not
+  authorize or perform target-fork Push, Pull Request creation, Issue comment,
+  label, assignment, or upstream source modification.

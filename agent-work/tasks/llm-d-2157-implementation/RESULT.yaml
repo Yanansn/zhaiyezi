@@ -1,0 +1,51 @@
+schema_version: 2
+task_id: llm-d-2157-implementation
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+status: blocked
+request_ref: agent-work/tasks/llm-d-2157-implementation/REQUEST.yaml
+outputs:
+  - agent-work/tasks/llm-d-2157-implementation/REPORT.md
+actions_performed:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - repository_modify
+  - run_tests
+  - write_result
+  - write_report
+actions_not_performed:
+  - modify_upstream_code
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - create_pull_request
+implementation:
+  repository: llm-d/llm-d
+  local_path: /home/sun/py/llm-d
+  branch: feat/llm-d-2157-tpu-podmonitor
+  base: main
+  outcome: superseded
+  scope: >-
+    The Google Managed Prometheus-only PodMonitoring draft was superseded after
+    review established that llm-d's default monitoring path is Prometheus
+    Operator-based.
+  excluded:
+    - TPU exporter implementation
+    - Prometheus recording rules
+    - Grafana dashboard
+    - alerts
+    - public GitHub actions
+validation:
+  - "Python YAML structural assertions passed for API version, kind, namespace, selector, port, and interval."
+  - "Dashboard and existing protocol validation were not changed by the target implementation."
+  - "kustomize build guides/recipes/observability/tpu: not run; kustomize is unavailable locally."
+  - "git diff --check: passed for the target repository."
+limitations:
+  - "This task's GKE Managed Prometheus-only scope did not meet the default llm-d observability integration requirement."
+  - "No GKE or TPU runtime was available for live scrape validation."
+next_action: >-
+  Continue only through llm-d-2157-podmonitor-implementation, which owns the
+  Prometheus Operator-based replacement.

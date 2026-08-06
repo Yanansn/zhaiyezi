@@ -1,0 +1,55 @@
+schema_version: 2
+task_id: llm-d-2157-implementation
+task_type: implementation
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+assigned_agent: agent:terra
+repository: llm-d/llm-d
+issue: llm-d/llm-d#2157
+status: ready
+input_refs:
+  - agent-work/tasks/llm-d-2157-deep-audit/RESULT.yaml
+  - agent-work/tasks/llm-d-2157-deep-audit/REPORT.md
+  - https://github.com/llm-d/llm-d/issues/2157
+  - https://docs.cloud.google.com/kubernetes-engine/docs/how-to/machine-learning/inference/autoscaling-tpu
+evidence_refs:
+  - agent-work/tasks/llm-d-2157-deep-audit/RESULT.yaml
+  - agent-work/tasks/llm-d-2157-deep-audit/REPORT.md
+goal: >-
+  Implement the smallest bounded contribution for llm-d/llm-d#2157: add a
+  reusable Google Managed Prometheus PodMonitoring manifest for the existing
+  GKE TPU metrics exporter. Do not implement or modify the exporter, dashboards,
+  recording rules, alerts, or upstream/public actions.
+allowed_actions:
+  - read_repository
+  - repository_read
+  - analyze_code
+  - repository_modify
+  - run_tests
+  - write_result
+  - write_report
+prohibited_actions:
+  - modify_registry
+  - initialize_formal_issue
+  - upstream_write
+  - push_upstream_branch
+  - create_issue
+  - comment_issue
+  - assign_issue
+  - add_labels
+  - create_pull_request
+expected_outputs:
+  - agent-work/tasks/llm-d-2157-implementation/RESULT.yaml
+  - agent-work/tasks/llm-d-2157-implementation/REPORT.md
+approval_required: false
+target_repository:
+  name: llm-d/llm-d
+  phase: implementation
+  fork:
+    remote: origin
+    url: git@github.com:bzsuni/llm-d.git
+  local:
+    path: /home/sun/py/llm-d
+    branch: feat/llm-d-2157-tpu-podmonitor
+    discovery: true

@@ -1,0 +1,17 @@
+schema_version: 2
+task_id: llm-d-2157-publication
+created_by: agent:terra
+decision_author: agent:terra
+materialized_by: agent:terra
+status: completed
+result_ref: RESULT.yaml
+result_revision: 1
+conclusion: "The signed implementation was pushed to bzsuni/llm-d and draft PR #2190 was created against llm-d/llm-d main."
+confidence: high
+evidence_refs:
+  - RESULT.yaml
+  - REPORT.md
+  - APPROVAL.yaml
+risks:
+  - "CI and maintainer review may request changes before the draft can proceed."
+next_action: "Await CI and maintainer review on draft PR #2190."

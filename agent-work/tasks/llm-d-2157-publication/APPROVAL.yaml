@@ -1,0 +1,14 @@
+schema_version: 2
+task_id: llm-d-2157-publication
+approved_by: user
+decision_author: user
+materialized_by: user
+status: approved
+actions:
+  - push_upstream_branch
+  - create_pull_request
+scope: >-
+  User approved pushing feat/llm-d-2157-tpu-podmonitor to bzsuni/llm-d and
+  creating the draft Pull Request for llm-d/llm-d#2157. Issue comments,
+  labels, assignments, upstream writes, and non-draft publication actions are
+  not approved.
