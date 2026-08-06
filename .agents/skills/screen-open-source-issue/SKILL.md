@@ -64,6 +64,14 @@ environment budget. Continuing without the required runtime is allowed only
 when the task explicitly accepts CI-only risk or reliable upstream/maintainer
 evidence makes the remaining question bounded; record that exception.
 
+When a required GPU, CUDA/model stack, vLLM, InfiniBand, NIXL/UCX, Kubernetes,
+external service, or other runtime is unavailable, record `environment-blocked`
+and a structured `feasibility_blocker` containing the requirements, evidence,
+and observation time. This is a feasibility marker, not `duplicate`,
+`not-actionable`, or an admission decision. Stop before Deep Audit unless a
+meaningful low-cost alternative exists, the user accepts CI-only risk, or
+reliable upstream evidence closes the remaining question.
+
 ### Candidate / screening record — Luna
 
 Use the task's smallest record set:

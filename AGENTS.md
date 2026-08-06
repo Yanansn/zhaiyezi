@@ -108,6 +108,14 @@ Deep Audit 前必须先完成一次低成本、实时的继续性检查。至少
 中暂时排除，后续只在作者 PR 出现、作者明确放弃，或维护者公开释放贡献范围后复查。
 不得因为作者尚未创建 PR 就继续消耗 Deep Audit 或实现预算。
 
+如果 Issue 的验证或实现明确依赖当前不可用的 GPU、CUDA、模型、vLLM、InfiniBand、
+NIXL/UCX、Kubernetes、外部服务或其他关键运行时，则在 discovery 或 screening
+记录中使用独立标记 `environment-blocked`，并记录 `feasibility_blocker`、具体
+requirements、公开证据和 observed_at。该标记表示当前环境阻塞，不表示 Issue
+无效、重复、已解决或不值得贡献；没有低成本静态/CPU/公开 CI 替代路径时，不进入
+Deep Audit。只有环境补齐、用户明确接受 CI-only 风险，或维护者/上游证据已经足够
+收敛时，才可复查并移除该阻塞标记。
+
 ## Candidate Discovery 去重
 
 `scripts/discover_github_issues.py` 默认读取并排除本地已知 Issue：正式记录的
@@ -126,6 +134,10 @@ available、Admission 或 implementation authorization。
 
 发现或筛选结果若包含 `author-claimed`，必须保留该标记及其公开证据；不得将其
 降级为普通 `no_known_related_pr`，也不得生成 Deep Audit 任务。
+
+发现或筛选结果若包含 `environment-blocked`，必须保留该标记及其依赖证据；不得
+降级为普通 `no_known_related_pr`，不得自动推荐为低成本候选，也不得因此写成
+`not-actionable`。
 
 ## Agent assignment
 

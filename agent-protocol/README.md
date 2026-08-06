@@ -52,6 +52,12 @@ paused and marked `author-claimed`. This is a temporary coordination boundary,
 not a duplicate or admission decision; resume only after a PR, explicit
 withdrawal, or maintainer release of the contribution scope.
 
+When required runtime is unavailable, record `environment-blocked` with the
+specific requirements, evidence, and observation time. This is a feasibility
+limitation rather than an Issue judgment; Deep Audit remains paused unless a
+low-cost alternative, explicit CI-only acceptance, or sufficient upstream
+evidence makes the remaining question bounded.
+
 ## Commands
 
 ```bash
