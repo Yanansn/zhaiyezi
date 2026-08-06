@@ -1,6 +1,6 @@
 # Publication Summary
 
-The signed commit `3264b6734dcaed39b7a802242acaa2bfae1aac4c` was pushed to
+The signed commit `2835c253314c2079d819526e9f7ebc77a20c09f1` was pushed to
 `bzsuni/llm-d` on `feat/llm-d-2157-tpu-podmonitor`.
 
 PR: https://github.com/llm-d/llm-d/pull/2190
