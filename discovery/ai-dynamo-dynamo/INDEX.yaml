@@ -1,0 +1,296 @@
+schema_version: 1
+repository: ai-dynamo/dynamo
+issues:
+  ai-dynamo/dynamo#12692:
+    remote_updated_at: '2026-08-05T08:40:57Z'
+    last_scanned_at: '2026-08-05T09:43:01.904522Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12692
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12672:
+    remote_updated_at: '2026-08-04T23:11:46Z'
+    last_scanned_at: '2026-08-05T09:43:02.547933Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12672
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12645:
+    remote_updated_at: '2026-08-04T18:16:56Z'
+    last_scanned_at: '2026-08-05T09:43:09.842141Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12645
+      url: https://github.com/ai-dynamo/dynamo/issues/12645
+      title: 'CI: deploy-operator fails on every release/* branch (invalid k8s label
+        from truncated branch name)'
+      created_at: '2026-08-04T18:15:53Z'
+      updated_at: '2026-08-04T18:16:56Z'
+      labels:
+      - bug
+      - ci
+      - deployment::k8s
+      assignees: []
+      related_pr_status: related_pr_found
+      related_pr_evidence:
+      - pr: ai-dynamo/dynamo#12702
+        url: https://github.com/ai-dynamo/dynamo/pull/12702
+        title: 'fix(ci): make release cleanup keys valid'
+        state: open
+        merged: false
+        merged_at: null
+        base: main
+        head: fix/release-ci-cleanup-key
+        relationship: direct-implementation
+        sources:
+        - kind: semantic-pr-refresh
+          detail: PR explicitly closes #12645 and changes setup-dynamo-operator cleanup-key generation.
+      limitations: []
+  ai-dynamo/dynamo#12636:
+    remote_updated_at: '2026-08-05T23:35:10Z'
+    last_scanned_at: '2026-08-06T03:49:44.063102Z'
+    last_scan_id: 2026-08-06T03-49-32.964936Z
+    result:
+      issue: ai-dynamo/dynamo#12636
+      url: https://github.com/ai-dynamo/dynamo/issues/12636
+      title: '[CONTRIBUTION]: Centralize worker component names in prometheus_names::component_names
+        (PREFILL/BACKEND/ENCODE/DIFFUSION) & migrate hardcoded registration sites'
+      created_at: '2026-08-04T17:25:30Z'
+      updated_at: '2026-08-05T23:35:10Z'
+      labels:
+      - language::rust
+      - backend::vllm
+      - metrics
+      - observability
+      - backend::sglang
+      - backend::trtllm
+      - contribution-request
+      assignees: []
+      related_pr_status: related_pr_found
+      related_prs:
+      - ai-dynamo/dynamo#12739
+      related_pr_evidence:
+      - url: https://github.com/ai-dynamo/dynamo/pull/12739
+        relation: closes_issue_12694
+        observed_at: '2026-08-06T06:24:22Z'
+      limitations: []
+  ai-dynamo/dynamo#12630:
+    remote_updated_at: '2026-08-04T11:14:16Z'
+    last_scanned_at: '2026-08-05T09:43:16.432708Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12630
+      related_pr_status: related_pr_found
+      related_prs:
+      - ai-dynamo/dynamo#12688
+  ai-dynamo/dynamo#12657:
+    remote_updated_at: '2026-08-04T19:25:14Z'
+    last_scanned_at: '2026-08-05T09:43:23.983133Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12657
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12671:
+    remote_updated_at: '2026-08-04T22:55:14Z'
+    last_scanned_at: '2026-08-05T09:43:28.036107Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12671
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12591:
+    remote_updated_at: '2026-08-03T21:43:15Z'
+    last_scanned_at: '2026-08-05T09:43:28.181375Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12591
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12475:
+    remote_updated_at: '2026-07-31T05:20:38Z'
+    last_scanned_at: '2026-08-05T09:43:29.544718Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12475
+      url: https://github.com/ai-dynamo/dynamo/issues/12475
+      title: '[Dynamo MultiNode Kimi-K3] [H200 Recipe Please!] Kimi-K3 deployment
+        on H200 (Hopper/SM90) hits FP8 MLA prefill kernel assertion'
+      created_at: '2026-07-31T05:19:32Z'
+      updated_at: '2026-07-31T05:20:38Z'
+      labels:
+      - bug
+      - platform support
+      - dynamo-runtime
+      - backend::vllm
+      - dep:draft
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12463:
+    remote_updated_at: '2026-08-01T06:24:47Z'
+    last_scanned_at: '2026-08-05T09:43:38.198399Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12463
+      url: https://github.com/ai-dynamo/dynamo/issues/12463
+      title: '[BUG]: vLLM disaggregated serving over InfiniBand returns garbage tokens
+        when UCX_NET_DEVICES is unset on passthrough VMs'
+      created_at: '2026-07-30T23:55:54Z'
+      updated_at: '2026-08-01T06:24:47Z'
+      labels:
+      - bug
+      - language::python
+      - dynamo-runtime
+      - nixl
+      - backend::vllm
+      - deployment::k8s
+      - kvbm
+      - Dynamo 1.3.0
+      - runtime
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12555:
+    remote_updated_at: '2026-08-03T07:21:57Z'
+    last_scanned_at: '2026-08-05T09:43:40.171611Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12555
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12460:
+    remote_updated_at: '2026-08-01T00:50:47Z'
+    last_scanned_at: '2026-08-05T09:43:44.016873Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12460
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12360:
+    remote_updated_at: '2026-08-03T15:53:13Z'
+    last_scanned_at: '2026-08-05T09:43:49.400083Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12360
+      url: https://github.com/ai-dynamo/dynamo/issues/12360
+      title: '[CONTRIBUTION]: Make OnceLock Env var a !marco pattern'
+      created_at: '2026-07-29T15:26:51Z'
+      updated_at: '2026-08-03T15:53:13Z'
+      labels:
+      - language::rust
+      - refactor
+      - contribution-request
+      - runtime
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12441:
+    remote_updated_at: '2026-07-30T21:25:33Z'
+    last_scanned_at: '2026-08-05T09:43:52.206484Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12441
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12355:
+    remote_updated_at: '2026-07-29T13:22:36Z'
+    last_scanned_at: '2026-08-05T09:43:55.498770Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12355
+      url: https://github.com/ai-dynamo/dynamo/issues/12355
+      title: '[BUG] vllm-runtime 1.3.0-dev.1-cuda13: baked flashinfer-jit-cache pin
+        breaks any in-container vLLM upgrade (serve-time registry failure)'
+      created_at: '2026-07-29T13:21:45Z'
+      updated_at: '2026-07-29T13:22:36Z'
+      labels:
+      - dynamo-runtime
+      - backend::vllm
+      - runtime
+      assignees: []
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      limitations: []
+  ai-dynamo/dynamo#12349:
+    remote_updated_at: '2026-07-29T08:58:18Z'
+    last_scanned_at: '2026-08-05T09:44:04.183361Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12349
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12344:
+    remote_updated_at: '2026-07-29T06:24:44Z'
+    last_scanned_at: '2026-08-05T09:44:05.901696Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12344
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12356:
+    remote_updated_at: '2026-07-31T12:20:41Z'
+    last_scanned_at: '2026-08-05T09:44:07.550701Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12356
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12383:
+    remote_updated_at: '2026-07-29T19:10:20Z'
+    last_scanned_at: '2026-08-05T09:44:08.558932Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12383
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12340:
+    remote_updated_at: '2026-07-29T03:10:41Z'
+    last_scanned_at: '2026-08-05T09:44:29.135466Z'
+    last_scan_id: 2026-08-05T09-42-37.329012Z
+    result:
+      issue: ai-dynamo/dynamo#12340
+      related_pr_status: related_pr_found
+      related_prs: []
+  ai-dynamo/dynamo#12694:
+    remote_updated_at: '2026-08-05T11:06:00Z'
+    last_scanned_at: '2026-08-06T03:49:40.717528Z'
+    last_scan_id: 2026-08-06T03-49-32.964936Z
+    result:
+      issue: ai-dynamo/dynamo#12694
+      url: https://github.com/ai-dynamo/dynamo/issues/12694
+      title: 'ci: DynamoCheckpoint deploy tests silently skipped when snapshot-agent
+        pods fail to become Ready'
+      created_at: '2026-08-05T11:04:45Z'
+      updated_at: '2026-08-05T11:06:00Z'
+      labels:
+      - bug
+      - ci
+      - dynamo-deploy
+      - deployment::k8s
+      assignees: []
+      related_pr_status: related_pr_found
+      related_prs:
+      - ai-dynamo/dynamo#12739
+      related_pr_evidence:
+      - url: https://github.com/ai-dynamo/dynamo/pull/12739
+        relation: closes_issue_12694
+        observed_at: '2026-08-06T06:24:22Z'
+      limitations: []
+  ai-dynamo/dynamo#12696:
+    remote_updated_at: '2026-08-05T11:33:12Z'
+    last_scanned_at: '2026-08-06T03:49:49.006630Z'
+    last_scan_id: 2026-08-06T03-49-32.964936Z
+    result:
+      issue: ai-dynamo/dynamo#12696
+      related_pr_status: related_pr_found
+      related_prs:
+      - ai-dynamo/dynamo#752
+      - ai-dynamo/dynamo#753
+      - ai-dynamo/grove#753
+      - ai-dynamo/grove#755
