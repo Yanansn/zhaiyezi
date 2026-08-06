@@ -44,6 +44,14 @@ readable enough to define scope, target binding and source baseline are valid,
 and at least one meaningful verification route exists: local unit/CPU tests,
 source facts, public CI/maintainer evidence, or a bounded reproduction path.
 
+Before spending further screening or Deep Audit effort, check Issue comments and
+maintainer discussion for an author-claimed boundary. If the Issue author or a
+maintainer says they are implementing it, already have a draft, or will open a
+PR, stop the workflow and record `author-claimed` with the author, timestamp,
+comment, and URL. This marker is not a duplicate or admission decision. Do not
+create a Deep Audit or implementation task until the author opens the PR,
+explicitly withdraws the claim, or maintainers publicly release the scope.
+
 Also record required runtime dependencies and whether the local environment has
 them. Missing GPU, model, vLLM, CUDA, external service, or cross-repository
 access is a feasibility limitation. If no low-cost alternative can support a

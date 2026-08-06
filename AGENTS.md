@@ -99,6 +99,15 @@ Deep Audit 前必须先完成一次低成本、实时的继续性检查。至少
 存在可执行的替代验证路径、用户明确接受 CI-only 风险，或维护者/上游证据已经
 足够收敛时，才可例外继续；该例外必须写入任务结果。
 
+## Author-Claimed Issue Boundary
+
+如果 Issue 作者或维护者已经公开声明：准备实现该 Issue、已有 draft、正在编码，
+或即将提交 PR，则立即停止我们的筛选、Deep Audit 和实现准备。记录独立标记
+`author-claimed`，并记录评论、作者、时间和原文链接；这不是 `duplicate`、
+`not-actionable` 或 Admission 决策。该 Issue 从 active candidate consideration
+中暂时排除，后续只在作者 PR 出现、作者明确放弃，或维护者公开释放贡献范围后复查。
+不得因为作者尚未创建 PR 就继续消耗 Deep Audit 或实现预算。
+
 ## Candidate Discovery 去重
 
 `scripts/discover_github_issues.py` 默认读取并排除本地已知 Issue：正式记录的
@@ -114,6 +123,9 @@ pass 或 not-actionable；已结束状态和明确终止分类才使用 terminal
 Discovery 只从这些正式记录单向读取排除信息；Ledger 与 Issue 分析状态不做双向
 同步。Ledger 中的 `no_known_related_pr` 只表示本次 API 审计事实，不表示 pass、
 available、Admission 或 implementation authorization。
+
+发现或筛选结果若包含 `author-claimed`，必须保留该标记及其公开证据；不得将其
+降级为普通 `no_known_related_pr`，也不得生成 Deep Audit 任务。
 
 ## Agent assignment
 

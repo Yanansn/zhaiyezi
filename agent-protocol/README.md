@@ -46,6 +46,12 @@ stops high-cost investigation when no meaningful low-cost alternative exists;
 the result records a feasibility limitation and does not claim the Issue is
 invalid. Deep Audit is not started merely because a candidate exists.
 
+The gate also checks for `author-claimed`: when the Issue author or a maintainer
+has publicly announced an implementation, draft, or forthcoming PR, the task is
+paused and marked `author-claimed`. This is a temporary coordination boundary,
+not a duplicate or admission decision; resume only after a PR, explicit
+withdrawal, or maintainer release of the contribution scope.
+
 ## Commands
 
 ```bash
