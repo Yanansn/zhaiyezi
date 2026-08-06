@@ -68,13 +68,16 @@ issues:
       - backend::trtllm
       - contribution-request
       assignees: []
-      related_pr_status: related_pr_found
-      related_prs:
-      - ai-dynamo/dynamo#12739
-      related_pr_evidence:
-      - url: https://github.com/ai-dynamo/dynamo/pull/12739
-        relation: closes_issue_12694
-        observed_at: '2026-08-06T06:24:22Z'
+      related_pr_status: no_known_related_pr
+      related_pr_evidence: []
+      candidate_status: author-claimed
+      author_claimed:
+        author: aryangorwade
+        status: true
+        reason: author_announced_draft_and_planned_pr
+        evidence:
+        - https://github.com/ai-dynamo/dynamo/issues/12636#issuecomment-5188572086
+        observed_at: '2026-08-06T06:56:06Z'
       limitations: []
   ai-dynamo/dynamo#12630:
     remote_updated_at: '2026-08-04T11:14:16Z'
