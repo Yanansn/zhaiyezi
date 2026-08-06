@@ -192,6 +192,14 @@ issues:
       assignees: []
       related_pr_status: no_known_related_pr
       related_pr_evidence: []
+      candidate_status: author-claimed
+      author_claimed:
+        author: elizabetht
+        status: true
+        reason: author_announced_draft_and_planned_pr
+        evidence:
+        - https://github.com/ai-dynamo/dynamo/issues/12360#issuecomment-5188332353
+        observed_at: '2026-07-30T05:58:03Z'
       limitations: []
   ai-dynamo/dynamo#12441:
     remote_updated_at: '2026-07-30T21:25:33Z'
